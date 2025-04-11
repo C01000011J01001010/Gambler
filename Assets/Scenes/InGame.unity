@@ -51089,8 +51089,8 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 550, y: 650}
-  m_Spacing: {x: 0, y: 50}
+  m_CellSize: {x: 550, y: 600}
+  m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 1
 --- !u!1 &1777781952
@@ -69925,6 +69925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardGameView: {fileID: 1437414261}
   cardGamePlayManager: {fileID: 56950625}
+  bed: {fileID: 547184108}
 --- !u!224 &2811911481614448205
 RectTransform:
   m_ObjectHideFlags: 0

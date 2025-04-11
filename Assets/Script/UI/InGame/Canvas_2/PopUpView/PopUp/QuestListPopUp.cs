@@ -59,7 +59,8 @@ public class QuestListPopUp : PopUpBase<QuestListPopUp>
                         questPanel.SetButtonCallback(
                             () =>
                             {
-                                questContentPopUp.descriptionPanel.SetPanel(questInfo);
+                                questContentPopUp.InitCententCellSize();
+                                questContentPopUp.descriptionPanel.SetPanel(questInfo, questContentPopUp.AddContentCellSizeY);
                                 GameManager.connector_InGame.popUpView_Script.QuestContentPopUpOpen();
                             });
                     }

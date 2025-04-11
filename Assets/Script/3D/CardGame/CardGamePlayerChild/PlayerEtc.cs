@@ -1,8 +1,7 @@
-using NUnit.Framework;
+
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening;
-using System.ComponentModel;
+using PublicSet;
 
 public class PlayerEtc : CardGamePlayerBase
 {
@@ -72,7 +71,7 @@ public class PlayerEtc : CardGamePlayerBase
                 weekPlayer = playerList[i];
             }
             else if(weekPlayer.closedCardList.Count == playerList[i].closedCardList.Count &&
-                weekPlayer.revealedCardList.Count < playerList[i].revealedCardList.Count) // 손패가 같을 경우 공개된 카드가 더 많은 쪽을 공략
+                weekPlayer.openedCardList.Count < playerList[i].openedCardList.Count) // 손패가 같을 경우 공개된 카드가 더 많은 쪽을 공략
             {
                 weekPlayer = playerList[i];
             }
@@ -99,10 +98,58 @@ public class PlayerEtc : CardGamePlayerBase
         }
 
         TrumpCardDefault selectedCard = null;
-
-        // 상대의 손패중에 공개된 카드를 우선해서 선택
         if(isAttack)
         {
+            // 먹잇감이 있으면 내 카드중 값이 가장 큰 것을 선택
+            if(CardGamePlayManager.Instance.Prey != null)
+            {
+                selectedCard = closedCardList[0].GetComponent<TrumpCardDefault>();
+
+                // 카드가 1장만 있는경우
+                if (closedCardList.Count == 1)
+                {
+                    if (TyrSetPresentedCard(selectedCard))
+                    {
+                        Debug.Log($"사용된 카드 : {PresentedCardScript}");
+                        return;
+                    }
+                }
+
+                // 카드가 2장 이상인 경우
+                TrumpCardDefault currentCardScript = null;
+                TrumpCardDefault joker = null;
+
+                // 값이 가장 큰 카드 찾기
+                for (int i = 1; i < closedCardList.Count; i++)
+                {
+                    currentCardScript =  closedCardList[i].GetComponent<TrumpCardDefault>();
+
+                    // 조커는 따로 관리
+                    if (currentCardScript.trumpCardInfo.cardType == eCardType.Joker)
+                    {
+                        joker = currentCardScript;
+                        continue;
+                    }
+
+                    // 조커카드를 제외한 가장 큰값의 카드를 선택, 첫 카드가 조커일 가능성도 있음
+                    else if (selectedCard.trumpCardInfo.cardValue < currentCardScript.trumpCardInfo.cardValue ||
+                                selectedCard.trumpCardInfo.cardType == eCardType.Joker)
+                    {
+                        selectedCard = currentCardScript;
+                    }
+                }
+                // 선택된 카드가 너무 작은 경우
+                if(selectedCard.trumpCardInfo.cardValue < 7)
+                    if(joker != null) selectedCard = joker; // 조커가 있으면 조커를 선택카드로 변경
+
+                if (TyrSetPresentedCard(selectedCard))
+                {
+                    Debug.Log($"사용된 카드 : {PresentedCardScript}");
+                    return;
+                }
+            }
+
+            // 상대의 손패중에 공개된 카드를 우선해서 선택
             TrumpCardDefault revealedCardScript = null;
             foreach (GameObject revealedCard in AttackTarget.revealedCardList)
             {
@@ -112,25 +159,20 @@ public class PlayerEtc : CardGamePlayerBase
                     foreach (var myCard in closedCardList)
                     {
                         selectedCard = myCard.GetComponent<TrumpCardDefault>();
-                        if (revealedCardScript.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType)
+                        if (revealedCardScript.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType ||
+                            revealedCardScript.trumpCardInfo.cardValue == selectedCard.trumpCardInfo.cardValue)
                         {
                             if (selectedCard.TrySelectThisCard_OnPlayTime(this))
                             {
-                                if (TyrSetPresentedCard(selectedCard))
-                                {
-                                    Debug.Log($"사용된 카드 : {PresentedCardScript}");
-                                    return;
-                                }
+                                Debug.Log($"사용된 카드 : {PresentedCardScript}");
+                                return;
                             }
                         }
                     }
                 }
             }
-        }
 
-        // 상대의 오픈패 중에 내 수중에 있는 카드와 같은 타입이 있다면 해당 카드를 선택
-        if (isAttack)
-        {
+            // 상대의 오픈패 중에 내 수중에 있는 카드와 같은 타입이 있다면 해당 카드를 선택
             TrumpCardDefault OpenedCardOfTarget = null;
             foreach (var targetCard in AttackTarget.openedCardList)
             {
@@ -138,7 +180,8 @@ public class PlayerEtc : CardGamePlayerBase
                 foreach (var myCard in closedCardList)
                 {
                     selectedCard = myCard.GetComponent<TrumpCardDefault>();
-                    if (OpenedCardOfTarget.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType)
+                    if (OpenedCardOfTarget.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType ||
+                        OpenedCardOfTarget.trumpCardInfo.cardValue == selectedCard.trumpCardInfo.cardValue)
                     {
                         if (selectedCard.TrySelectThisCard_OnPlayTime(this))
                         {
@@ -150,7 +193,6 @@ public class PlayerEtc : CardGamePlayerBase
                         }
                     }
                 }
-
             }
         }
         

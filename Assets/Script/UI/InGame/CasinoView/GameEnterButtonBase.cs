@@ -13,7 +13,7 @@ public abstract class GameEnterButtonBase : ButtonBase
     }
     public abstract void EnterGame();
 
-    public void SetPlayerCantPlayThis()
+    public virtual void SetPlayerCantPlayThis()
     {
         SetButtonCallback(
             () => GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerCantPlayThis)

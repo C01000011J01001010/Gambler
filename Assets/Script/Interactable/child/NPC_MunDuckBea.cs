@@ -18,9 +18,14 @@ public class NPC_MunDuckBea : InteractableObject
         // 최초 조우시 Encounter 파일번호 반환
         if (currentFile == eTextScriptFile.NPC_MunDuckBea_Encounter)
         {
-            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(eQuestType.LetsLookAroundOutside);
-            if(!questInfo.isComplete)
-                questInfo.callback_endConditionCheck();
+            // 퀘스트 수주한 경우
+            sQuest quest = new sQuest(0, eQuestType.LetsLookAroundOutside);
+            if (QuestManager.questHashSet.Contains(quest))
+            {
+                cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                if (!questInfo.isComplete) questInfo.callback_endConditionCheck();
+            }
+                
 
             currentFile = eTextScriptFile.NPC_MunDuckBea_Acquaintance;
             return eTextScriptFile.NPC_MunDuckBea_Encounter;

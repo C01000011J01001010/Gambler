@@ -44,13 +44,6 @@ public class PopUpView_InGame : PopUpViewBase
         //gameObject.SetActive(true);
         inventoryPopUp.gameObject.SetActive(true);
         inventoryPopUp.transform.SetAsLastSibling();
-
-        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(eQuestType.OpenInventory);
-        if(questInfo.isComplete == false)
-        {
-            questInfo.callback_endConditionCheck();
-        }
-
     }
 
     // 버튼 콜백

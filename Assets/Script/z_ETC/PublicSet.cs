@@ -114,7 +114,9 @@ namespace PublicSet
         num407_OnChooseNextPlayer,
 
 
-        num501_final = 501
+        num501_final = 501,
+        num502_EndGame
+
     }
 
     public enum eCriteria
@@ -174,7 +176,7 @@ namespace PublicSet
     public enum eItemCallback
     {
         None,
-        FirstQuest,
+        CasinoTicket,
         EatMeal
     }
 
@@ -185,7 +187,6 @@ namespace PublicSet
         //튜토리얼 관련
         LetsLookAroundOutside,
         LetsOpenBoxForTheFirstTime,
-        OpenInventory,
         UseCasinoEntryTicket,
         LearnHowToSave,
         StartFirstGame,

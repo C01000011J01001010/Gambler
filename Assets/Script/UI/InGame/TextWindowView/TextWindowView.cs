@@ -330,6 +330,11 @@ public class TextWindowView : MonoBehaviour
             {
                 dialogue = dialogue.Replace("{EXPRESSION}", CardGamePlayManager.Instance.ExpressionValue.ToString());
             }
+
+            if (dialogue.Contains("{PLAYER}"))
+            {
+                dialogue = dialogue.Replace("{PLAYER}", PlayManager.Instance.characterInfo.CharacterName);
+            }
         }
         
         isTypingReady = false;

@@ -41,31 +41,39 @@ public class QuestManager : Singleton<QuestManager>
         return maxItemNumber;
     }
 
-    // 새로운 아이템 정보를 저장하기 위한 함수
+    
     public void PlayerGetQuest(eQuestType questType)
     {
         int questId = GetNewLastId();
 
-        sQuest newItem = new sQuest(questId, questType);
+        sQuest newQuest = new sQuest(questId, questType);
 
-        if (questHashSet.Contains(newItem))
+        // type만 비교하기 때문에 같은 퀘스트는 수주되지 않음
+        if (questHashSet.Contains(newQuest))
         {
             // 이미 존재하면 추가하지 않음
-            Debug.LogWarning($"Item {questId} 는 이미 존재하는 아이템 항목.");
+            Debug.LogWarning($"Quest {questId} 는 수주받은 퀘스트.");
             return;
         }
-        // 존재하지 않는다면 아이템 목록에 추가
-        questHashSet.Add(newItem);
-        Debug.Log($"Item {questId} 획득 성공.");
 
-        // 아이템 목록에 변화가 생겼으니 팝업 리프레시
-        InventoryPopUp.Instance.RefreshPopUp();
-        //GameManager.connector_InGame.popUpView_Script.inventoryPopUp.RefreshPopUp();
+        questHashSet.Add(newQuest);
+        Debug.Log($"Quest {questId} 수주 성공.");
+
+        GameManager.connector_InGame.popUpView_Script.questListPopUp.RefreshPopUp();
     }
 
 
     public void PlayerCompleteQuest(eQuestType questType)
     {
+        // 수주된 퀘스트인지 확인
+        sQuest quest = new sQuest(0,questType);
+        if(questHashSet.Contains(quest) == false)
+        {
+            Debug.LogWarning("수주하지 않은 퀘스트");
+            return;
+        }
+        
+
         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
         questInfo.isComplete = true;
 
@@ -75,6 +83,8 @@ public class QuestManager : Singleton<QuestManager>
 
         EventManager.Instance.SetEventMessage($"퀘스트\n{questInfo.name}\n성공!");
         EventManager.Instance.PlaySequnce_EventAnimation();
+
+        GameManager.connector_InGame.popUpView_Script.questListPopUp.RefreshPopUp();
     }
 
 }

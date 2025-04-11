@@ -17,9 +17,18 @@ public abstract class CardGamePlayerBase : MonoBehaviour
     public CardGamePlayerBase AttackTarget {  get; protected set; } // 공격 대상
     public TrumpCardDefault PresentedCardScript { get; protected set; } // 공경 또는 수비에 사용할 카드
     public List<Transform> CardList {  get; protected set; }
-    public List<GameObject> openedCardList { get; protected set; } // 오픈박스 자식객체로 있는 카드
-    public List<GameObject> closedCardList { get; protected set; } // 클로즈박스 자식객체로 있는 카드
-    public List<GameObject> revealedCardList { get; protected set; } // 클로즈박스에 상관없이 게임에서 공개된 카드 목록
+    /// <summary>
+    /// 완전히 공개된 카드
+    /// </summary>
+    public List<GameObject> openedCardList { get; protected set; }
+    /// <summary>
+    /// 손패에 있는 카드
+    /// </summary>
+    public List<GameObject> closedCardList { get; protected set; }
+    /// <summary>
+    /// 오픈하지 않았지만 확인된 카드
+    /// </summary>
+    public List<GameObject> revealedCardList { get; protected set; }
 
     public Dictionary<eCardType, int> cardCountPerType { get; protected set; } // 게임 세팅을 위해 플레이어가 갖고있는 각 문양의 카드 숫자
 
@@ -192,6 +201,7 @@ public abstract class CardGamePlayerBase : MonoBehaviour
         {
             closedCardList.Remove(card);
         }
+
         if (revealedCardList.Contains(card))
         {
             revealedCardList.Remove(card);

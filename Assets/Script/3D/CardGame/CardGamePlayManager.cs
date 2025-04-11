@@ -100,7 +100,11 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         {
             if(player.closedCardList.Count == 0)
             {
-                if(Prey == null) Prey = player; // 먹잇감이 없으면 해당 플레이어를 설정
+                //먹잇감은 사냥감이자 희생자로 처리
+                if (Prey == null)
+                {
+                    Prey = player; // 먹잇감이 없으면 해당 플레이어를 설정
+                }
                 else if (Prey != player && player.CompareTag("Player")) Prey = player; // 주인공이 우선해서 먹잇감이 됨
             }
         }
@@ -179,6 +183,16 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
         // 게임 진행도 초기화
         SetProgress_EnterGame();
+
+
+        // 퀘스트 수주한 경우
+        sQuest quest = new sQuest(0, eQuestType.StartFirstGame);
+        if (QuestManager.questHashSet.Contains(quest))
+        {
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+        }
+            
     }
 
     /// <summary>
@@ -299,7 +313,17 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             // 그렇지 않으면 게임을 종료
             else
             {
-                currentProgress = eOOLProgress.num501_final;
+                // 플레이어가 둘 이상인 경우 게임을 지속
+                if (playerList.Count >= 2)
+                    currentProgress = eOOLProgress.num501_final;
+                else if (playerList.Count == 1) // 플레이어가 1명만 남은경우
+                    currentProgress = eOOLProgress.num502_EndGame;
+                else
+                {
+                    Debug.LogError("예기치 않은 처리");
+                    return;
+                }
+                    
             }
         }
         else if(currentProgress == eOOLProgress.num501_final) // 게임이 끝나고 다음 게임을 시작한 경우
@@ -558,6 +582,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
         if(isBankrupt)
         {
+            // 조커가 등장한 경우 이미 Victim이 설정되어있음
             sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt));
         }
         else
@@ -635,6 +660,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
         if (isBankrupt)
         {
+            SetVictim(Prey);
             sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt));
         }
         else

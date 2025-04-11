@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PublicSet;
+using System;
+using Unity.VisualScripting;
 
 public class QuestDescriptionPanel : MonoBehaviour
 {
@@ -13,16 +15,19 @@ public class QuestDescriptionPanel : MonoBehaviour
     bool coinDone;
     bool itemDone;
 
-    public void SetPanel(cQuestInfo questInfo)
+    public void SetPanel(cQuestInfo questInfo, Action TextSpacing)
     {
         // 판넬의 이름 변경
         questName.text = questInfo.name;
 
         // 설명리스트에서 한 문장씩 가져오고 문장 사이에 개행문자 삽입
         questDescription.text = string.Empty;
-        foreach (string description in questInfo.descriptionList)
+
+        questDescription.text += $"{questInfo.descriptionList[0]}";
+        for (int i = 1; i<questInfo.descriptionList.Count;i++)
         {
-            questDescription.text += $"{description}\n";
+            TextSpacing();
+            questDescription.text += $"\n{questInfo.descriptionList[i]}";
         }
 
 

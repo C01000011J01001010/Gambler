@@ -27,7 +27,7 @@ public class InventoryPopUp : PopUpBase<InventoryPopUp>
                 foreach (sItem item in playerItems)
                 {
                     // 아이템정보로 초기화될 객체
-                    ItemDefault itemDefault = ActiveObjList[item.id].GetComponent<ItemDefault>(); ;
+                    ItemDefault itemDefault = ActiveObjList[item.id].GetComponent<ItemDefault>();
 
                     // 아이템 종합정보를 호출
                     cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);

@@ -176,6 +176,14 @@ public class CallbackManager : Singleton<CallbackManager>
                 ()=>
                 {
                     PlayManager.Instance.StartPlayerMonologue_OnPlayerWakeUp();
+
+                    // 퀘스트를 수주한 경우
+                    sQuest quest = new sQuest(0, eQuestType.GoToSleep);
+                    if(QuestManager.questHashSet.Contains(quest))
+                    {
+                        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                        if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+                    }
                 }
             );
 
@@ -191,9 +199,14 @@ public class CallbackManager : Singleton<CallbackManager>
         GameManager.connector_InGame.iconView_Script.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
         TextWindowPopUp_Close();
 
-        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(eQuestType.LetsOpenBoxForTheFirstTime);
-        if(!questInfo.isComplete)
-            questInfo.callback_endConditionCheck();
+        // 퀘스트를 수주한 경우
+        sQuest quest = new sQuest(0, eQuestType.LetsOpenBoxForTheFirstTime);
+        if (QuestManager.questHashSet.Contains(quest))
+        {
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            if (!questInfo.isComplete) questInfo.callback_endConditionCheck();
+        }
+            
     }
 
     //6
@@ -306,6 +319,7 @@ public class CallbackManager : Singleton<CallbackManager>
             case 24: return OnHuntingTime;
             case 25: return OnPlayerBackrupt;
             case 30: return NextGame;
+            case 31: return EndGame;
 
             default: return TrashFuc;
         }
@@ -376,6 +390,11 @@ public class CallbackManager : Singleton<CallbackManager>
         CardGamePlayManager.Instance.cardGameView.PlaySequnce_StartButtonFadeIn();
     }
 
+    private void EndGame()
+    {
+        EnterCasino();
+    }
+
 
 
 
@@ -388,7 +407,7 @@ public class CallbackManager : Singleton<CallbackManager>
     {
         switch (index)
         {
-            case eItemCallback.FirstQuest : return CasinoOpen;
+            case eItemCallback.CasinoTicket : return CasinoOpen;
             case eItemCallback.EatMeal: return EatMeal;
 
             default: return TrashFuc;
@@ -401,6 +420,15 @@ public class CallbackManager : Singleton<CallbackManager>
         GameManager.Instance.NextStage();
         EventManager.Instance.SetEventMessage(stageMessageDict[currentStage]);
         EventManager.Instance.PlaySequnce_EventAnimation();
+
+        // 퀘스트를 수주한 경우
+        sQuest quest = new sQuest(0, eQuestType.UseCasinoEntryTicket);
+        if (QuestManager.questHashSet.Contains(quest))
+        {
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+        }
+            
     }
 
     
@@ -424,7 +452,6 @@ public class CallbackManager : Singleton<CallbackManager>
         {
             case eQuestType.LetsLookAroundOutside: return LetsLookAroundOutside;
             case eQuestType.LetsOpenBoxForTheFirstTime: return LetsOpenBoxForTheFirstTime;
-            case eQuestType.OpenInventory: return OpenInventory;
             case eQuestType.UseCasinoEntryTicket: return UseCasinoEntryTicket;
             case eQuestType.LearnHowToSave: return LearnHowToSave;
             case eQuestType.StartFirstGame: return StartFirstGame;
@@ -441,13 +468,9 @@ public class CallbackManager : Singleton<CallbackManager>
     public void LetsOpenBoxForTheFirstTime()
     {
         QuestManager.Instance.PlayerCompleteQuest(eQuestType.LetsOpenBoxForTheFirstTime);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.OpenInventory);
-    }
-    public void OpenInventory()
-    {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.OpenInventory);
         QuestManager.Instance.PlayerGetQuest(eQuestType.UseCasinoEntryTicket);
     }
+
     public void UseCasinoEntryTicket()
     {
         QuestManager.Instance.PlayerCompleteQuest(eQuestType.UseCasinoEntryTicket);
@@ -465,6 +488,7 @@ public class CallbackManager : Singleton<CallbackManager>
     public void GoToSleep()
     {
         QuestManager.Instance.PlayerCompleteQuest(eQuestType.GoToSleep);
+        QuestManager.Instance.PlayerGetQuest(eQuestType.Collect2000Coins);
     }
     public void Collect2000Coins()
     {

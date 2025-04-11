@@ -5,6 +5,7 @@ public class OnlyOneLivesButton : GameEnterButtonBase
 {
     public CardGameView CardGameView;
     public CardGamePlayManager cardGamePlayManager;
+    public Bed bed;
 
     public override void EnterGame()
     {
@@ -28,5 +29,17 @@ public class OnlyOneLivesButton : GameEnterButtonBase
             );
     }
 
-    
+    public override void SetPlayerCantPlayThis()
+    {
+        SetButtonCallback(
+            () =>
+            {
+                GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerCantPlayThis);
+
+                QuestManager.Instance.PlayerGetQuest(eQuestType.GoToSleep);
+            }
+
+            );
+    }
+
 }

@@ -68,7 +68,7 @@ public struct sItem
 /// <summary>
 /// 퀘스트 저장 자료구조
 /// </summary>
-public struct sQuest
+public struct sQuest : IEquatable<sQuest>
 {
     public int id; // 퀘스트 순서
     public eQuestType type; // 퀘스트 번호
@@ -106,16 +106,24 @@ public struct sQuest
         return default;
     }
 
+    public bool Equals(sQuest other)
+    {
+        return this.type == other.type;
+    }
+
     public override bool Equals(object obj)
     {
-        return obj is sQuest quest &&
-               id == quest.id &&
-               type == quest.type;
+        return obj is sQuest other && Equals(other);
+        //if (obj is sQuest)
+        //{
+        //    sQuest other = (sQuest)obj;
+        //    return Equals(other);
+        //}
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(id, type);
+        return type.GetHashCode();
     }
 
     // 생성자

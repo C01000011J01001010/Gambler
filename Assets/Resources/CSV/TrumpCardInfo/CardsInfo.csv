@@ -1,5 +1,5 @@
 index(int),name(string),cardType(Enum),number(int)
-0,조커,0,0
+0,조커,0,14
 1,스페이드 A,1,1
 2,스페이드 2,1,2
 3,스페이드 3,1,3
