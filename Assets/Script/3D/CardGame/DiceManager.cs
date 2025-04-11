@@ -1,0 +1,79 @@
+using DG.Tweening;
+using UnityEngine;
+
+public class DiceManager : MonoBehaviour
+{
+    // 에디터 연결
+    public CardGamePlayManager cardGamePlayManager;
+
+    // 자식객체 연결
+    public GameObject diceChecker;
+    public GameObject whiteDice;
+
+    // 스크립트 편집
+    int currentDiceValue;
+
+    private void Start()
+    {
+        if (cardGamePlayManager == null)
+            Debug.LogAssertion($"cardGamePlayManager == null ");
+    }
+
+    // DiceButton으로 최초 버튼콜백, 이후 GameSetting에 의해 실행
+    public void RotateDice(GameObject currentPlayer)
+    {
+        // 회전 지연시간을 랜덤으로 설정
+        float delay;
+        delay = Random.Range(1.0f, 2.0f);
+
+        // x축 회전
+        int[] randomValues = new int[3];
+        for (int i = 0; i < randomValues.Length; i++)
+        {
+            // 회전지연시간만큼 더 많이 회전하도록 만듬
+            randomValues[i] = (int)Random.Range(5f, 10f) * 90 * Mathf.RoundToInt(delay);
+            Debug.Log($"randomValues[{i}] : {randomValues[i]}");
+        }
+
+        Sequence sequence = DOTween.Sequence();
+
+        // 회전값 적용
+        sequence.Append(whiteDice.transform.DORotate(new Vector3(randomValues[0], randomValues[1], randomValues[2]), delay, RotateMode.FastBeyond360));
+
+        // 다이스 체커가 충돌하여 알아낸 값을 현재값으로 저장
+        sequence.AppendCallback(() => GetDiceValue());
+
+        // 현재값을 플레이어가 저장하고 주사위를 굴렸음을 저장함
+        sequence.AppendCallback(() => Debug.Log($"현재 주사위 값은 {currentDiceValue}입니다."));
+        CardGamePlayerBase playerScript = currentPlayer.GetComponent<CardGamePlayerBase>();
+        if(playerScript != null)
+        {
+            sequence.AppendCallback(() => playerScript.SetDiceValue(currentDiceValue));
+        }
+        else
+        {
+            Debug.LogAssertion($"playerScript == {playerScript} \n" +
+                $"주사위 값이 저장되지 않았음");
+        }
+        
+        // 주사위 값이 정해진 후 카드분배를 시작
+        sequence.AppendCallback(() => cardGamePlayManager.deckOfCards.CardDistribution(currentPlayer, currentDiceValue));
+
+
+        // Player(Me)의 경우 한번만 버튼을 누를 수 있도록 설정
+        if (currentPlayer.layer == LayerMask.NameToLayer("Me"))
+        {
+            cardGamePlayManager.cardGameView.diceButton.TryDeactivate_Button();
+        }
+
+        sequence.SetLoops(1);
+        sequence.Play();
+    }
+
+    public int GetDiceValue()
+    {
+        currentDiceValue = diceChecker.GetComponent<DiceChecker>().diceValue;
+
+        return currentDiceValue;
+    }
+}
