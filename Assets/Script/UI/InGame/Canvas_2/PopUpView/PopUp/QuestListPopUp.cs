@@ -30,10 +30,6 @@ public class QuestListPopUp : PopUpBase<QuestListPopUp>
         questContentPopUp.InitPopUp();
     }
 
-    private void OnEnable()
-    {
-        RefreshPopUp();
-    }
 
     public override void RefreshPopUp()
     {

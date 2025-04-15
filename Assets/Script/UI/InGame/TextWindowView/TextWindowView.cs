@@ -24,6 +24,7 @@ public class TextWindowView : MonoBehaviour
     public Coroutine currentCoroutine {  get; private set; }
     private cTextScriptInfo textScriptData { get; set; }
     private eTextType currentTextType { get; set; }
+    public cCharacterInfo PlayerCharacterInfo { get { return CsvManager.Instance.GetCharacterInfo(eCharacterType.Player); } }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -95,7 +96,16 @@ public class TextWindowView : MonoBehaviour
         DefaultProcess(progress);
 
         TextViewStartProcess_BackEnd();
+    }
 
+    public void StartTextWindow(eSystemGuide system)
+    {
+        TextViewStartProcess_FrontEnd();
+
+        // 상호작용을 위한 기본처리
+        DefaultProcess(system);
+
+        TextViewStartProcess_BackEnd();
     }
 
     private void OnDisable()
@@ -215,12 +225,18 @@ public class TextWindowView : MonoBehaviour
     }
     private void DefaultProcess(eOOLProgress progress)
     {
-        
-
         //현재 읽어오려는 텍스트타입 저장
         currentTextType = eTextType.OnlyOneLivesProgress;
 
         textScriptDataList = CsvManager.Instance.GetTextScript(progress);
+    }
+
+    private void DefaultProcess(eSystemGuide system)
+    {
+        //현재 읽어오려는 텍스트타입 저장
+        currentTextType = eTextType.SystemGuide;
+
+        textScriptDataList = CsvManager.Instance.GetTextScript(system);
     }
 
     public void PrintText()
@@ -333,7 +349,7 @@ public class TextWindowView : MonoBehaviour
 
             if (dialogue.Contains("{PLAYER}"))
             {
-                dialogue = dialogue.Replace("{PLAYER}", PlayManager.Instance.characterInfo.CharacterName);
+                dialogue = dialogue.Replace("{PLAYER}", PlayerCharacterInfo.CharacterName);
             }
         }
         

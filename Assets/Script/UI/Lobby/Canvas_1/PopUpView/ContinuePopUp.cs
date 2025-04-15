@@ -9,10 +9,6 @@ public class ContinuePopUp : PopUpBase<ContinuePopUp>
         InitializePool(4);
     }
 
-    private void OnEnable()
-    {
-        RefreshPopUp();
-    }
 
     public override void RefreshPopUp()
     {

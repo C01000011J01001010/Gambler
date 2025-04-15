@@ -63,9 +63,18 @@ public class PopUpView_InGame : PopUpViewBase
 
     public void GameAssistantPopUpOpen_OnlyOneLives()
     {
-        //gameObject.SetActive(true);
-        gameAssistantPopUp_OnlyOneLives.gameObject.SetActive(true);
-        gameAssistantPopUp_OnlyOneLives.transform.SetAsLastSibling();
+        if(CardGamePlayManager.Instance.cardGameView.gameObject.activeInHierarchy)
+        {
+            gameAssistantPopUp_OnlyOneLives.gameObject.SetActive(true);
+            gameAssistantPopUp_OnlyOneLives.transform.SetAsLastSibling();
+            return;
+        }
+        else
+        {
+            GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.GameAssistantNotAvailable);
+            return;
+        }
+        
     }
 
     public void SaveDataPopUpOpen()

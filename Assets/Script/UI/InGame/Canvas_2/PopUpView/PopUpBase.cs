@@ -19,17 +19,22 @@ public abstract class PopUpBase<T_Class> : MemoryPool_Queue<T_Class>
         Debug.LogWarning("PopUp은 Awake에서 싱글톤 생성 안함");
     }
 
-
-
-    private void InitAnchor()
+    protected virtual void OnEnable()
     {
-        contentTrans.anchorMin = new Vector2(0.5f, 1f);
-        contentTrans.anchorMax = new Vector2(0.5f, 1f);
+        RefreshPopUp();
+        ScrollToTop();
     }
+
+
+    //private void InitAnchor();
+    //{
+    //    contentTrans.anchorMin = new Vector2(0.5f, 1f);
+    //    contentTrans.anchorMax = new Vector2(0.5f, 1f);
+    //}
 
     protected virtual void ChangeContentRectTransform()
     {
-        InitAnchor();
+        //InitAnchor();
         //InitGridRayout();
 
         if (contentGrid != null)
@@ -56,8 +61,6 @@ public abstract class PopUpBase<T_Class> : MemoryPool_Queue<T_Class>
 
             contentTrans.sizeDelta = size;
 
-            ScrollToTop();
-
             //Debug.Log("CONTENT 맞춤설정 완료");
 
         }
@@ -69,7 +72,7 @@ public abstract class PopUpBase<T_Class> : MemoryPool_Queue<T_Class>
     }
 
     // 스크롤을 위로 올리는 함수
-    private void ScrollToTop()
+    public void ScrollToTop()
     {
         // 스크롤바를 통해 콘텐트를 제어
         //scrollRect.verticalScrollbar.value = 1;

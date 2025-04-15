@@ -12,10 +12,6 @@ public class InventoryPopUp : PopUpBase<InventoryPopUp>
         get { return ItemManager.ItemHashSet; }
     }
 
-    private void OnEnable()
-    {
-        RefreshPopUp();
-    }
 
 
     public override void RefreshPopUp()

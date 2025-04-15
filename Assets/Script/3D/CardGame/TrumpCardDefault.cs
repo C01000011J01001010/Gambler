@@ -56,7 +56,7 @@ public class TrumpCardDefault : MonoBehaviour
         }
         else
         {
-            //Debug.Log($"{gameObject.name}은 선택되지 않았음");
+            Debug.Log($"{gameObject.name}은 선택되지 않았음");
             return false;
         }
     }
@@ -123,8 +123,6 @@ public class TrumpCardDefault : MonoBehaviour
     {
         // 동일한 디버깅은 생략함
 
-        
-
         // 플레이어의 경우 선택이 제한됨
         if (player.tag == "Player")
         {
@@ -133,7 +131,7 @@ public class TrumpCardDefault : MonoBehaviour
             {
                 isSelected = true;
 
-                playerMe.TyrSetPresentedCard(this);
+                playerMe.SetPresentedCard(this);
 
                 playerMe.Set_isCompleteSelect_OnPlayTime(isSelected);
 
@@ -152,6 +150,8 @@ public class TrumpCardDefault : MonoBehaviour
         else
         {
             isSelected = true;
+            player.SetPresentedCard(this);
+            Debug.Log($"사용된 카드 : {trumpCardInfo.cardName}");
             return true;
         }
         

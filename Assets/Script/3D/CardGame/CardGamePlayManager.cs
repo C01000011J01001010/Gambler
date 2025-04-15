@@ -100,7 +100,6 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         {
             if(player.closedCardList.Count == 0)
             {
-                //먹잇감은 사냥감이자 희생자로 처리
                 if (Prey == null)
                 {
                     Prey = player; // 먹잇감이 없으면 해당 플레이어를 설정
@@ -345,6 +344,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     {
         // 첫번째 순서 찾기
         int firstPlayerIndex = 0;
+        
         for (int i = 1; i<playerList.Count; i++ )
         {
             if (playerList[firstPlayerIndex].myDiceValue > playerList[i].myDiceValue)
@@ -465,7 +465,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             Deffender.PresentedCardScript.GetSequnce_TryCardOpen(joinSequnce, Deffender);
             sequence.Join(joinSequnce);
         }
-        else Debug.LogWarning("방어자가 카드를 선택하지 못함");
+        else Debug.Log("방어자가 카드를 선택하지 못함");
 
         // 카드를 자세히 확인하기 위한 시간
         float delay = 1.5f;
@@ -551,9 +551,22 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             default: break; // 필요 없으나 만일을 대비
         }
 
+
+        // 파산한 플레이어가 늘어날 수록 코인배수 증가(1배, 2배, 4배)
+        { 
+            coinMultiple = 1;
+            int bankruptPlayerNum = 4 - playerList.Count;
+            if (bankruptPlayerNum > 0)
+            {
+                coinMultiple = coinMultiple << bankruptPlayerNum; // 2의 bankruptPlayerNum승,
+            }
+        }
+
         // 남은 플레이어 숫자의 제곱에 비례하여 이동하는 코인이 결정됨(1배, 4배, 9배로 증가)
-        coinMultiple = 1 + playerParent.childCount - playerList.Count;
-        coinMultiple *= coinMultiple;
+        {
+            //coinMultiple = 5 - playerList.Count;
+            //coinMultiple *= coinMultiple;
+        }
 
         int defaultMultiple = 10; //게임의 난이도에 따라 변경 할 수 있도록 만들까?
         ExpressionValue = resultValue * coinMultiple * defaultMultiple;
@@ -675,28 +688,34 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     public void OnPlayerBankrupt()
     {
         Debug.Log($"플레이어{Victim.characterInfo.CharacterName} 파산");
+
         if (Victim.CompareTag("Player")) 
         {
             GameManager.Instance.GameOver();
             return;
         }// 파산한게 주인공이면 뒤의 연산은 필요없음
 
-        // 리스트에서 제거하여 정산값을 조정
+        // 파산한 플레이어가 prey설정된경우 prey 클리어
+        if(Victim == Prey) ClearPrey();
+
+        // 리스트에서 제거하여 정산값을 조정 및 대상에서 제외
         playerList.Remove(Victim);
 
         // Queue에서 해당 플레이어의 순서를 제거
-        Queue<CardGamePlayerBase> tempQueue = new Queue<CardGamePlayerBase>(OrderedPlayerQueue);
-        OrderedPlayerQueue.Clear();
-        while (tempQueue.Count > 0)
-        {
-            CardGamePlayerBase player = tempQueue.Dequeue();
-            if(player == Victim)
+        { 
+            Queue<CardGamePlayerBase> tempQueue = new Queue<CardGamePlayerBase>(OrderedPlayerQueue);
+            OrderedPlayerQueue.Clear();
+            while (tempQueue.Count > 0)
             {
-                continue;
-            }
-            else
-            {
-                OrderedPlayerQueue.Enqueue(player);
+                CardGamePlayerBase player = tempQueue.Dequeue();
+                if(player == Victim)
+                {
+                    continue;
+                }
+                else
+                {
+                    OrderedPlayerQueue.Enqueue(player);
+                }
             }
         }
 

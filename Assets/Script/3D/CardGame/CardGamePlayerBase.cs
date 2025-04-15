@@ -30,7 +30,15 @@ public abstract class CardGamePlayerBase : MonoBehaviour
     /// </summary>
     public List<GameObject> revealedCardList { get; protected set; }
 
-    public Dictionary<eCardType, int> cardCountPerType { get; protected set; } // 게임 세팅을 위해 플레이어가 갖고있는 각 문양의 카드 숫자
+    /// <summary>
+    /// 게임 세팅을 위해 플레이어가 갖고있는 각 문양의 카드 숫자
+    /// </summary>
+    public Dictionary<eCardType, int> cardCountPerType_GameSetting { get; protected set; }
+
+    /// <summary>
+    /// 게임 플레이를 위해 플레이어가 갖고있는 각 문양의 카드 숫자
+    /// </summary>
+    public Dictionary<eCardType, int> cardCountPerType_OnGame { get; protected set; }
 
 
     public int coin;
@@ -72,12 +80,18 @@ public abstract class CardGamePlayerBase : MonoBehaviour
 
     public virtual void InitAttribute_ForNextOrder()
     {
-        if(cardCountPerType == null) cardCountPerType = new Dictionary<eCardType, int>();
+        if(cardCountPerType_GameSetting == null) cardCountPerType_GameSetting = new Dictionary<eCardType, int>();
+        if (cardCountPerType_OnGame == null) cardCountPerType_OnGame = new Dictionary<eCardType, int>();
+        
         foreach (eCardType type in Enum.GetValues(typeof(eCardType)))
         {
-            if(cardCountPerType.ContainsKey(type)) cardCountPerType[type] = 0;
-            else cardCountPerType.Add(type, 0);
+            if(cardCountPerType_GameSetting.ContainsKey(type)) cardCountPerType_GameSetting[type] = 0;
+            else cardCountPerType_GameSetting.Add(type, 0);
+
+            if (cardCountPerType_OnGame.ContainsKey(type)) cardCountPerType_OnGame[type] = 0;
+            else cardCountPerType_OnGame.Add(type, 0);
         }
+
         AttackTarget = null;
         PresentedCardScript = null;
     }
@@ -156,20 +170,24 @@ public abstract class CardGamePlayerBase : MonoBehaviour
 
     public void UpCountPerCardType(cTrumpCardInfo cardInfo)
     {
-        cardCountPerType[cardInfo.cardType]++;
+        cardCountPerType_GameSetting[cardInfo.cardType]++;
 
         if(gameObject.tag == "Player")
         {
-            cardGamePlayManager.cardGameView.selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType);
+            cardGamePlayManager.cardGameView.selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType_GameSetting);
         }
 
         Debug.Log($"{gameObject.name}에게 {cardInfo.cardName}카드 추가");
-        Debug.Log($"{gameObject.name}의 {cardInfo.cardType} 카드개수 : {cardCountPerType[cardInfo.cardType]}");
+        Debug.Log($"{gameObject.name}의 {cardInfo.cardType} 카드개수 : {cardCountPerType_GameSetting[cardInfo.cardType]}");
     }
 
     public void SetParent_CloseBox(GameObject card)
     {
         card.transform.SetParent(closeBox.transform);
+
+        // 손패에 문양당 남아있는 카드수 정리
+        TrumpCardDefault cardScript = card.GetComponent<TrumpCardDefault>();
+        cardCountPerType_OnGame[cardScript.trumpCardInfo.cardType]++;
 
         // 해당 카드가 리스트에 없으면 추가하고
         if (closedCardList.Contains(card) == false)
@@ -191,6 +209,10 @@ public abstract class CardGamePlayerBase : MonoBehaviour
     public void SetParent_OpenBox(GameObject card)
     {
         card.transform.SetParent(openBox.transform);
+
+        // 손패에 문양당 남아있는 카드수 정리
+        TrumpCardDefault cardScript = card.GetComponent<TrumpCardDefault>();
+        cardCountPerType_OnGame[cardScript.trumpCardInfo.cardType]--;
 
         // 해당 카드가 리스트에 없으면 추가하고
         if (openedCardList.Contains(card) == false)
@@ -388,23 +410,23 @@ public abstract class CardGamePlayerBase : MonoBehaviour
 
     public virtual bool TryDownCountPerCardType(cTrumpCardInfo cardInfo)
     {
-        if (cardCountPerType[cardInfo.cardType] > 1)
+        if (cardCountPerType_GameSetting[cardInfo.cardType] > 1)
         {
-            cardCountPerType[cardInfo.cardType]--;
+            cardCountPerType_GameSetting[cardInfo.cardType]--;
 
             // 플레이어가 TryDownCountPerCardType를 실행할 시 선택이 완료됐는지를 확인하고 버튼을 활성화함
             if (gameObject.tag == "Player")
             {
-                cardGamePlayManager.cardGameView.selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType);
+                cardGamePlayManager.cardGameView.selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType_GameSetting);
             }
             
             Debug.Log($"{gameObject.name}에게 {cardInfo.cardName}카드 제거");
-            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()} 남은 카드 수 : {cardCountPerType[cardInfo.cardType]}");
+            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()} 남은 카드 수 : {cardCountPerType_GameSetting[cardInfo.cardType]}");
             return true;
         }
         else
         {
-            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()}의 남은 카드 수 : {cardCountPerType[cardInfo.cardType]}");
+            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()}의 남은 카드 수 : {cardCountPerType_GameSetting[cardInfo.cardType]}");
             Debug.Log("카드 개수를 줄일 수 없음");
             return false;
         }
@@ -445,10 +467,9 @@ public abstract class CardGamePlayerBase : MonoBehaviour
         CardGamePlayManager.Instance.SetDeffender(null);
     }
 
-    public virtual bool TyrSetPresentedCard(TrumpCardDefault card)
+    public virtual void SetPresentedCard(TrumpCardDefault card)
     {
         PresentedCardScript = card;
-        return true;
     }
 
     
@@ -463,6 +484,7 @@ public abstract class CardGamePlayerBase : MonoBehaviour
 
         // 내 공격 끝내기
         Debug.Log($"{gameObject.name}이 공격을 실행함");
+        Debug.Log($"선택된 상대 {AttackTarget}");
 
         if (isAttack)
         {

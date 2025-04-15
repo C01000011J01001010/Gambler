@@ -1,2 +1,3 @@
-progress,Character_Enum,DialogueIcon_Index,Script,"endCallback (1, 0)",endCallback number
-101,10001,0,¾È³çÇÏ½Ê´Ï±î ¼Õ´Ô? ÀúÈñ °ÔÀÓÀÇ °£´ÜÇÑ ¼³¸íÀ» ÇØµå¸®°Ú½À´Ï´Ù.,0,
+system,Character_Enum,DialogueIcon_Index,Script,"endCallback (1, 0)",endCallback number
+101,101,0,ì•ˆë…•í•˜ì‹­ë‹ˆê¹Œ ì†ë‹˜? ì €í¬ ê²Œì„ì˜ ê°„ë‹¨í•œ ì„¤ëª…ì„ í•´ë“œë¦¬ê² ìŠµë‹ˆë‹¤.,0,
+1001,101,0,í•´ë‹¹ íŒì—…ì€ ì¹´ì§€ë…¸ê²Œì„ í™”ë©´ìœ¼ë¡œ ì „í™˜í•˜ì‹  í›„ ì´ìš© ê°€ëŠ¥í•©ë‹ˆë‹¤.,0,

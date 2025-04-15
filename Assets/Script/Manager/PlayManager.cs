@@ -28,14 +28,13 @@ public class PlayManager : Singleton<PlayManager>
     }
 
     public sPlayerStatus currentPlayerStatus { get; private set; }
-    public cCharacterInfo characterInfo {  get; private set; }
+    
     
 
     //public int current
     protected override void Awake()
     {
         base.Awake();
-        characterInfo = CsvManager.Instance.GetCharacterInfo(eCharacterType.Player);
     }
 
     public void SetPlayerStatus(sPlayerStatus value = default)

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using PublicSet;
 using System.IO;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEngine.UI;
 
 
 
@@ -14,23 +16,29 @@ public class CsvManager : Singleton<CsvManager>
     [SerializeField] private ItemTable itemPlusInfoTable;
 
     // 스크립트
-    // OnlyOneLives PlayerInfo 자료구조
+    // OnlyOneLives PlayerInfo 자료
     private Dictionary<eCharacterType,cCharacterInfo> CharacterInfo_Dict;
 
-    // 게임 스테이지에 따른 TextList를 저장하기위한 자료구조
+    // 게임 스테이지에 따른 TextList를 저장하기위한 자료
     // 접근법 : TextInfoDicts[eTextScriptFile.None][eStage.None]
     private Dictionary<eTextScriptFile , Dictionary<eStage, List<cTextScriptInfo>>> TextScriptInfoList_2dDict;
 
-    // onlyOneLives의 게임 절차에 따른 TextList를 저장하기위한 자료구조
+    // onlyOneLives의 게임 절차에 따른 TextList를 저장하기위한 자료
     private Dictionary<eOOLProgress, List<cTextScriptInfo>> TextScriptInfoList_OnlyOneLives_Dict;
 
-    // 아이템 객체 자료구조
+    // 시스템 관련 TextList를 저장하기위한 자료
+    private Dictionary<eSystemGuide, List<cTextScriptInfo>> TextScriptInfoList_SystemGuide;
+
+    // 아이템 객체 자료
     private Dictionary<eItemType, cItemInfo> ItemInfo_Dict;
 
-    // 퀘스트 객체 자료구조
+    // 퀘스트 객체 자료
     private Dictionary<eQuestType, cQuestInfo> QuestInfo_Dict;
 
+    // 게임룰 자료
+    private Dictionary<int, cOnlyOneLivesGameRule> onlyOneLivesGameRuleDict;
 
+    
 
     public Dictionary<eCharacterType, cCharacterInfo> GetCharacterInfoDict()
     {
@@ -59,6 +67,11 @@ public class CsvManager : Singleton<CsvManager>
     public List<cTextScriptInfo> GetTextScript(eOOLProgress progress)
     {
         return TextScriptInfoList_OnlyOneLives_Dict[progress];
+    }
+
+    public List<cTextScriptInfo> GetTextScript(eSystemGuide system)
+    {
+        return TextScriptInfoList_SystemGuide[system];
     }
 
     public cItemInfo GetItemInfo(eItemType itemType)
@@ -111,29 +124,24 @@ public class CsvManager : Singleton<CsvManager>
             TextScriptInfoList_OnlyOneLives_Dict.Add(progress, new List<cTextScriptInfo>());
         }
 
+        TextScriptInfoList_SystemGuide = new Dictionary<eSystemGuide, List<cTextScriptInfo>>();
+        foreach (eSystemGuide system in Enum.GetValues(typeof(eSystemGuide)))
+        {
+            // 시스템 키에 저장될 메모리 확보
+            TextScriptInfoList_SystemGuide.Add(system, new List<cTextScriptInfo>());
+        }
+
 
         // 아이템 관련
         ItemInfo_Dict = new Dictionary<eItemType, cItemInfo>();
 
         // 퀘스트 관련
         QuestInfo_Dict = new Dictionary<eQuestType, cQuestInfo>();
+
+        // 게임 룰
+        onlyOneLivesGameRuleDict = new Dictionary<int, cOnlyOneLivesGameRule>();
     }
     
-
-    //public void NewCsvFile<T>(int FileCount, int StageCount, List<T>[][] CsvFileInfoPerStage)
-    //{
-    //    for (int i = 0; i < FileCount; i++)
-    //    {
-    //        // 각 파일들에 스테이지관리를 위한 저장공간
-    //        CsvFileInfoPerStage[i] = new List<T>[StageCount];
-
-    //        for (int j = 0; j < StageCount; j++)
-    //        {
-    //            // 각 스테이지마다 갖는 데이터 공간
-    //            CsvFileInfoPerStage[i][j] = new List<T>(); // 리스트 초기화
-    //        }
-    //    }
-    //}
 
     /// <summary>
     /// callbackManager를 써야하니 start에서 시작해야함
@@ -144,12 +152,16 @@ public class CsvManager : Singleton<CsvManager>
 
         ProcessCsvOfTextScript();
         ProcessCsvOfTextScript_OnlyOneLives();
+        ProcessCsvOfTextScript_SystemGuide();
 
         ProcessCsvOfItemInfo();
         ProcessCsvOfItemDescription();
 
         ProcessCsvOfQuestInfo();
         ProcessCsvOfQuestDescription();
+
+        ProcessCsvOfOnlyOneLivesGameRule_Title();
+        ProcessCsvOfOnlyOneLivesGameRule_Description();
     }
 
     private void ProcessCsvOfCharacterInfo()
@@ -401,6 +413,140 @@ public class CsvManager : Singleton<CsvManager>
         }
     }
 
+    private void ProcessCsvOfTextScript_SystemGuide()
+    {
+        string path = Path.Combine("CSV", "TextScript", "SystemGuide");
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Path.Combine(Application.streamingAssetsPath, path);
+        }
+
+        LoadCsv<cTextScriptInfo>(path,
+            (row, info) =>
+            {
+                if (info == null) return;
+
+                int intSystem = int.MinValue;
+
+                int intField = 0;
+                int field_num = 0;
+                foreach (string field in row)
+                {
+                    switch (field_num)
+                    {
+                        case 0:
+
+                            if (int.TryParse(field, out intField))
+                            {
+                                if (Enum.IsDefined(typeof(eSystemGuide), intField))
+                                {
+                                    intSystem = intField;
+                                }
+                                else
+                                {
+                                    Debug.LogAssertion($"{path}의 \"{field}\"는 eSystemGuide에 정의되지 않았음");
+                                }
+                            }
+                            else
+                            {
+                                if (field != "")
+                                {
+                                    Debug.LogWarning($"[{field}]는 정수값이 아님");
+                                }
+                            }
+                            break;
+
+                        // 캐릭터 인덱스 처리
+                        case 1:
+                            if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
+                            {
+                                if (Enum.IsDefined(typeof(eCharacterType), intField)) // 정수값이 enum에 정의되었는지 확인
+                                {
+                                    info.characterEnum = (eCharacterType)intField;
+                                }
+                                else
+                                {
+                                    Debug.LogWarning($"[{intField}]는 {typeof(eCharacterType).Name}에 정의되지 않았음");
+                                }
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"{field}는 정수값이 아닙니다.");
+                            }
+                            break;
+
+                        // 캐릭터의 다이얼로그아이콘 인덱스 처리
+                        case 2:
+                            if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
+                            {
+                                info.DialogueIconIndex = intField;
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"[{field}]는 정수값이 아닙니다.");
+                            }
+                            break;
+                        // 스크립트 처리
+                        case 3: info.script = field; break;
+
+                        // 엔드콜백 처리
+                        case 4:
+                            if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
+                            {
+                                if (Enum.IsDefined(typeof(eHasEndCallback), intField)) // 정수값이 enum에 정의되었는지 확인
+                                {
+                                    info.hasEndCallback = (eHasEndCallback)intField;
+                                }
+                                else
+                                {
+                                    Debug.LogWarning($"{intField}는 {typeof(eHasEndCallback).Name}에 정의되지 않았음");
+                                }
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"{field}는 정수값이 아닙니다.");
+                            }
+                            break;
+                        // 엔드콜백이 존재하는 경우만(기본값 NO)
+                        case 5:
+                            if (info.hasEndCallback == eHasEndCallback.yes)
+                            {
+                                if (int.TryParse(field, out intField))
+                                {
+                                    info.endCallback = CallbackManager.Instance.CallbackList_OnlyOneLivesText(intField);
+                                }
+                                else
+                                {
+                                    Debug.LogAssertion($"[{field}]는 정수값이 아님");
+                                }
+                            }
+                            break;
+                    }
+
+                    field_num++;
+                }
+
+                // 정의되지 않은 system의 경우 무시
+                if (Enum.IsDefined(typeof(eSystemGuide), intSystem)) // system은 새로 할당받지 않았으면 int.MinValue가 저장되어있음
+                {
+                    // 각 행의 원소들을 처리한 후 스테이지별 csv파일에 삽입
+                    TextScriptInfoList_SystemGuide[(eSystemGuide)intSystem].Add(info);
+                }
+            }
+            );
+
+        foreach (eSystemGuide system in Enum.GetValues(typeof(eSystemGuide)))
+        {
+            // 각 절차에서 행을 하나씩 뽑아서 데이터를 올바르게 처리했는지 확인
+            foreach (cTextScriptInfo info in TextScriptInfoList_SystemGuide[system])
+            {
+                Debug.Log($"csv TextScript({(info as cTextScriptInfo).script}) 프린트 생략");
+                PrintProperties(info);
+            }
+        }
+    }
+
     private void ProcessCsvOfItemInfo()
     {
         //string path = "CSV/Item/Item";
@@ -644,7 +790,10 @@ public class CsvManager : Singleton<CsvManager>
             if (type == eItemType.None) continue;
 
             //Debug.Log($"csv Item({QuestInfo_Dict[type].name}) 프린트 생략");
-            PrintProperties(ItemInfo_Dict[type]);
+            if(ItemInfo_Dict.ContainsKey(type))
+            {
+                PrintProperties(ItemInfo_Dict[type]);
+            }
         }
     }
 
@@ -828,6 +977,127 @@ public class CsvManager : Singleton<CsvManager>
 
             //Debug.Log($"csv Item({QuestInfo_Dict[type].name}) 프린트 생략");
             PrintProperties(QuestInfo_Dict[type]);
+        }
+    }
+
+    private void ProcessCsvOfOnlyOneLivesGameRule_Title()
+    {
+        string path = Path.Combine("CSV", "GameRule", "onlyOneLivesTitle");
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Path.Combine(Application.streamingAssetsPath, path);
+        }
+        LoadCsv<cOnlyOneLivesGameRule>(path,
+            (row, info) =>
+            {
+                // 저장공간을 할당받지 못한 경우
+                if (info == null) return;
+
+                int Index = 0;
+                int intField = 0;
+                int field_num = 0;
+
+                // 각 행의 처리 시작
+                foreach (string field in row)
+                {
+                    switch (field_num)
+                    {
+                        case 0:
+                            if (int.TryParse(field, out intField))
+                            {
+                                Index = intField;
+                            }
+                            else
+                            {
+                                if (field != "")
+                                {
+                                    Debug.LogWarning($"[{field}]는 게임 룰 번호가 될 수 없음");
+                                }
+                            }
+                            break;
+
+                        case 1:
+                            info.Title = field;
+                            break;
+
+                        default:
+                            Debug.LogAssertion($"{field}는 잘못된 항목에 위치함");
+                            break;
+                    }
+                    field_num++;
+                }
+
+                if(onlyOneLivesGameRuleDict.ContainsKey(Index))
+                {
+                    onlyOneLivesGameRuleDict[Index] = info;
+                }
+                else
+                {
+                    onlyOneLivesGameRuleDict.Add(Index, info);
+                }
+            }
+            );
+    }
+    private void ProcessCsvOfOnlyOneLivesGameRule_Description()
+    {
+        string path = Path.Combine("CSV", "GameRule", "onlyOneLivesDescription");
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            path = Path.Combine(Application.streamingAssetsPath, path);
+        }
+        LoadCsv<cQuestInfo>(path,
+            (row, None) =>
+            {
+                int index = 0;
+                int intField = 0;
+                int field_num = 0;
+                // 각 행의 처리 시작
+                foreach (string field in row)
+                {
+                    switch (field_num)
+                    {
+                        case 0:
+                            if (int.TryParse(field, out intField))
+                            {
+                                index = intField;
+                            }
+                            else
+                            {
+                                if (field != "")
+                                {
+                                    Debug.LogWarning($"[{field}]는 게임 룰 번호가 될 수 없음");
+                                }
+                            }
+                            break;
+
+                        case 1:
+                            if (field.Contains("{newline}"))
+                            {
+                                string resultString = field.Replace("{newline}", "\n");
+                                onlyOneLivesGameRuleDict[index].DescriptionList.Add(resultString);
+                            }
+                            else
+                            {
+                                if (string.IsNullOrEmpty(field) == false)
+                                    onlyOneLivesGameRuleDict[index].DescriptionList.Add(field);
+                            }
+                            break;
+
+                        default:
+                            Debug.LogAssertion($"{field}는 잘못된 항목에 위치함");
+                            break;
+                    }
+                    field_num++;
+                }
+            }
+            );
+
+        // 처리된 데이터의 확인
+        foreach (int index in onlyOneLivesGameRuleDict.Keys)
+        {
+            PrintProperties(onlyOneLivesGameRuleDict[index]);
         }
     }
 
@@ -1062,11 +1332,7 @@ public class CsvManager : Singleton<CsvManager>
 #nullable enable
             // object? : nullable object(null값을 반환받을 수 있음)
             object? value = prop.GetValue(obj); // 속성 값 가져오기
-            if(value == null)
-            {
-                Debug.LogWarning($"value == null -> 출력할 내용이 없음");
-            }
-            else if (value is List<string>)
+            if (value is List<string>)
             {
                 List<string> list = (value as List<string>)!;
                 int i = 0;
@@ -1088,7 +1354,14 @@ public class CsvManager : Singleton<CsvManager>
             }
             else
             {
-                Debug.Log($"{prop.Name}: {value}");
+                if (value == null)
+                {
+                    Debug.LogWarning($"{prop.Name}: null");
+                }
+                else
+                {
+                    Debug.Log($"{prop.Name}: {value}");
+                }
             }
             
         }

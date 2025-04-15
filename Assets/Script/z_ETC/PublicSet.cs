@@ -43,7 +43,8 @@ namespace PublicSet
     public enum eTextType
     {
         TextScriptFile,
-        OnlyOneLivesProgress
+        OnlyOneLivesProgress,
+        SystemGuide
     }
 
     public enum eTextScriptFile
@@ -63,7 +64,7 @@ namespace PublicSet
         OutsideDoor,
         NPC_MunDuckBea_Acquaintance,
         NPC_MunDuckBea_Encounter,
-        
+
         // 카지노
         NPC_MunDuckBea_InCasino,
         NPC_Caesar,
@@ -95,13 +96,13 @@ namespace PublicSet
         num203_PlayerCantAttack,
 
         // 수비차례, computer의 경우 DefenseTrun_Player를 스킵
-        num301_DefenseTrun_Player= 301,
+        num301_DefenseTrun_Player = 301,
         num302_DefenseDone,
         num303_PlayerCantDefense,
 
 
         // 공격, 방어를 진행한 후 카드를 동시에 오픈
-        num401_CardOpenAtTheSameTime = 401, 
+        num401_CardOpenAtTheSameTime = 401,
 
         // 결과 발표
         num402_OnJokerAppear,
@@ -130,7 +131,11 @@ namespace PublicSet
 
     public enum eSystemGuide
     {
+        None = 0,
 
+        ExplainFeature = 101,
+
+        GameAssistantNotAvailable = 1001
     }
 
 
@@ -194,7 +199,7 @@ namespace PublicSet
         Collect2000Coins
     }
 
-    
+
 
     public enum eQuestCallback
     {
@@ -289,7 +294,6 @@ namespace PublicSet
         }
 
         // 스크립트에서 별도로 추가할 값들
-        public GameObject itemPrefab { get; set; }
         public UnityAction itemCallback { get; set; }
 
     }
@@ -304,8 +308,8 @@ namespace PublicSet
         public bool isRepeatable { get; set; }
 
         // 별도 관리
-        public bool isComplete {  get; set; }
-        public bool hasReceivedReward {  get; set; }
+        public bool isComplete { get; set; }
+        public bool hasReceivedReward { get; set; }
 
         public List<string> descriptionList { get; set; }
 
@@ -313,9 +317,19 @@ namespace PublicSet
         {
             descriptionList = new List<string>();
         }
-        
+
     }
 
+    public class cOnlyOneLivesGameRule
+    {
+        public string Title { get; set; }
+        public List<string> DescriptionList { get; set; }
+
+        public cOnlyOneLivesGameRule()
+        {
+            DescriptionList = new List<string>();
+        }
+    }
     public class cQuestDescription
     {
         
