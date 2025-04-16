@@ -2,12 +2,16 @@ using PublicSet;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestElementPanel : ButtonBase
+public class QuestElementPanel : Selection_ButtonBase<QuestElementPanel>
 {
     public sQuest quest;
     public cQuestInfo questInfo {  get; private set; }
-    public Text TextOfButton;
     public Text TextOfStatus;
+
+    private void Start()
+    {
+        SetButtonCallback(() => TrySelectThisButton(this));
+    }
 
     public void SetQuestdata(sQuest quest, cQuestInfo cQuest)
     {
@@ -15,9 +19,12 @@ public class QuestElementPanel : ButtonBase
         questInfo = cQuest;
     }
 
+    /// <summary>
+    /// SetpanelÆ÷ÇÔ
+    /// </summary>
     public void InitPanel()
     {
-        TextOfButton.text = questInfo.name;
+        Setpanel(questInfo.name);
 
         if (questInfo.isComplete == false)
         {

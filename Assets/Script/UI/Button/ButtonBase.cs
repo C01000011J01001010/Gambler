@@ -27,7 +27,7 @@ public abstract class ButtonBase : MonoBehaviour
     /// 콜백함수는 오로지 하나만 넣을 수 있으며, 여러 개를 넣을 시 람다함수로 여러 함수를 묶어야함
     /// </summary>
     /// <param name="callback"></param>
-    public void SetButtonCallback(UnityAction callback)
+    public virtual void SetButtonCallback(UnityAction callback)
     {
         if (button != null)
         {

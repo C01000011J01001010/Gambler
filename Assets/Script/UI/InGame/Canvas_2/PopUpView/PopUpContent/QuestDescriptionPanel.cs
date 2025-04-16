@@ -15,7 +15,8 @@ public class QuestDescriptionPanel : MonoBehaviour
     bool coinDone;
     bool itemDone;
 
-    public void SetPanel(cQuestInfo questInfo, Action TextSpacing)
+
+    public void SetPanel(cQuestInfo questInfo, Action TextSpacing = null)
     {
         // 판넬의 이름 변경
         questName.text = questInfo.name;
@@ -26,7 +27,8 @@ public class QuestDescriptionPanel : MonoBehaviour
         questDescription.text += $"{questInfo.descriptionList[0]}";
         for (int i = 1; i<questInfo.descriptionList.Count;i++)
         {
-            TextSpacing();
+            if (TextSpacing != null) TextSpacing();
+
             questDescription.text += $"\n{questInfo.descriptionList[i]}";
         }
 
@@ -76,5 +78,12 @@ public class QuestDescriptionPanel : MonoBehaviour
         }
         
         
+    }
+    public void ClearPanel()
+    {
+        questName.text = "퀘스트 제목";
+        questDescription.text = "왼쪽의 항목 클릭 시 내용을 확인하실 수 있습니다.";
+        questReward.text = "보상 내역";
+        rewardButton.TryDeactivate_Button();
     }
 }

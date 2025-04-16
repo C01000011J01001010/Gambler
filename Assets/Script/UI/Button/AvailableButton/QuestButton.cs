@@ -28,6 +28,6 @@ public class QuestButton : ButtonBase
         if (popUpView == null)
             Debug.LogAssertion("PopUpView == null");
 
-        SetButtonCallback(popUpView.QuestListPopUpOpen);
+        SetButtonCallback(popUpView.QuestPopUpOpen);
     }
 }

@@ -32,6 +32,6 @@ public class RewardButton : Deactivatable_ButtonBase
         questInfo.hasReceivedReward = true;
 
         // 정보대로 팝업을 리프레시
-        GameManager.connector_InGame.popUpView_Script.questListPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
     }
 }

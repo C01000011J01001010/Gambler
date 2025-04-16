@@ -1,13 +1,12 @@
 using UnityEngine;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine.UI;
+using System;
 
 /// <summary>
 /// 같은 종류의 버튼은 오직 한순간에 한번만 선택됨
 /// </summary>
 /// <typeparam name="T_Class">상속받는 클래스</typeparam>
-public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class : ButtonBase
+public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class : Selection_ButtonBase<T_Class>
 {
     private Image _image = null;
     protected Image image
@@ -28,15 +27,41 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
     /// </summary>
     protected static T_Class currentSelectedObj;
 
-    private void Start()
-    {
-        SetButtonCallback(TrySelectThisButton);
-    }
     private void OnDisable()
     {
         UnselectThisButton();
     }
 
-    public abstract void TrySelectThisButton();
-    public abstract void UnselectThisButton();
+    [SerializeField] protected Text buttonText;
+    public Action callback { get; private set; }
+
+    public void Setpanel(string value)
+    {
+        buttonText.text = value;
+    }
+    public void SetCallback(Action fuc)
+    {
+        callback = fuc;
+    }
+
+    public virtual void TrySelectThisButton(T_Class currentObj)
+    {
+        if (currentSelectedObj == null)
+        {
+            currentSelectedObj = currentObj;
+            image.color = Color.gray;
+            callback();
+        }
+        else
+        {
+            currentSelectedObj.UnselectThisButton();
+            TrySelectThisButton(currentObj);
+        }
+    }
+
+    public virtual void UnselectThisButton()
+    {
+        image.color = Color.white;
+        currentSelectedObj = null;
+    }
 }

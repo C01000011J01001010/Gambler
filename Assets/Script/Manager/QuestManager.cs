@@ -59,7 +59,7 @@ public class QuestManager : Singleton<QuestManager>
         questHashSet.Add(newQuest);
         Debug.Log($"Quest {questId} 수주 성공.");
 
-        GameManager.connector_InGame.popUpView_Script.questListPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
     }
 
 
@@ -84,7 +84,7 @@ public class QuestManager : Singleton<QuestManager>
         EventManager.Instance.SetEventMessage($"퀘스트\n{questInfo.name}\n성공!");
         EventManager.Instance.PlaySequnce_EventAnimation();
 
-        GameManager.connector_InGame.popUpView_Script.questListPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
     }
 
 }

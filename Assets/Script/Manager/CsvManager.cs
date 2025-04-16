@@ -68,7 +68,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         return TextScriptInfoList_OnlyOneLives_Dict[progress];
     }
-
     public List<cTextScriptInfo> GetTextScript(eSystemGuide system)
     {
         return TextScriptInfoList_SystemGuide[system];
@@ -84,7 +83,10 @@ public class CsvManager : Singleton<CsvManager>
         return QuestInfo_Dict[questType];
     }
 
-
+    public Dictionary<int, cOnlyOneLivesGameRule> GetGameRule_OnlyOneLives()
+    {
+        return onlyOneLivesGameRuleDict;
+    }
 
     protected override void Awake()
     {
@@ -1018,7 +1020,7 @@ public class CsvManager : Singleton<CsvManager>
                             break;
 
                         case 1:
-                            info.Title = field;
+                            info.Title = $"{Index.ToString()}. {field}";
                             break;
 
                         default:
@@ -1053,6 +1055,7 @@ public class CsvManager : Singleton<CsvManager>
                 int index = 0;
                 int intField = 0;
                 int field_num = 0;
+
                 // 각 행의 처리 시작
                 foreach (string field in row)
                 {

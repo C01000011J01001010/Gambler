@@ -1,22 +1,12 @@
 using PublicSet;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
+using UnityEngine.UI;
 
-public class QuestListPopUp : PopUpBase<QuestListPopUp>
+public class QuestPopUp : PopUpBase<QuestPopUp>
 {
-
-    [SerializeField] private QuestContentPopUp _questContentPopUp;
-    public QuestContentPopUp questContentPopUp
-    {
-        get
-        {
-            if(_questContentPopUp == null)
-            {
-                Debug.LogAssertion("QuestListPopUp에 QuestContentPopUp가 연결되지 않았음");
-            }
-            return _questContentPopUp;
-        }
-    }
+    [SerializeField] private QuestDescriptionPanel descriptionPanel;
 
     HashSet<sQuest> playerQuestHash
     {
@@ -27,9 +17,13 @@ public class QuestListPopUp : PopUpBase<QuestListPopUp>
     {
         base.Awake();
         InitializePool(10);
-        questContentPopUp.InitPopUp();
     }
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        descriptionPanel.ClearPanel();
+    }
 
     public override void RefreshPopUp()
     {
@@ -52,12 +46,10 @@ public class QuestListPopUp : PopUpBase<QuestListPopUp>
                         questPanel.InitPanel();
 
                         // 퀘스트 항목을 클릭시 호출
-                        questPanel.SetButtonCallback(
+                        questPanel.SetCallback(
                             () =>
                             {
-                                questContentPopUp.InitCententCellSize();
-                                questContentPopUp.descriptionPanel.SetPanel(questInfo, questContentPopUp.AddContentCellSizeY);
-                                GameManager.connector_InGame.popUpView_Script.QuestContentPopUpOpen();
+                                descriptionPanel.SetPanel(questInfo);
                             });
                     }
                     else

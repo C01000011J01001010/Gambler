@@ -10,8 +10,7 @@ public class PopUpView_InGame : PopUpViewBase
     // 아이콘 팝업
     public GameObject optionPopUp;
     public InventoryPopUp inventoryPopUp;
-    public QuestListPopUp questListPopUp;
-    public QuestContentPopUp questContentPopUp;
+    public QuestPopUp questPopUp;
     public GameAssistantPopUp_OnlyOneLives gameAssistantPopUp_OnlyOneLives;
     public SaveDataPopUp saveDataPopUp;
     public CardGameRulePopUp CardGameRulePopUp;
@@ -22,8 +21,7 @@ public class PopUpView_InGame : PopUpViewBase
     public override void MakePopUpSingleTone()
     {
         inventoryPopUp.MakeSingleTone();
-        questListPopUp.MakeSingleTone();
-        questContentPopUp.MakeSingleTone();
+        questPopUp.MakeSingleTone();
         gameAssistantPopUp_OnlyOneLives.MakeSingleTone();
         CardGameRulePopUp.MakeSingleTone();
         saveDataPopUp.MakeSingleTone();
@@ -47,19 +45,19 @@ public class PopUpView_InGame : PopUpViewBase
     }
 
     // 버튼 콜백
-    public void QuestListPopUpOpen()
+    public void QuestPopUpOpen()
     {
         //gameObject.SetActive(true);
-        questListPopUp.gameObject.SetActive(true);
-        questListPopUp.transform.SetAsLastSibling();
+        questPopUp.gameObject.SetActive(true);
+        questPopUp.transform.SetAsLastSibling();
     }
 
-    public void QuestContentPopUpOpen()
-    {
-        //gameObject.SetActive(true);
-        questContentPopUp.gameObject.SetActive(true);
-        questContentPopUp.transform.SetAsLastSibling();
-    }
+    //public void QuestContentPopUpOpen()
+    //{
+    //    //gameObject.SetActive(true);
+    //    questContentPopUp.gameObject.SetActive(true);
+    //    questContentPopUp.transform.SetAsLastSibling();
+    //}
 
     public void GameAssistantPopUpOpen_OnlyOneLives()
     {
