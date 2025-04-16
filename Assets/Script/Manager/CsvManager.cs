@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using PublicSet;
 using System.IO;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
-using UnityEngine.UI;
+using System.Collections;
 
 
 
@@ -170,11 +169,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "Character", "CharacterInfo");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
-
 
         // 데이터 처리
         LoadCsv<cCharacterInfo>(
@@ -255,10 +249,6 @@ public class CsvManager : Singleton<CsvManager>
 
             path = Path.Combine(folderPath, eFileName.ToString());
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                path = Path.Combine(Application.streamingAssetsPath, path);
-            }
 
             // 데이터 처리
             LoadTextCsv(path, eFileName);
@@ -283,10 +273,6 @@ public class CsvManager : Singleton<CsvManager>
 
         string path = Path.Combine("CSV","TextScript","OnlyOneLivesProcedure");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
 
         LoadCsv<cTextScriptInfo>(path,
             (row, info) =>
@@ -419,11 +405,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "TextScript", "SystemGuide");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
-
         LoadCsv<cTextScriptInfo>(path,
             (row, info) =>
             {
@@ -555,10 +536,6 @@ public class CsvManager : Singleton<CsvManager>
 
         string path = Path.Combine("CSV","Item","Item");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
         LoadCsv<cItemInfo>(path,
             (row, itemInfo) =>
             {
@@ -734,10 +711,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "Item", "ItemDescription");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
 
         LoadCsv<cQuestInfo>(path,
             (row, None) =>
@@ -803,10 +776,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "Quest", "Quest");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
         LoadCsv<cQuestInfo>(path,
             (row, questInfo) =>
             {
@@ -828,8 +797,10 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 questInfo.type = enumField; // 기본키
                                 questInfo.callback_endConditionCheck = CallbackManager.Instance.CallBackList_QuestCheck(enumField); // 체크
-                                questInfo.isComplete = false;
-                                questInfo.hasReceivedReward = false;
+
+                                // 로비로 씬로드시 할당되니 삭제
+                                //questInfo.isComplete = false;
+                                //questInfo.hasReceivedReward = false;
                             }
                             else
                             {
@@ -919,10 +890,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "Quest", "QuestDescription");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
         LoadCsv<cQuestInfo>(path,
             (row, None) =>
             {
@@ -986,10 +953,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "GameRule", "onlyOneLivesTitle");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
         LoadCsv<cOnlyOneLivesGameRule>(path,
             (row, info) =>
             {
@@ -1045,10 +1008,6 @@ public class CsvManager : Singleton<CsvManager>
     {
         string path = Path.Combine("CSV", "GameRule", "onlyOneLivesDescription");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = Path.Combine(Application.streamingAssetsPath, path);
-        }
         LoadCsv<cQuestInfo>(path,
             (row, None) =>
             {
@@ -1282,6 +1241,8 @@ public class CsvManager : Singleton<CsvManager>
         csvData.Clear();
 
         string fixedPath = resourceName.Replace('\\', '/');
+
+
 
         TextAsset csvFile = Resources.Load<TextAsset>(resourceName);
         if (csvFile != null)

@@ -25,11 +25,11 @@ public abstract class ImageResourceBase<T_Class,T_Enum> : Singleton<T_Class>
     {
         if (imageDict.ContainsKey(imageEnum))
         {
-            Sprite[] characterSprites = imageDict[(T_Enum)imageEnum];
-            if (MethodManager.Instance.IsIndexInRange(characterSprites, imageIndex))
+            Sprite[] itemSprites = imageDict[(T_Enum)imageEnum];
+            if (MethodManager.Instance.IsIndexInRange(itemSprites, imageIndex))
             {
                 result = true;
-                return characterSprites[imageIndex];
+                return itemSprites[imageIndex];
             }
             else
             {

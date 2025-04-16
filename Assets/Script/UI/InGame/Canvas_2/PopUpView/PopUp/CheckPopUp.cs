@@ -1,3 +1,5 @@
+using PublicSet;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum checkCase
@@ -7,8 +9,9 @@ public enum checkCase
 }
 public class CheckPopUp : SimplePopUpBase
 {
-    public CaseQuest caseQuest;
-    public void PopUpUpChange(checkCase checkCase)
+    [SerializeField] private CaseQuest caseQuest;
+
+    protected void PopUpUpChange(checkCase checkCase)
     {
         switch(checkCase)
         {
@@ -22,5 +25,31 @@ public class CheckPopUp : SimplePopUpBase
                 mainDescription.gameObject.SetActive(false);
                 break;
         }
+    }
+
+    public override void UpdateMainDescription(List<string> descriptionList)
+    {
+        PopUpUpChange(checkCase.@default);
+
+        if (descriptionList.Count > 0)
+            mainDescription.text = descriptionList[0];
+
+        // 2개 이상의 문자열인 경우 줄바꿈을 적용함
+        for (int i = 1; i < descriptionList.Count; i++)
+        {
+            mainDescription.text += $"\n{descriptionList[i]}";
+        }
+    }
+
+    public override void UpdateMainDescription(string description)
+    {
+        PopUpUpChange(checkCase.@default);
+        mainDescription.text = description;
+    }
+
+    public void RefreshPopUp(cQuestInfo questInfo)
+    {
+        PopUpUpChange(checkCase.QuestComplete);
+        caseQuest.SetPanel(questInfo);
     }
 }

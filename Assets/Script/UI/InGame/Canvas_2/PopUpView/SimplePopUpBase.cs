@@ -8,13 +8,6 @@ public abstract class SimplePopUpBase : MonoBehaviour
 
     public virtual void UpdateMainDescription(List<string> descriptionList)
     {
-        // 체크팝업 기본 업데이트
-        CheckPopUp check = this as CheckPopUp;
-        if(check != null)
-        {
-            check.PopUpUpChange(checkCase.@default);
-        }
-
         if(descriptionList.Count > 0)
             mainDescription.text = descriptionList[0];
 
@@ -27,13 +20,6 @@ public abstract class SimplePopUpBase : MonoBehaviour
 
     public virtual void UpdateMainDescription(string description)
     {
-        // 체크팝업 기본 업데이트
-        CheckPopUp check = this as CheckPopUp;
-        if (check != null)
-        {
-            check.PopUpUpChange(checkCase.@default);
-        }
-
         mainDescription.text = description;
     }
 }

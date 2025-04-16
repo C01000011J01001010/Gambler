@@ -37,7 +37,7 @@ public class PlayManager : Singleton<PlayManager>
         base.Awake();
     }
 
-    public void SetPlayerStatus(sPlayerStatus value = default)
+    public void InitPlayerStatus(sPlayerStatus value = default)
     {
         currentPlayerStatus = value;
         UpdateInterface();

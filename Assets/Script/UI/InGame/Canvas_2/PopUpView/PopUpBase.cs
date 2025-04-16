@@ -32,6 +32,7 @@ public abstract class PopUpBase<T_Class> : MemoryPool_Queue<T_Class>
     //    contentTrans.anchorMax = new Vector2(0.5f, 1f);
     //}
 
+    
     protected virtual void ChangeContentRectTransform()
     {
         //InitAnchor();

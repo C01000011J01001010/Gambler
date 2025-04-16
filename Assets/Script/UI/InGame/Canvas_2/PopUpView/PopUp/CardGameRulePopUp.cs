@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardGameRulePopUp : PopUpBase<CardGameRulePopUp>
+public class CardGameRulePopUp : PopUpBase_FullScreen<CardGameRulePopUp>
 {
     [SerializeField]private Text description;
 

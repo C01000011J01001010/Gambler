@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class CaseQuest : MonoBehaviour
 {
-    public CheckPopUp checkPopUp;
-
-    public Text questNameText;
     public GameObject rewardCoin;
     public GameObject rewardItem;
 
@@ -16,30 +13,32 @@ public class CaseQuest : MonoBehaviour
     
 
 
-    public void SetPanel(cQuestInfo quest)
+    public void SetPanel(cQuestInfo questInfo)
     {
-        checkPopUp.PopUpUpChange(checkCase.QuestComplete);
-
-        // 패널에 보일 퀘스트명을 수정
-        questNameText.text = quest.name;
-
         // 코인 보상이 있을경우 활성화
-        if (quest.rewardCoin == 0) rewardCoin.SetActive(false);
+        if (questInfo.rewardCoin == 0) rewardCoin.SetActive(false);
         else
         {
             rewardCoin.SetActive(true);
-            coinNum.text = $"x{quest.rewardCoin.ToString()}";
-            PlayManager.Instance.AddPlayerMoney(quest.rewardCoin);
+            coinNum.text = $"x{questInfo.rewardCoin.ToString()}";
         }
         
         // 아이템 보상이 있을경우 활성화
-        if(quest.rewardItemType == eItemType.None) rewardItem.SetActive(false);
+        if(questInfo.rewardItemType == eItemType.None) rewardItem.SetActive(false);
         else
         {
             rewardItem.SetActive(true);
-            cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(quest.rewardItemType);
+            cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(questInfo.rewardItemType);
+
+            // 아이템 이미지 설정
+            Sprite itemSprite = ItemImageResource.Instance.TryGetImage(itemInfo.type, 0, out bool result);
+            if (result)
+            {
+                itemImage.sprite = itemSprite;
+            }
+
+            // 아이템 이름 설정
             itemName.text = $"{itemInfo.name}";
-            ItemManager.Instance.PlayerGetItem(quest.rewardItemType);
         }
 
     }

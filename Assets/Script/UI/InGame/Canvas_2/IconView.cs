@@ -35,6 +35,7 @@ public class IconView : MonoBehaviour
         {
             switch(OpenedIconCount)
             {
+                case 0: Debug.Log("뉴비 등장"); break;
                 case 1:
                     Destroy(inventory_Lock);
                     inventory_Lock = null;

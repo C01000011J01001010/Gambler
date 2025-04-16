@@ -2,20 +2,21 @@ using PublicSet;
 using System;
 using UnityEngine;
 
-public class SaveDataPopUp : PopUpBase<SavedPlayerDataPanel>
+public class SaveDataPopUp : PopUpBase_FullScreen<SavedPlayerDataPanel>
 {
+    int count = 0;
     protected override void Awake()
     {
-        InitializePool(4);
-    }
-    private void Start()
-    {
-        RefreshPopUp();
+        // None을 제외한 개수
+        count = Enum.GetValues(typeof(ePlayerSaveKey)).Length;
+        if(Enum.IsDefined(typeof(ePlayerSaveKey), "None")) count--;
+
+        InitializePool(count);
     }
 
     public override void RefreshPopUp()
     {
-        RefreshPopUp(4,
+        RefreshPopUp(count,
             () =>
             {
                 int index = 0;
@@ -36,4 +37,6 @@ public class SaveDataPopUp : PopUpBase<SavedPlayerDataPanel>
                 }
             });
     }
+
+    
 }

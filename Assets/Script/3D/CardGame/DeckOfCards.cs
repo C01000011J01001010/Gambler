@@ -58,10 +58,6 @@ public class DeckOfCards : MonoBehaviour
 
         string path = System.IO.Path.Combine("CSV","TrumpCardInfo","CardsInfo");
 
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            path = System.IO.Path.Combine(Application.streamingAssetsPath, path);
-        }
 
         CsvManager.Instance.LoadCsv<cTrumpCardInfo>(path,
             (row, trumpCardInfo) => // trumpCard는 컴포넌트로 쓰일 스크립트

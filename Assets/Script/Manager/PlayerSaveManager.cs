@@ -386,6 +386,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         if (string.IsNullOrEmpty(savedData))
         {
             Debug.LogWarning("저장된 데이터가 없음 : LoadItems");
+            ItemManager.ItemHashSet.Clear();
             return new HashSet<sItem>();
         }
 
@@ -428,6 +429,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         Debug.Log($"savedData : {savedData}");
         if (string.IsNullOrEmpty(savedData))
         {
+            QuestManager.questHashSet.Clear();
             return new HashSet<sQuest>();
         }
 
@@ -509,17 +511,18 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
     }
     public sPlayerStatus LoadPlayerStatus(ePlayerSaveKey saveKey)
     {
-        //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
+        
+
         string savedData = LoadData(saveKey.ToString() + defaultSaveKey_PlayerStatus, string.Empty);
+        
 
         Debug.Log($"savedData : {savedData}");
         if (string.IsNullOrEmpty(savedData))
         {
-            Debug.LogWarning("데이터가 비었음 : sPlayerStatus");
+            Debug.Log("데이터가 비었음 : sPlayerStatus");
             return sPlayerStatus.defaultData;
         }
 
-        // id : serail
         sPlayerStatus playerStatus = sPlayerStatus.DataSplit(savedData);
 
         // 데이터가 잘못된경우 패스
@@ -537,17 +540,11 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         int savedData = LoadData(saveKey.ToString() + defaultSaveKey_OpenedIconCount, 0);
 
         Debug.Log($"savedData : {savedData}");
-        if (savedData == 0)
-        {
-            Debug.LogWarning("데이터가 비었음 : LoadOpenedIconCount");
-            return savedData;
-        }
-        else
-        {
-            Debug.Log("데이터 로딩 성공 : LoadOpenedIconCount");
-            GameManager.connector_InGame.iconView_Script.SetOpendIconCount(savedData);
-            return savedData;
-        }
+        if (savedData == 0) Debug.LogWarning("데이터가 비었음 : LoadOpenedIconCount");
+        else Debug.Log("데이터 로딩 성공 : LoadOpenedIconCount");
+
+        GameManager.connector_InGame.iconView_Script.SetOpendIconCount(savedData);
+        return savedData;
     }
 
     

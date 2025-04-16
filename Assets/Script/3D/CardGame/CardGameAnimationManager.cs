@@ -1,6 +1,4 @@
 using DG.Tweening;
-using System;
-using UnityEditor.Animations;
 using UnityEngine;
 
 public class CardGameAnimationManager : Singleton<CardGameAnimationManager>

@@ -267,8 +267,12 @@ public class GameManager : Singleton<GameManager>
         // 디데이는 30일부터 시작해서 0이 되면 게임이 종료됨
         SetRemainingPeriod(30);
 
-        // 코인을 0으로 초기화
-        PlayManager.Instance.SetPlayerStatus();
+        // 기본값으로 설정
+        PlayManager.Instance.InitPlayerStatus();
+        SetStage(eStage.Stage1);
+        connector_InGame.iconView_Script.SetOpendIconCount(0);
+        ItemManager.ItemHashSet.Clear();
+        QuestManager.questHashSet.Clear();
 
         connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
         SetStage(eStage.Stage1);
@@ -286,16 +290,17 @@ public class GameManager : Singleton<GameManager>
         SetRemainingPeriod(PlayerSaveManager.Instance.LoadRemainingPeriod(currentPlayerSaveKey));
 
         // 플레이어 정보 불러오기
-        PlayManager.Instance.SetPlayerStatus(
-            PlayerSaveManager.Instance.LoadPlayerStatus(currentPlayerSaveKey)
-            );
-
-        connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
+        sPlayerStatus playerStatus =  PlayerSaveManager.Instance.LoadPlayerStatus(currentPlayerSaveKey);
+        PlayManager.Instance.InitPlayerStatus(playerStatus);
         PlayerSaveManager.Instance.LoadStage(currentPlayerSaveKey); // 여기서 데이터 Set함
         PlayerSaveManager.Instance.LoadOpenedIconCount(currentPlayerSaveKey); // 여기서 Set함
         PlayerSaveManager.Instance.LoadItems(currentPlayerSaveKey);
         PlayerSaveManager.Instance.LoadQuests(currentPlayerSaveKey);
 
+        
+        
+
+        connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
         SceneLoadView(
             () =>
             {
@@ -325,7 +330,19 @@ public class GameManager : Singleton<GameManager>
         switch (scene.buildIndex)
         { 
             case 0: SetCurrentScene(eScene.Title);  break;
-            case 1: SetCurrentScene(eScene.Lobby);  break;
+            case 1: 
+                {
+                    SetCurrentScene(eScene.Lobby);
+                    // 퀘스트는 퀘스트 정보도 함께 초기화
+                    foreach (eQuestType type in Enum.GetValues(typeof(eQuestType)))
+                    {
+                        if (type == eQuestType.None) continue;
+
+                        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(type);
+                        questInfo.isComplete = false; questInfo.hasReceivedReward = false;
+                    }
+                }
+                break;
             case 2:
                 {
                     SetCurrentScene(eScene.InGame); 

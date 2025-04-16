@@ -4,25 +4,25 @@ using UnityEngine;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
-public class QuestPopUp : PopUpBase<QuestPopUp>
+public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
 {
-    [SerializeField] private QuestDescriptionPanel descriptionPanel;
-
+    [SerializeField] protected QuestDescriptionPanel descriptionPanel;
+    
     HashSet<sQuest> playerQuestHash
     {
         get { return QuestManager.questHashSet; }
     }
-
-    protected override void Awake()
-    {
-        base.Awake();
-        InitializePool(10);
-    }
+    
 
     protected override void OnEnable()
     {
         base.OnEnable();
         descriptionPanel.ClearPanel();
+    }
+    protected override void Awake()
+    {
+        base.Awake();
+        InitializePool(10);
     }
 
     public override void RefreshPopUp()
