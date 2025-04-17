@@ -113,9 +113,14 @@ public class IconView : MonoBehaviour
     private void SetPos()
     {
         OutOfScreen_anchoredPos = rectTrans.rect.size;
-        OutOfScreen_anchoredPos.x = OutOfScreen_anchoredPos.x - OutOfScreen_anchoredPos.y;
-        OutOfScreen_anchoredPos.y = -(OutOfScreen_anchoredPos.y/2);
 
+        // 아이콘박스 1개만큼의 x축 길이를 제외 -> 화살표 아이콘을 화면에 항상 보이게 만듬
+        OutOfScreen_anchoredPos.x = OutOfScreen_anchoredPos.x - OutOfScreen_anchoredPos.y;
+
+        // 상단으로부터 절반정도 아래로 내려감
+        OutOfScreen_anchoredPos.y = -(OutOfScreen_anchoredPos.y/2);
+        
+        // 아이콘뷰가 센터에 오는 위치는 앵커기준으로 y축만 변화된 값
         Center_anchoredPos = OutOfScreen_anchoredPos;
         Center_anchoredPos.x = 0f;
 
@@ -145,7 +150,7 @@ public class IconView : MonoBehaviour
         PlaySequnce_IconViewProcess(OutOfScreen_anchoredPos, false);
     }
 
-    private void PlaySequnce_IconViewProcess(Vector3 tragetPos ,bool boolActive, Sequence sequencePlus = null)
+    private void PlaySequnce_IconViewProcess(Vector3 tragetAnchoredPos ,bool boolActive, Sequence sequencePlus = null)
     {
         // 변수 초기화
         isIconViewOpen = boolActive;
@@ -161,7 +166,7 @@ public class IconView : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
 
         // iconView가 움직이고 iconView의 온오프 버튼의 처리
-        sequence.Append(rectTrans.DOAnchorPos(tragetPos, ViewOpenDelay))
+        sequence.Append(rectTrans.DOAnchorPos(tragetAnchoredPos, ViewOpenDelay))
                 .AppendCallback(() => iconViewCloseButton.SetActive(boolActive));
 
         // 아이콘 뷰가 움직인 후 추가적인 처리가 필요하면 sequence에 추가

@@ -10,14 +10,13 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
     public PlayerMe playerMe;
 
     // 스크립트 편집
-    float cardWidth;
+    protected RectTransform buttonRectTrans {  get; private set; }
     public List<CardSelectButton> cardSelectButtonList {  get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-
-        cardWidth = prefab.GetComponent<RectTransform>().sizeDelta.x;
+        buttonRectTrans = prefab.GetComponent<RectTransform>();
         cardSelectButtonList = new List<CardSelectButton>();
         InitializePool(6);
     }
@@ -85,15 +84,18 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
         {
             Transform card = cardsParent.GetChild(i);
 
-            // 부모객체를 중심으로 위치 설정
+            // 부모 앵커를 중심으로 위치 설정
             float offset = (cardCount % 2 == 0) ? (i - cardCount / 2 + 0.5f) : (i - cardCount / 2);
-            Vector3 pos = transform.position;
-            pos.x += offset * cardWidth * 1.1f;
-            pos.y += -300;
+            Vector2 AnchoredPos = Vector2.zero;
+
+            AnchoredPos.x += offset * buttonRectTrans.rect.size.x * 1.1f;
+            AnchoredPos.y += -buttonRectTrans.rect.size.y;
 
             // 카드버튼을 정해진 위치에 활성화
             // CardSelectButton의 Enable에 의해 버튼은 항상 ON color임
-            GameObject obj = GetObject(pos);
+            GameObject obj = GetObject();
+            obj.GetComponent<RectTransform>().anchoredPosition = AnchoredPos;
+
             Debug.Log($"{i + 1}번 카드버튼 생성");
 
             // 버튼과 카드 연결

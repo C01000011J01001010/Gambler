@@ -39,11 +39,20 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
     {
         buttonText.text = value;
     }
+
+    /// <summary>
+    /// SetButtonCallback대신 해당 함수를 사용해야함
+    /// </summary>
+    /// <param name="fuc"></param>
     public void SetCallback(Action fuc)
     {
         callback = fuc;
     }
 
+    /// <summary>
+    /// 각 자식클래스의 start에서 호출되어야함
+    /// </summary>
+    /// <param name="currentObj"></param>
     public virtual void TrySelectThisButton(T_Class currentObj)
     {
         if (currentSelectedObj == null)

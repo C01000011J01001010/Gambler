@@ -10,6 +10,7 @@ public class CardGameView : MonoBehaviour
     public PlayerInterface_CardGame playerInterface;
     public CardGamePlayManager cardGamePlayManager;
     public CardScreenButton cardScreenButton;
+    public CardScreenBackGround cardScreenBackGround;
     public DiceButton diceButton;
     public SelectCompleteButton selectCompleteButton;
     public CasinoView casinoView;
@@ -20,12 +21,6 @@ public class CardGameView : MonoBehaviour
     public DeckOfCards deckOfCards;
 
     // 스크립트 편집
-    
-    private bool isCardScreenInCenter;
-    private Vector3 CenterPos;
-    
-    private Vector3 CardScreen_OutOfMainScreenPos;
-
     private Vector3 StartButtonScaleOrigin;
 
     public void InitAttribute()
@@ -37,10 +32,7 @@ public class CardGameView : MonoBehaviour
 
     private void Awake()
     {
-        isCardScreenInCenter = false;
-        CenterPos = transform.position;
         
-        CardScreen_OutOfMainScreenPos = SubScreen_Card.transform.position;
 
         if (cardGamePlayManager == null)
             Debug.LogAssertion($"cardGamePlayManager == null ");
@@ -133,41 +125,6 @@ public class CardGameView : MonoBehaviour
     public void ReturnCasino()
     {
         CallbackManager.Instance.EnterCasino();
-    }
-
-    public float GetSequnce_CardScrrenOpen(Sequence sequence)
-    {
-        float delay = 1.0f;
-        float returnDelay = 0;
-
-        // 스크린을 센터로 불러오는 경우
-        if (isCardScreenInCenter == false)
-        {
-            isCardScreenInCenter = true;
-            cardScreenButton.SetButtonCallback(cardScreenButton.subScreenClose);
-            sequence.Append(SubScreen_Card.transform.DOMove(CenterPos, delay));
-            returnDelay += delay;
-        }
-
-        return returnDelay;
-    }
-
-    public float GetSequnce_CardScrrenClose(Sequence sequence)
-    {
-        Debug.Log("GetSequnce_CardScrrenClose 실행");
-        float delay = 1.0f;
-        float returnDelay = 0;
-
-        // 스크린을 밖으로 빼는 경우
-        if (isCardScreenInCenter == true)
-        {
-            isCardScreenInCenter = false;
-            cardScreenButton.SetButtonCallback(cardScreenButton.subScreenOpen);
-            sequence.Append(SubScreen_Card.transform.DOMove(CardScreen_OutOfMainScreenPos, delay));
-            returnDelay += delay;
-        }
-
-        return returnDelay;
     }
 
 }

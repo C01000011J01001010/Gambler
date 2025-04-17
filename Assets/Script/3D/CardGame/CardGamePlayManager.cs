@@ -14,6 +14,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     // 에디터 연결
     public Transform playerParent;
     public CardGameView cardGameView;
+    
 
     public PlayerMe playerMe;
     public CardManager cardManager;

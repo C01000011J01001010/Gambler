@@ -9,6 +9,11 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
     public List<PlayerEtc> players {  get; private set; } 
     private List<int> SelectedIndex;
 
+    private void OnEnable()
+    {
+        // 팝업의 용도를 설명
+        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.HowToUseGameAssistant_OnlyOneLives);
+    }
 
     public void InitPlayerList()
     {
@@ -31,6 +36,10 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
         else SelectedIndex.Clear();
     }
 
+
+    /// <summary>
+    /// 게임 시작시 오직 한번만 호출되어야함
+    /// </summary>
     public override void RefreshPopUp()
     {
         PreCheck();

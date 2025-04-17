@@ -2,35 +2,29 @@ using PublicSet;
 using System;
 using UnityEngine;
 
-public class ContinuePopUp : PopUpBase<ContinuePopUp>
+public class ContinuePopUp : DataManagePopUp<ContinuePopUp>
 {
-    protected override void Awake()
-    {
-        InitializePool(4);
-    }
+    //public override void RefreshPopUp()
+    //{
+    //    RefreshPopUp(DataCount,
+    //        () =>
+    //        {
+    //            int index = 0;
+    //            foreach (ePlayerSaveKey saveKey in Enum.GetValues(typeof(ePlayerSaveKey)))
+    //            {
+    //                if (saveKey == ePlayerSaveKey.None) continue;
 
+    //                SavedPlayerDataPanel panel = ActiveObjList[index++].GetComponent<SavedPlayerDataPanel>();
+    //                if (panel != null)
+    //                {
+    //                    panel.SetPanel(saveKey);
+    //                }
+    //                else
+    //                {
+    //                    Debug.LogAssertion($"{gameObject.name}의 스크립트 확인 바람");
+    //                }
 
-    public override void RefreshPopUp()
-    {
-        RefreshPopUp(4,
-            () =>
-            {
-                int index = 0;
-                foreach (ePlayerSaveKey saveKey in Enum.GetValues(typeof(ePlayerSaveKey)))
-                {
-                    if (saveKey == ePlayerSaveKey.None) continue;
-
-                    SavedPlayerDataPanel panel = ActiveObjList[index++].GetComponent<SavedPlayerDataPanel>();
-                    if (panel != null)
-                    {
-                        panel.SetPanel(saveKey);
-                    }
-                    else
-                    {
-                        Debug.LogAssertion($"{gameObject.name}의 스크립트 확인 바람");
-                    }
-
-                }
-            });
-    }
+    //            }
+    //        });
+    //}
 }

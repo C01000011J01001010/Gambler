@@ -99,9 +99,10 @@ public class PlayerEtc : CardGamePlayerBase
         }
 
         TrumpCardDefault selectedCard = null;
-        if(isAttack)
+
+        // 먹잇감이 있으면 내 카드중 값이 가장 큰 것을 선택
+        if (isAttack)
         {
-            // 먹잇감이 있으면 내 카드중 값이 가장 큰 것을 선택
             if(CardGamePlayManager.Instance.Prey != null)
             {
                 selectedCard = closedCardList[0].GetComponent<TrumpCardDefault>();
@@ -141,57 +142,54 @@ public class PlayerEtc : CardGamePlayerBase
 
                 if (selectedCard.TrySelectThisCard_OnPlayTime(this)) return;
             }
+        }
 
-            // 상대의 손패중에 공개된 카드를 우선해서 선택
-            TrumpCardDefault revealedCardScript = null;
+        // 그렇지 않으면 상대의 손패중에 공개된 카드를 고려하여 선택
+        TrumpCardDefault revealedCardScript = null;
+
+        // 공격
+        if (isAttack)
+        {
             foreach (GameObject revealedCard in AttackTarget.revealedCardList)
             {
                 revealedCardScript = revealedCard.GetComponent<TrumpCardDefault>();
                 foreach (var myCard in closedCardList)
                 {
                     selectedCard = myCard.GetComponent<TrumpCardDefault>();
+
+                    // 상대 패에 확인된 카드가 내 카드와 문양이 같으면 선택
                     if (revealedCardScript.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType ||
-                        revealedCardScript.trumpCardInfo.cardValue == selectedCard.trumpCardInfo.cardValue)
+                    revealedCardScript.trumpCardInfo.cardValue == selectedCard.trumpCardInfo.cardValue)
                     {
                         if (selectedCard.TrySelectThisCard_OnPlayTime(this)) return;
                     }
+
                 }
             }
         }
         
 
         // 공격 or 수비 : 조커가 있는 경우 조커를 선택
+        // 공격할 때는 조커를 아끼지만 수비할 때는 카운터용으로 우선해서 사용
         foreach (var myCard in closedCardList)
         {
             selectedCard = myCard.GetComponent<TrumpCardDefault>();
-            if (selectedCard.trumpCardInfo.cardType == PublicSet.eCardType.Joker)
-            {
-                if(selectedCard.TrySelectThisCard_OnPlayTime(this)) return;
-            }
+            
         }
 
-        // 조커도 없는 경우 감에 의존하여
-        if (isAttack)
+        // 수비
+        if (!isAttack)
         {
-            // 상대의 오픈패 중에 내 수중에 있는 카드와 같은 타입이 있다면 해당 카드를 선택
-            TrumpCardDefault OpenedCardOfTarget = null;
-            foreach (var OpenedCardObjOfTarget in AttackTarget.openedCardList)
+            foreach (GameObject revealedCard in AttackTarget.revealedCardList)
             {
-                OpenedCardOfTarget = OpenedCardObjOfTarget.GetComponent<TrumpCardDefault>();
-
-                // 오픈된 카드의 타입이 상대의 손패에 없는 경우
-                // 카드를 공격에 사용하고 실패한 케이스에 해당함
-                if (AttackTarget.cardCountPerType_OnGame[OpenedCardOfTarget.trumpCardInfo.cardType] == 0)
-                {
-                    Debug.Log("해당카드의 타입은 이미 전부 오픈되었음");
-                    continue; 
-                }
-
-                // 오픈된 카드와 같은 문양이 아직 손패에 있는 경우
+                revealedCardScript = revealedCard.GetComponent<TrumpCardDefault>();
                 foreach (var myCard in closedCardList)
                 {
                     selectedCard = myCard.GetComponent<TrumpCardDefault>();
-                    if (OpenedCardOfTarget.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType) // 이 경우 숫자가 같은 것은 의미 없음
+
+                    // 상대 패에 확인된 카드가 내 카드와 문양도 숫자도 같지 않으면 선택
+                    if (revealedCardScript.trumpCardInfo.cardType != selectedCard.trumpCardInfo.cardType &&
+                    revealedCardScript.trumpCardInfo.cardValue != selectedCard.trumpCardInfo.cardValue)
                     {
                         if (selectedCard.TrySelectThisCard_OnPlayTime(this)) return;
                     }
@@ -199,6 +197,35 @@ public class PlayerEtc : CardGamePlayerBase
             }
         }
 
+
+        //// 조커도 없는 경우(공격)
+        //if (isAttack)
+        //{
+        //    // 상대의 오픈패 중에 내 수중에 있는 카드와 같은 타입이 있다면 해당 카드를 선택
+        //    TrumpCardDefault OpenedCardOfTarget = null;
+        //    foreach (var OpenedCardObjOfTarget in AttackTarget.openedCardList)
+        //    {
+        //        OpenedCardOfTarget = OpenedCardObjOfTarget.GetComponent<TrumpCardDefault>();
+
+        //        // 오픈된 카드의 타입이 상대의 손패에 없는 경우
+        //        // 카드를 공격에 사용하고 실패한 케이스에 해당함
+        //        if (AttackTarget.cardCountPerType_OnGame[OpenedCardOfTarget.trumpCardInfo.cardType] == 0)
+        //        {
+        //            Debug.Log("해당카드의 타입은 이미 전부 오픈되었음");
+        //            continue;
+        //        }
+
+        //        // 오픈된 카드와 같은 문양이 아직 손패에 있는 경우
+        //        foreach (var myCard in closedCardList)
+        //        {
+        //            selectedCard = myCard.GetComponent<TrumpCardDefault>();
+        //            if (OpenedCardOfTarget.trumpCardInfo.cardType == selectedCard.trumpCardInfo.cardType) // 이 경우 숫자가 같은 것은 의미 없음
+        //            {
+        //                if (selectedCard.TrySelectThisCard_OnPlayTime(this)) return;
+        //            }
+        //        }
+        //    }
+        //}
 
         // 카드 선택을 못한 경우 랜덤으로 설정
         int randomCardIndex;

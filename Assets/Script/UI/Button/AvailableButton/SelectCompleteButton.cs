@@ -86,11 +86,14 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
     {
         Debug.Log("CompleteCardSelect_OnStartTime 실행");
 
+        // 내카드 보기 비활성화
+        CardGamePlayManager.Instance.cardGameView.cardScreenButton.TryDeactivate_Button();
+
         // 애니메이션 실행
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
-        CardGamePlayManager.Instance.cardGameView.GetSequnce_CardScrrenClose(sequence);
+        CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
 
         // 카드 이동 및 공개
         CardGameAnimationManager.Instance.GetSequnce_ChooseCardsToReveal_Aniamaition(sequence);
@@ -108,6 +111,9 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
     {
         Debug.Log($"CompleteCardSelect_OnAttack_Or_OnDeffence 실행");
 
+        // 내카드 보기 비활성화
+        CardGamePlayManager.Instance.cardGameView.cardScreenButton.TryDeactivate_Button();
+
         // 역할이 끝난 게임어시스턴트의 선택기능 종료
         GameAssistantPopUp_OnlyOneLives.Instance.PlaceRestrictionToAllSelections();
 
@@ -115,7 +121,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
-        CardGamePlayManager.Instance.cardGameView.GetSequnce_CardScrrenClose(sequence);
+        CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
 
         // 카드 제시하기
         playerMe.GetSequnce_PresentCard(sequence,playerMe.isAttack);

@@ -3,19 +3,21 @@ using DG.Tweening;
 public class PlayerInterface_CardGame : MonoBehaviour
 {
     //에디터
+    public RectTransform rectTransform;
     public CardScreenButton cardScreenButton;
     public DiceButton diceButton;
     public GameObject SubScreen_Dice;
 
     //스크립트
-    private Vector3 InScreenPos;
-    private Vector3 OutOfScreenPos;
+    private Vector2 InScreenAnchoredPos;
+    private Vector2 OutOfScreenAnchoredPos;
+    private Vector2 rectSize;
     float delay = 1.0f;
+    
 
     private void Awake()
     {
-        InScreenPos = transform.position;
-        OutOfScreenPos = transform.position + Vector3.right * 300;
+        SetPos();
     }
 
     private void Start()
@@ -36,9 +38,21 @@ public class PlayerInterface_CardGame : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    private void SetPos()
     {
-        
+        // 현재 위치를 내부에서의 위치로 결정
+        InScreenAnchoredPos = rectTransform.anchoredPosition;
+
+        // 박스의 x축만큼 이동하여 화면에서 완전히 사라지도록 좌표를 결정
+        rectSize = rectTransform.rect.size;
+        OutOfScreenAnchoredPos = rectTransform.anchoredPosition;
+        OutOfScreenAnchoredPos.x = rectSize.x;
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (rectSize != rectTransform.rect.size) 
+            SetPos();
     }
 
     private void DiceSetAcive(bool value)
@@ -50,7 +64,7 @@ public class PlayerInterface_CardGame : MonoBehaviour
     public void InitInterface()
     {
         // 활성화되면 밖에서 대기
-        transform.position = OutOfScreenPos;
+        rectTransform.anchoredPosition = OutOfScreenAnchoredPos;
 
         cardScreenButton.TryDeactivate_Button();
         diceButton.TryDeactivate_Button();
@@ -89,24 +103,10 @@ public class PlayerInterface_CardGame : MonoBehaviour
 
     public void GetSequnce_InterfaceOn(Sequence sequence)
     {
-        sequence.Append(transform.DOMove(InScreenPos, delay));
-    }
-    public void PlaySequnce_InterfaceOn()
-    {
-        Sequence sequence = DOTween.Sequence();
-        GetSequnce_InterfaceOn(sequence);
-        sequence.SetLoops(1);
-        sequence.Play();
+        sequence.Append(rectTransform.DOAnchorPos(InScreenAnchoredPos, delay));
     }
     public void GetSequnce_InterfaceOff(Sequence sequence)
     {
-        sequence.Append(transform.DOMove(OutOfScreenPos, delay));
-    }
-    public void PlaySequnce_InterfaceOff()
-    {
-        Sequence sequence = DOTween.Sequence();
-        GetSequnce_InterfaceOff(sequence);
-        sequence.SetLoops(1);
-        sequence.Play();
+        sequence.Append(rectTransform.DOAnchorPos(OutOfScreenAnchoredPos, delay));
     }
 }

@@ -18,9 +18,10 @@ public class CardGameRulePopUp : PopUpBase_FullScreen<CardGameRulePopUp>
         } 
     }
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
+        RefreshPopUp();
+        ScrollToTop();
         description.text = "왼쪽의 항목 클릭 시 내용을 확인하실 수 있습니다.";
     }
 

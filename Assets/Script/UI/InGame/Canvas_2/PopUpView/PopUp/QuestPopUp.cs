@@ -14,9 +14,10 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
     }
     
 
-    protected override void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
+        RefreshPopUp();
+        ScrollToTop();
         descriptionPanel.ClearPanel();
     }
     protected override void Awake()

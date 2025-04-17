@@ -1287,48 +1287,49 @@ public class CsvManager : Singleton<CsvManager>
     // 프로퍼티가 설정된 데이터멤버만 출력됨
     public void PrintProperties(object obj)
     {
-        Type type = obj.GetType(); // 객체의 타입 가져오기
-        PropertyInfo[] properties = type.GetProperties(); // 모든 속성 가져오기
-        foreach (PropertyInfo prop in properties)
-        {
+    //    { 
+    //        Type type = obj.GetType(); // 객체의 타입 가져오기
+    //        PropertyInfo[] properties = type.GetProperties(); // 모든 속성 가져오기
+    //        foreach (PropertyInfo prop in properties)
+    //        {
 
-
-#nullable enable
-            // object? : nullable object(null값을 반환받을 수 있음)
-            object? value = prop.GetValue(obj); // 속성 값 가져오기
-            if (value is List<string>)
-            {
-                List<string> list = (value as List<string>)!;
-                int i = 0;
-                Debug.Log($"{prop.Name} 개수 {list.Count}");
-                foreach(string a in list)
-                {
-                    Debug.Log($"{prop.Name}[{i++}]: {a}");
-                }
-            }
-            else if(value is List<UnityAction>)
-            {
-                List<UnityAction> list = (value as List<UnityAction>)!;
-                int i = 0;
-                foreach (UnityAction callback in list)
-                {
-                    MethodInfo methodInfo = callback.Method;
-                    Debug.Log($"{prop.Name}[{i++}]: {methodInfo.Name}");
-                }
-            }
-            else
-            {
-                if (value == null)
-                {
-                    Debug.LogWarning($"{prop.Name}: null");
-                }
-                else
-                {
-                    Debug.Log($"{prop.Name}: {value}");
-                }
-            }
+    //#nullable enable
+    //            // object? : nullable object(null값을 반환받을 수 있음)
+    //            object? value = prop.GetValue(obj); // 속성 값 가져오기
+    //            if (value is List<string>)
+    //            {
+    //                List<string> list = (value as List<string>)!;
+    //                int i = 0;
+    //                Debug.Log($"{prop.Name} 개수 {list.Count}");
+    //                foreach(string a in list)
+    //                {
+    //                    Debug.Log($"{prop.Name}[{i++}]: {a}");
+    //                }
+    //            }
+    //            else if(value is List<UnityAction>)
+    //            {
+    //                List<UnityAction> list = (value as List<UnityAction>)!;
+    //                int i = 0;
+    //                foreach (UnityAction callback in list)
+    //                {
+    //                    MethodInfo methodInfo = callback.Method;
+    //                    Debug.Log($"{prop.Name}[{i++}]: {methodInfo.Name}");
+    //                }
+    //            }
+    //            else
+    //            {
+    //                if (value == null)
+    //                {
+    //                    Debug.LogWarning($"{prop.Name}: null");
+    //                }
+    //                else
+    //                {
+    //                    Debug.Log($"{prop.Name}: {value}");
+    //                }
+    //            }
             
-        }
+    //        }
+    //    }
     }
 }
 

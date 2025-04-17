@@ -98,8 +98,19 @@ public class TextWindowView : MonoBehaviour
         TextViewStartProcess_BackEnd();
     }
 
+    /// <summary>
+    /// 다른 텍스트가 출력중일 때 호출 불가능함
+    /// </summary>
+    /// <param name="system"></param>
     public void StartTextWindow(eSystemGuide system)
     {
+        if (gameObject.activeInHierarchy)
+        {
+            Debug.Log("이미 실행중인 텍스트가 있음");
+            return;
+        }
+            
+
         TextViewStartProcess_FrontEnd();
 
         // 상호작용을 위한 기본처리

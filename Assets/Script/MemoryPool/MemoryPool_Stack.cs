@@ -75,6 +75,30 @@ public abstract class MemoryPool_Stack<T_Class> : Singleton<T_Class>
         }
     }
 
+    /// <summary>
+    /// 위치 조정 필요
+    /// </summary>
+    /// <returns></returns>
+    public virtual GameObject GetObject()
+    {
+        if (memoryPool != null)
+        {
+            if (memoryPool.Count == 0)
+            {
+                CreateNewObject(transform.childCount);
+            }
+
+            GameObject obj = memoryPool.Pop();
+            obj.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            Debug.LogError("memoryPool == null");
+            return null;
+        }
+    }
+
 
     public virtual void ReturnObject(GameObject obj)
     {

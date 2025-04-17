@@ -15,6 +15,11 @@ namespace PublicSet
         Player_2,
         Player_3,
         Player_4,
+        Player_5,
+        Player_6,
+        Player_7,
+        Player_8,
+        Player_9,
     }
 
     public enum eScene
@@ -135,7 +140,13 @@ namespace PublicSet
 
         ExplainFeature = 101,
 
-        GameAssistantNotAvailable = 1001
+        
+        GameAssistantNotAvailable = 1001,
+
+        HowToCardSelect = 2001,
+        HowToUseGameAssistant_OnlyOneLives = 2002,
+        HowToUseLoupe = 2003,
+
     }
 
 
