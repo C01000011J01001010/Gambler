@@ -196,13 +196,16 @@ public class CallbackManager : Singleton<CallbackManager>
     {
         // false키에 "Interactable_Box_Empty"저장되어있음
         GameManager.connector_InGame.box_Script.EmptyOutBox();
-        GameManager.connector_InGame.iconView_Script.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
         TextWindowPopUp_Close();
 
         // 퀘스트를 수주한 경우
         sQuest quest = new sQuest(0, eQuestType.LetsOpenBoxForTheFirstTime);
         if (QuestManager.questHashSet.Contains(quest))
         {
+            // 첫 아이템 획득이니 아이콘을 해방
+            GameManager.connector_InGame.iconView_Script.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
+
+            // 퀘스트의 완료조건 확인하여 퀘스트 완료
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
             if (!questInfo.isComplete) questInfo.callback_endConditionCheck();
         }
@@ -286,18 +289,22 @@ public class CallbackManager : Singleton<CallbackManager>
     {
         EventManager.Instance.SetEventMessage(stageMessageDict[currentStage]);
         EventManager.Instance.PlaySequnce_EventAnimation();
-        QuestManager.Instance.PlayerGetQuest(eQuestType.LetsLookAroundOutside);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.LetsLookAroundOutside);
         GameManager.connector_InGame.iconView_Script.TryIconUnLock(eIcon.Quest);
     }
 
     // 15
     public void GetQuest_BoxOpen()
     {
-        List<eItemType> list = new List<eItemType>();
-        list.Add(eItemType.CasinoEntryTicket);
-        list.Add(eItemType.Notice_Stage1);
-        GameManager.connector_InGame.box_Script.FillUpBox(list);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.LetsOpenBoxForTheFirstTime);
+        bool result = QuestManager.Instance.TryPlayerGetQuest(eQuestType.LetsOpenBoxForTheFirstTime);
+        if(result)
+        {
+            // 아이템은 퀘스트를 수주한 경우 1번만 획득함
+            List<eItemType> list = new List<eItemType>();
+            list.Add(eItemType.CasinoEntryTicket);
+            list.Add(eItemType.Notice_Stage1);
+            GameManager.connector_InGame.box_Script.FillUpBox(list);
+        }
     }
 
 
@@ -463,38 +470,38 @@ public class CallbackManager : Singleton<CallbackManager>
 
     public void LetsLookAroundOutside()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.LetsLookAroundOutside);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.LetsLookAroundOutside);
     }
     public void LetsOpenBoxForTheFirstTime()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.LetsOpenBoxForTheFirstTime);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.UseCasinoEntryTicket);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.LetsOpenBoxForTheFirstTime);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.UseCasinoEntryTicket);
     }
 
     public void UseCasinoEntryTicket()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.UseCasinoEntryTicket);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.LearnHowToSave);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.UseCasinoEntryTicket);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.LearnHowToSave);
     }
     public void LearnHowToSave()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.LearnHowToSave);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.StartFirstGame);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.LearnHowToSave);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.StartFirstGame);
     }
     public void StartFirstGame()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.StartFirstGame);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.StartFirstGame);
     }
     public void GoToSleep()
     {
-        QuestManager.Instance.PlayerCompleteQuest(eQuestType.GoToSleep);
-        QuestManager.Instance.PlayerGetQuest(eQuestType.Collect2000Coins);
+        QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.GoToSleep);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.Collect2000Coins);
     }
     public void Collect2000Coins()
     {
         if(playerStatus.coin >= 2000)
         {
-            QuestManager.Instance.PlayerCompleteQuest(eQuestType.Collect2000Coins);
+            QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect2000Coins);
         }
     }
 }

@@ -8,10 +8,6 @@ public class QuestElementPanel : Selection_ButtonBase<QuestElementPanel>
     public cQuestInfo questInfo {  get; private set; }
     public Text TextOfStatus;
 
-    private void Start()
-    {
-        SetButtonCallback(() => TrySelectThisButton(this));
-    }
 
     public void SetQuestdata(sQuest quest, cQuestInfo cQuest)
     {

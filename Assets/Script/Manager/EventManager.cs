@@ -35,7 +35,7 @@ public class EventManager : Singleton<EventManager>
     /// <param name="sequence"></param>
     /// <param name="middleCallback">이벤트에 쓰일 문장</param>
     /// <param name="eventText">이벤트 문장이 적힌 텍스트</param>
-    public void GetSequnce_EventAnimation(Sequence sequence, Text eventText)
+    public void GetSequnce_EventAnimation(Sequence sequence, CanvasGroup canvasGroup)
     {
         //Debug.Log("stage 애니메이션 시작");
         
@@ -44,23 +44,26 @@ public class EventManager : Singleton<EventManager>
         connector_InGame.eventView.gameObject.SetActive(true);
 
         // 이미지 색깔 초기화
-        Image stateViewImage = connector_InGame.eventView.GetComponent<Image>();
-        stateViewImage.color = colorClearAlpha;
-        connector_InGame.eventView.SetTextColer(Color.clear);
+        canvasGroup.alpha = 0f;
+        //Image stateViewImage = connector_InGame.eventView.GetComponent<Image>();
+        //stateViewImage.color = colorClearAlpha;
+        //connector_InGame.eventView.SetTextColer(Color.clear);
 
         // 이벤트 끝난 후 간격
         sequence.AppendInterval(intervalDelay);
 
         // 이벤트 화면 페이드인
-        sequence.Append(stateViewImage.DOColor(Color.white, delay));
-        sequence.Join(eventText.DOColor(Color.black, delay));
+        sequence.Append(canvasGroup.DOFade(1f, delay));
+        //sequence.Append(stateViewImage.DOColor(Color.white, delay));
+        //sequence.Join(eventText.DOColor(Color.black, delay));
 
         // 유지
         sequence.AppendInterval(delay);
 
         // 이벤트 화면 페이드아웃
-        sequence.Append(stateViewImage.DOColor(colorClearAlpha, delay));
-        sequence.Join(eventText.DOColor(Color.clear, delay));
+        sequence.Append(canvasGroup.DOFade(0f, delay));
+        //sequence.Append(stateViewImage.DOColor(colorClearAlpha, delay));
+        //sequence.Join(eventText.DOColor(Color.clear, delay));
 
         // 이벤트 화면 비활성화
         sequence.AppendCallback(() => connector_InGame.eventView.gameObject.SetActive(false));
@@ -75,7 +78,7 @@ public class EventManager : Singleton<EventManager>
     public void PlaySequnce_EventAnimation()
     {
         Sequence sequence = DOTween.Sequence();
-        GetSequnce_EventAnimation(sequence, connector_InGame.eventView.eventText);
+        GetSequnce_EventAnimation(sequence, connector_InGame.eventView.canvasGroup);
 
         sequence.SetLoops(1);
         sequence.Play();

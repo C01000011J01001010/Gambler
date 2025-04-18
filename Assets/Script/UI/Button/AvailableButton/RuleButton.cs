@@ -6,8 +6,5 @@ using UnityEngine.UI;
 
 public class RuleButton : Selection_ButtonBase<RuleButton>
 {
-    private void Start()
-    {
-        SetButtonCallback(()=>TrySelectThisButton(this));
-    }
+
 }

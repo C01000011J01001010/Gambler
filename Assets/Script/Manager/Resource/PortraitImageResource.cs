@@ -48,7 +48,7 @@ public class PortraitImageResource : ImageResourceBase<PortraitImageResource,eCh
         if (imageDict.ContainsKey(characterIndex))
         {
             Sprite[] characterSprites = imageDict[(eCharacterType)characterIndex];
-            if (MethodManager.Instance.IsIndexInRange(characterSprites, portraitIndex))
+            if (MethodManager.IsIndexInRange(characterSprites, portraitIndex))
             {
                 result = true;
                 return characterSprites[portraitIndex];
@@ -84,7 +84,7 @@ public class PortraitImageResource : ImageResourceBase<PortraitImageResource,eCh
         if (imageDict.ContainsKey(characterIndex))
         {
             Sprite[] characterSprites = imageDict[characterIndex];
-            if (MethodManager.Instance.IsIndexInRange(characterSprites, 0))
+            if (MethodManager.IsIndexInRange(characterSprites, 0))
             {
                 result = true;
                 return characterSprites[0];

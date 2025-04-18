@@ -42,7 +42,7 @@ public class QuestManager : Singleton<QuestManager>
     }
 
     
-    public void PlayerGetQuest(eQuestType questType)
+    public bool TryPlayerGetQuest(eQuestType questType)
     {
         int questId = GetNewLastId();
 
@@ -53,24 +53,27 @@ public class QuestManager : Singleton<QuestManager>
         {
             // 이미 존재하면 추가하지 않음
             Debug.LogWarning($"Quest {questId} 는 수주받은 퀘스트.");
-            return;
+            return false;
         }
+
+        
 
         questHashSet.Add(newQuest);
         Debug.Log($"Quest {questId} 수주 성공.");
 
         GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
+        return true;
     }
 
 
-    public void PlayerCompleteQuest(eQuestType questType)
+    public bool TryPlayerCompleteQuest(eQuestType questType)
     {
         // 수주된 퀘스트인지 확인
         sQuest quest = new sQuest(0,questType);
         if(questHashSet.Contains(quest) == false)
         {
             Debug.LogWarning("수주하지 않은 퀘스트");
-            return;
+            return false;
         }
         
 
@@ -85,6 +88,7 @@ public class QuestManager : Singleton<QuestManager>
         EventManager.Instance.PlaySequnce_EventAnimation();
 
         GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
+        return true;
     }
 
 }

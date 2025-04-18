@@ -26,7 +26,7 @@ public abstract class ImageResourceBase<T_Class,T_Enum> : Singleton<T_Class>
         if (imageDict.ContainsKey(imageEnum))
         {
             Sprite[] itemSprites = imageDict[(T_Enum)imageEnum];
-            if (MethodManager.Instance.IsIndexInRange(itemSprites, imageIndex))
+            if (MethodManager.IsIndexInRange(itemSprites, imageIndex))
             {
                 result = true;
                 return itemSprites[imageIndex];
@@ -52,7 +52,7 @@ public abstract class ImageResourceBase<T_Class,T_Enum> : Singleton<T_Class>
         if (imageDict.ContainsKey(imageEnum))
         {
             Sprite[] characterSprites = imageDict[imageEnum];
-            if (MethodManager.Instance.IsIndexInRange(characterSprites, 0))
+            if (MethodManager.IsIndexInRange(characterSprites, 0))
             {
                 result = true;
                 return characterSprites[0];

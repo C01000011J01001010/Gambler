@@ -5,9 +5,18 @@ using UnityEngine.UIElements;
 
 public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_OnlyOneLives>
 {
+    [SerializeField] private DragTarget dragTarget;
+
     // 스크립트
     public List<PlayerEtc> players {  get; private set; } 
     private List<int> SelectedIndex;
+
+    private void Start()
+    {
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        dragTarget.SetMoveObjAttribute(rectTransform, canvasGroup);
+    }
 
     private void OnEnable()
     {

@@ -27,13 +27,6 @@ public class SaveButton : SaveAndContinue_ButtonBase
 
     private void SaveDataProcess()
     {
-        GameManager.Instance.SetPlayerSaveKey(saveKey);
-        PlayerSaveManager.Instance.SaveTotalData();
-
-        popUpView.CheckPopUpOpen();
-        checkPopUp.UpdateMainDescription("플레이어 정보가 저장되었습니다.");
-        GameManager.connector_InGame.popUpView_Script.saveDataPopUp.RefreshPopUp();
-
         // 퀘스트 수주한 경우
         sQuest quest = new sQuest(0, eQuestType.LearnHowToSave);
         if (QuestManager.questHashSet.Contains(quest))
@@ -41,6 +34,12 @@ public class SaveButton : SaveAndContinue_ButtonBase
             cQuestInfo quesInfo = CsvManager.Instance.GetQuestInfo(quest.type);
             if (quesInfo.isComplete == false) quesInfo.callback_endConditionCheck();
         }
-            
+
+        GameManager.Instance.SetPlayerSaveKey(saveKey);
+        PlayerSaveManager.Instance.SaveTotalData();
+
+        popUpView.CheckPopUpOpen();
+        checkPopUp.UpdateMainDescription("플레이어 정보가 저장되었습니다.");
+        GameManager.connector_InGame.popUpView_Script.saveDataPopUp.RefreshPopUp();
     }
 }

@@ -105,7 +105,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
                 {
                     Prey = player; // 먹잇감이 없으면 해당 플레이어를 설정
                 }
-                else if (Prey != player && player.CompareTag("Player")) Prey = player; // 주인공이 우선해서 먹잇감이 됨
+                //else if (Prey != player && player.CompareTag("Player")) Prey = player; // 주인공이 우선해서 먹잇감이 됨
             }
         }
     }
@@ -482,7 +482,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     public void DetermineTheResult()
     {
         // 수비에 사용할 카드가 없는 경우
-        if(Prey != null)
+        if(Prey != null && Deffender != null
+            && Prey == Deffender)
         {
             currentCriteria = eCriteria.HuntingTime;
         }

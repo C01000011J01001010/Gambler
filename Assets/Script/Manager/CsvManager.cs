@@ -395,7 +395,7 @@ public class CsvManager : Singleton<CsvManager>
             // 각 절차에서 행을 하나씩 뽑아서 데이터를 올바르게 처리했는지 확인
             foreach (cTextScriptInfo info in TextScriptInfoList_OnlyOneLives_Dict[progress])
             {
-                Debug.Log($"csv TextScript({(info as cTextScriptInfo).script}) 프린트 생략");
+                //Debug.Log($"csv TextScript({(info as cTextScriptInfo).script}) 프린트 생략");
                 PrintProperties(info);
             }
         }

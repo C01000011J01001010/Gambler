@@ -8,7 +8,10 @@ using UnityEngine;
 /// </summary>
 public struct sItem
 {
-    public int id; // 내가 소유하고 있는 아이템 번호
+    /// <summary>
+    /// 내가 소유하고 있는 아이템 번호, 0부터 시작
+    /// </summary>
+    public int id;
     public eItemType type; // 아이템 시리얼 번호 - 아이콘, 아이템의 능력치
 
     // 데이터 저장을 위해 string으로 변환

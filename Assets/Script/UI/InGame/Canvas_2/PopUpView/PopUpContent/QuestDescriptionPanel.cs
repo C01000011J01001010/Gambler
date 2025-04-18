@@ -22,9 +22,8 @@ public class QuestDescriptionPanel : MonoBehaviour
         questName.text = questInfo.name;
 
         // 설명리스트에서 한 문장씩 가져오고 문장 사이에 개행문자 삽입
-        questDescription.text = string.Empty;
 
-        questDescription.text += $"{questInfo.descriptionList[0]}";
+        questDescription.text = $"{questInfo.descriptionList[0]}";
         for (int i = 1; i<questInfo.descriptionList.Count;i++)
         {
             if (TextSpacing != null) TextSpacing();

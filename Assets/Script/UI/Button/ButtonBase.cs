@@ -39,4 +39,12 @@ public abstract class ButtonBase : MonoBehaviour
             Debug.Log("button == null");
         }
     }
+
+    public virtual void ClearButtonCallback()
+    {
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners();
+        }
+    }
 }

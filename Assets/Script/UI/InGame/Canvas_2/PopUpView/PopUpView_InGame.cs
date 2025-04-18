@@ -15,6 +15,12 @@ public class PopUpView_InGame : PopUpViewBase
     public SaveDataPopUp saveDataPopUp;
     public CardGameRulePopUp CardGameRulePopUp;
 
+
+    protected override void Awake()
+    {
+        MakePopUpSingleTone();
+        InitPopUp();
+    }
     /// <summary>
     /// 팝업은 awake에서 싱글톤생성 호출을 하지 않음
     /// </summary>
@@ -26,6 +32,10 @@ public class PopUpView_InGame : PopUpViewBase
         CardGameRulePopUp.MakeSingleTone();
         saveDataPopUp.MakeSingleTone();
         CardGameRulePopUp.MakeSingleTone();
+    }
+    public void InitPopUp()
+    {
+        inventoryPopUp.InitAttribute();
     }
 
     

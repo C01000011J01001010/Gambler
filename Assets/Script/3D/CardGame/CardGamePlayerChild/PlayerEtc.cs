@@ -180,7 +180,7 @@ public class PlayerEtc : CardGamePlayerBase
         // ¼öºñ
         if (!isAttack)
         {
-            foreach (GameObject revealedCard in AttackTarget.revealedCardList)
+            foreach (GameObject revealedCard in CardGamePlayManager.Instance.Attacker.revealedCardList)
             {
                 revealedCardScript = revealedCard.GetComponent<TrumpCardDefault>();
                 foreach (var myCard in closedCardList)

@@ -29,6 +29,10 @@ public class Box : InteractableObject
 
             // 박스에 이미 아이템이 있는 경우
             else itemList.AddRange(list);
+
+            Debug.Log("아이템이 상자에 채워졌습니다.");
+            for (int i = 0; i < itemList.Count; i++)
+                Debug.Log($"현재박스에 채워진 아이템 -> {i}. {itemList[i].ToString()}");
         }
         else
         {

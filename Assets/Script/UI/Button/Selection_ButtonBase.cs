@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
 
 /// <summary>
 /// 같은 종류의 버튼은 오직 한순간에 한번만 선택됨
 /// </summary>
 /// <typeparam name="T_Class">상속받는 클래스</typeparam>
-public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class : Selection_ButtonBase<T_Class>
+public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase where T_Class : Selection_ButtonBase<T_Class>
 {
     private Image _image = null;
     protected Image image
@@ -33,7 +34,7 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
     }
 
     [SerializeField] protected Text buttonText;
-    public Action callback { get; private set; }
+    public UnityAction callback { get; private set; }
 
     public void Setpanel(string value)
     {
@@ -43,11 +44,14 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
     /// <summary>
     /// SetButtonCallback대신 해당 함수를 사용해야함
     /// </summary>
-    /// <param name="fuc"></param>
-    public void SetCallback(Action fuc)
+    /// <param name="currentObj">각 Obj의 스크립트 컴포넌트객체</param>
+    /// <param name="fuc">항목 클릭시 description에 실행할 내용</param>
+    public void SetCallback(T_Class currentObj, UnityAction fuc)
     {
+        SetButtonCallback(() => TrySelectThisButton(currentObj));
         callback = fuc;
     }
+
 
     /// <summary>
     /// 각 자식클래스의 start에서 호출되어야함
@@ -58,7 +62,7 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
         if (currentSelectedObj == null)
         {
             currentSelectedObj = currentObj;
-            image.color = Color.gray;
+            TryDeactivate_Button();
             callback();
         }
         else
@@ -70,7 +74,10 @@ public abstract class Selection_ButtonBase<T_Class> : ButtonBase where T_Class :
 
     public virtual void UnselectThisButton()
     {
-        image.color = Color.white;
-        currentSelectedObj = null;
+        if(currentSelectedObj != null)
+        {
+            currentSelectedObj.TryActivate_Button();
+            currentSelectedObj = null;
+        }
     }
 }

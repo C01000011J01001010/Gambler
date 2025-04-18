@@ -6,7 +6,7 @@ public abstract class PopUpViewBase : MonoBehaviour
     public YesOrNoPopUp yesOrNoPopUp;
     public CheckPopUp checkPopUp;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         MakePopUpSingleTone();
     }

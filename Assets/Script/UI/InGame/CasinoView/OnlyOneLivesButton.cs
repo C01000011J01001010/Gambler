@@ -36,7 +36,7 @@ public class OnlyOneLivesButton : GameEnterButtonBase
             {
                 GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerCantPlayThis);
 
-                QuestManager.Instance.PlayerGetQuest(eQuestType.GoToSleep);
+                QuestManager.Instance.TryPlayerGetQuest(eQuestType.GoToSleep);
             }
 
             );

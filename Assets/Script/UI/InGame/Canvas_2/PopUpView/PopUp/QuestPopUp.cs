@@ -47,11 +47,12 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
                         questPanel.InitPanel();
 
                         // 퀘스트 항목을 클릭시 호출
-                        questPanel.SetCallback(
+                        questPanel.SetCallback(questPanel,
                             () =>
                             {
                                 descriptionPanel.SetPanel(questInfo);
-                            });
+                            }
+                            );
                     }
                     else
                     {

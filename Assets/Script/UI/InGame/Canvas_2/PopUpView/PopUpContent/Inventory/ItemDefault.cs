@@ -22,11 +22,6 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
     public UnityAction useCheckCallback;
 
 
-    private void Start()
-    {
-        SetButtonCallback(()=>TrySelectThisButton(this));
-    }
-
     public void InitItemData(sItem item, cItemInfo itemInfo)
     {
         this.item = new sItem(item);
@@ -57,7 +52,12 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
                             if (itemInfo.isConsumable)
                                 UsedByPlayer();
 
+                            // 인벤토리에서 아이템칸이 클릭 가능하도록
+                            UnselectThisButton();
+
+                            popUpView.inventoryPopUp.descriptionPanel.ClearPanel();
                             popUpView.inventoryPopUp.RefreshPopUp();
+
                         }
                         );
                 };
@@ -81,6 +81,10 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
             itemImage.sprite = sprite;
         }
     }
+    public void ClearItemImage()
+    {
+        itemImage.sprite = null;
+    }
 
     public void UsedByPlayer()
     {
@@ -94,4 +98,5 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
         cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);
         PlayManager.Instance.AddPlayerMoney(itemInfo.value_Sale);
     }
+
 }

@@ -1,10 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EventView : MonoBehaviour
+public class EventView : ButtonBase
 {
-    [SerializeField] private Text _eventText;
-    public Text eventText {get {return _eventText;} set { _eventText = value; } }
+    [SerializeField] private Text eventText;
+    [SerializeField] private CanvasGroup _canvasGroup;
+    public CanvasGroup canvasGroup { get { return _canvasGroup; } }
+    
+
+
+    private void Start()
+    {
+        SetButtonCallback(EventEnd);
+    }
+
     public void SetTextContent(string value)
     {
         eventText.text = value;
@@ -12,5 +21,10 @@ public class EventView : MonoBehaviour
     public void SetTextColer(Color value)
     {
         eventText.color = value;
+    }
+
+    public void EventEnd()
+    {
+        gameObject.SetActive(false);
     }
 }

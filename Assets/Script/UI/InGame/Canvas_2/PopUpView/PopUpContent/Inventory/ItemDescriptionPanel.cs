@@ -23,6 +23,7 @@ public class ItemDescriptionPanel : MonoBehaviour
         useButton.gameObject.SetActive(active);
         RegisterButton.gameObject.SetActive(active);
     }
+
     public void SetPanel(ItemDefault item, cItemInfo itemInfo)
     {
         // 아이템 이름 설정
@@ -67,5 +68,12 @@ public class ItemDescriptionPanel : MonoBehaviour
             // 버튼셋 비활성화
             ButtonSetActive(false);
         }
+    }
+
+    public void ClearPanel()
+    {
+        itemName.text = "아이템 이름";
+        description.text = "왼쪽의 항목 클릭 시 내용을 확인하실 수 있습니다.";
+        ButtonSetActive(false);
     }
 }
