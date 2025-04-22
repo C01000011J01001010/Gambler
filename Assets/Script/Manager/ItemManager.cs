@@ -61,6 +61,9 @@ public class ItemManager : Singleton<ItemManager>
         ItemHashSet.Add(newItem);
         Debug.Log($"Item {itemId} 획득 성공.");
 
+        // 플레이어가 획득한 아이템을 확인하도록 유도
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Inventory);
+
         // 아이템 목록에 변화가 생겼으니 팝업 리프레시
         InventoryPopUp.Instance.RefreshPopUp();
         //GameManager.connector_InGame.popUpView_Script.inventoryPopUp.RefreshPopUp();

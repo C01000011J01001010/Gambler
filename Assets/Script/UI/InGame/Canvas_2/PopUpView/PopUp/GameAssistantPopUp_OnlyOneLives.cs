@@ -97,6 +97,9 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
                 panel.selectAsTarget_Toggle.SetInteractable(false);
             }
         }
+
+        // 플레이어가 공격대상을 설정할 필요가 없어짐
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
     }
 
     public void PlaceRestrictionToAllSelections()
@@ -106,6 +109,9 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
             OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
             panel.selectAsTarget_Toggle.SetInteractable(false);
         }
+
+        // 플레이어가 공격대상을 설정할 필요가 없어짐
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
     }
 
     public void LiftRestrictionToSelections(SelectAsTarget_Toggle exception)
@@ -120,6 +126,9 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
                 panel.selectAsTarget_Toggle.SetInteractable(true);
             }
         }
+
+        // 플레이어가 공격대상을 설정하도록 유도
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
     }
 
     public void LiftRestrictionToAllSelections()
@@ -129,6 +138,9 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase<GameAssistantPopUp_Only
             OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
             panel.selectAsTarget_Toggle.SetInteractable(true);
         }
+
+        // 플레이어가 공격대상을 설정하도록 유도
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
     }
 
 

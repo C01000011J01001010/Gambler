@@ -82,7 +82,7 @@ public struct sQuest : IEquatable<sQuest>
         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(type);
 
         // 참조변수의 일부 데이터를 같이 저장
-        return $"{id}:{type}:{questInfo.isComplete.ToString()}:{questInfo.hasReceivedReward.ToString()}";
+        return $"{id}:{type}:{questInfo.isNeedCheck.ToString()}:{questInfo.isComplete.ToString()}:{questInfo.hasReceivedReward.ToString()}";
     }
 
     // string으로 저장했던 정보를 사용가능한 데이터로 변환
@@ -94,13 +94,15 @@ public struct sQuest : IEquatable<sQuest>
         if (parts.Length == 4 &&
             int.TryParse(parts[0], out item.id) &&
             eQuestType.TryParse(parts[1], out item.type)&&
-            bool.TryParse(parts[2], out bool isComplete) &&
-            bool.TryParse(parts[3], out bool hasReceivedReward)
+            bool.TryParse(parts[2], out bool isNeedCheck) &&
+            bool.TryParse(parts[3], out bool isComplete) &&
+            bool.TryParse(parts[4], out bool hasReceivedReward)
             )
             
         {
             // 데이터를 불러오면서 참조변수의 데이터도 같이 복원
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(item.type);
+            questInfo.isNeedCheck = isNeedCheck;
             questInfo.isComplete = isComplete;
             questInfo.hasReceivedReward = hasReceivedReward;
 
@@ -129,8 +131,13 @@ public struct sQuest : IEquatable<sQuest>
         return type.GetHashCode();
     }
 
-    // 생성자
-    public sQuest(int id, eQuestType type)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="type"></param>
+    /// <param name="isNeedCheck">설정되지 않았으면 기본적으로 확인해야함</param>
+    public sQuest(int id, eQuestType type, bool isNeedCheck = true)
     {
         this.id = id;
         this.type = type;
@@ -143,6 +150,7 @@ public struct sQuest : IEquatable<sQuest>
         type = quest.type;
         return;
     }
+
 }
 
 /// <summary>

@@ -35,7 +35,7 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
                 foreach (sQuest quest in playerQuestHash)
                 {
                     // 아이템정보로 초기화될 객체
-                    QuestElementPanel questPanel = ActiveObjList[quest.id].GetComponent<QuestElementPanel>(); ;
+                    QuestPanel questPanel = ActiveObjList[quest.id].GetComponent<QuestPanel>(); ;
 
                     // 아이템 종합정보를 호출
                     cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
@@ -50,7 +50,24 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
                         questPanel.SetCallback(questPanel,
                             () =>
                             {
+                                // 퀘스트에 대한 설명을 화면에 표시
                                 descriptionPanel.SetPanel(questInfo);
+
+                                // 퀘스트를 확인했으니 변수 재설정
+                                // 퀘스트 완료 후 확인 유도에는 영향없음
+                                if (questInfo.isComplete == false)
+                                {
+                                    questInfo.isNeedCheck = false; // foreach문이니 메소드로 수정함
+                                    RefreshPopUp();
+                                    
+                                }
+
+                                // 보상이 없는 경우 확인시 바로 처리
+                                else if(questInfo.isComplete && questInfo.hasReceivedReward)
+                                {
+                                    questInfo.isNeedCheck = false;
+                                    RefreshPopUp();
+                                }
                             }
                             );
                     }
@@ -60,5 +77,7 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
                     }
                 }
             });
+
+        
     }
 }

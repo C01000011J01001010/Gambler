@@ -2,12 +2,16 @@ using PublicSet;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class QuestElementPanel : Selection_ButtonBase<QuestElementPanel>
+public class QuestPanel : Selection_ButtonBase<QuestPanel>
 {
-    public sQuest quest;
-    public cQuestInfo questInfo {  get; private set; }
     public Text TextOfStatus;
+    public GameObject clickGuide;
+    
+    
 
+
+    public sQuest quest { get; private set; }
+    public cQuestInfo questInfo { get; private set; }
 
     public void SetQuestdata(sQuest quest, cQuestInfo cQuest)
     {
@@ -21,6 +25,21 @@ public class QuestElementPanel : Selection_ButtonBase<QuestElementPanel>
     public void InitPanel()
     {
         Setpanel(questInfo.name);
+
+        // 확인이 필요하면 객체를 활성화 시키고 그렇지 않으면 비활성화
+        if(questInfo.isNeedCheck) 
+        {
+            GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
+            if (clickGuide.activeInHierarchy == false) 
+                clickGuide.SetActive(true);
+        }
+        else
+        {
+            GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.Quest);
+            if (clickGuide.activeInHierarchy) 
+                clickGuide.SetActive(false);
+        }
+        
 
         if (questInfo.isComplete == false)
         {

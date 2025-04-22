@@ -339,7 +339,9 @@ public class GameManager : Singleton<GameManager>
                         if (type == eQuestType.None) continue;
 
                         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(type);
-                        questInfo.isComplete = false; questInfo.hasReceivedReward = false;
+
+                        questInfo.isNeedCheck = true;
+                        questInfo.isComplete = questInfo.hasReceivedReward = false;
                     }
                 }
                 break;

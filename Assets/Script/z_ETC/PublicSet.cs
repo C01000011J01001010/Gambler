@@ -232,6 +232,7 @@ namespace PublicSet
 
     public enum eIcon
     {
+        IconViewOnOff,
         Quest,
         Inventory,
         GameAssistant,
@@ -319,14 +320,21 @@ namespace PublicSet
         public bool isRepeatable { get; set; }
 
         // 별도 관리
+        public bool isNeedCheck { get; set; }
         public bool isComplete { get; set; }
         public bool hasReceivedReward { get; set; }
+
+        
 
         public List<string> descriptionList { get; set; }
 
         public cQuestInfo()
         {
             descriptionList = new List<string>();
+
+            isNeedCheck = true;
+            isComplete = false;
+            hasReceivedReward = false;
         }
 
     }

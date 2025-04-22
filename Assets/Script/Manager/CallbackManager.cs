@@ -414,7 +414,7 @@ public class CallbackManager : Singleton<CallbackManager>
     {
         switch (index)
         {
-            case eItemCallback.CasinoTicket : return CasinoOpen;
+            case eItemCallback.CasinoTicket : return CasinoTicket;
             case eItemCallback.EatMeal: return EatMeal;
 
             default: return TrashFuc;
@@ -422,7 +422,7 @@ public class CallbackManager : Singleton<CallbackManager>
     }
 
     
-    public void CasinoOpen()
+    public void CasinoTicket()
     {
         GameManager.Instance.NextStage();
         EventManager.Instance.SetEventMessage(stageMessageDict[currentStage]);
@@ -482,11 +482,12 @@ public class CallbackManager : Singleton<CallbackManager>
     {
         QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.UseCasinoEntryTicket);
         QuestManager.Instance.TryPlayerGetQuest(eQuestType.LearnHowToSave);
+        QuestManager.Instance.TryPlayerGetQuest(eQuestType.StartFirstGame);
     }
     public void LearnHowToSave()
     {
         QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.LearnHowToSave);
-        QuestManager.Instance.TryPlayerGetQuest(eQuestType.StartFirstGame);
+        
     }
     public void StartFirstGame()
     {
