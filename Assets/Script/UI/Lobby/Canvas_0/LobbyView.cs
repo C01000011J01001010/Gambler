@@ -13,7 +13,6 @@ public class LobbyView : MonoBehaviour
         GameManager.Instance.SceneUnloadView(()=> SceneManager.LoadScene("InGame"));
     }
 
-    // 이어하기 버튼 -> 저장기록 팝업 오픈
     public void ContinuePopUpOpen()
     {
         popUpView.ContinuePopUpOpen();
@@ -25,10 +24,9 @@ public class LobbyView : MonoBehaviour
 
     }
 
-    // 옵션 -> 옵션팝업 오픈
-    public void OptionPopUpOpen()
+    public void GameSettingPopUpOpen()
     {
-
+        popUpView.GameSettingPopUpOpen();
     }
 
     // 최고기록 -> 게임종료시 최종금액중 가장높은 금액 3개를 표시

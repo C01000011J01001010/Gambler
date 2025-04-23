@@ -2,7 +2,8 @@ using PublicSet;
 using System;
 using UnityEngine;
 
-public abstract class DataManagePopUp<T_Class> : PopUpBase_FullScreen<T_Class> where T_Class : MonoBehaviour
+public abstract class PopUpBase_DataManage<T_Class> : PopUpBase_FullScreen<T_Class> 
+    where T_Class : PopUpBase_DataManage<T_Class>
 {
     protected int DataCount = 0;
 

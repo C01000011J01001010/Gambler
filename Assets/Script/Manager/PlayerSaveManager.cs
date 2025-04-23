@@ -560,19 +560,6 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         return savedData;
     }
 
-    
-
-#if UNITY_EDITOR
-    private void Update()
-    {
-
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            PlayerPrefs.DeleteAll();
-            Debug.Log("葛电 历厘等 单捞磐 昏力");
-        }
-    }
-#endif
 
     private void SaveData(string key, int value)
     {

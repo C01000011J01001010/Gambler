@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 /// <typeparam name="T_Class">상속받는 클래스</typeparam>
 public abstract class PopUpBase<T_Class> : MemoryPool_Queue<T_Class>
-    where T_Class : MonoBehaviour
+    where T_Class : PopUpBase<T_Class>
 {
     // 에디터 연결
     public RectTransform contentTrans;

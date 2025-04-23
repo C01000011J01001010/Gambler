@@ -4,10 +4,10 @@ using UnityEngine.EventSystems;
 public class DragManager : Singleton<DragManager>
 {
     private Canvas canvas;
-
     private RectTransform currentRect;
-    
     private CanvasGroup canvasGroup;
+
+    public bool IsDragging => currentRect != null;
 
 
     public void OnTouchEnter(DragTarget target, PointerEventData eventData, Canvas TargetCanvas)
@@ -28,7 +28,7 @@ public class DragManager : Singleton<DragManager>
         
         canvas = TargetCanvas;
 
-        canvasGroup.alpha = 0.6f; // ÇØ´ç °´Ã¼°¡
+        canvasGroup.alpha = 0.8f;
         canvasGroup.blocksRaycasts = false;
     }
 

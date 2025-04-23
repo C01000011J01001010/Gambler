@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class> where T_Class : MonoBehaviour
+public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class> 
+    where T_Class : PopUpBase_FullScreen<T_Class>
 {
     public RectTransform viewPortRectTrans;
 

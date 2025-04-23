@@ -58,6 +58,29 @@ public class DragTarget : MonoBehaviour, IPointerDownHandler, IBeginDragHandler,
         DragManager.Instance.EndDrag();
     }
 
+
+    private void Update()
+    {
+
+        // 화면터치에서 벗어났으나 드레그가 유지되는 문제를 처리
+#if UNITY_EDITOR
+        // 마우스 (에디터/PC) 처리
+        if (Input.GetMouseButtonUp(0) && DragManager.Instance.IsDragging)
+        {
+            Debug.LogWarning("드래그 상태가 중간에 끊겨 강제 종료! (마우스)");
+            DragManager.Instance.EndDrag();
+        }
+#else
+
+        // 터치 (모바일) 처리
+        if (Input.touchCount == 0 && DragManager.Instance.IsDragging)
+        {
+            Debug.LogWarning("드래그 상태가 중간에 끊겨 강제 종료! (터치)");
+            DragManager.Instance.EndDrag();
+        }
+#endif
+    }
+
     /// <summary>
     /// 실제 드래그 대상과 이동하는 대상이 다를 수 있음
     /// </summary>

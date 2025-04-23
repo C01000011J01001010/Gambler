@@ -2,7 +2,7 @@ using PublicSet;
 using System;
 using UnityEngine;
 
-public class ContinuePopUp : DataManagePopUp<ContinuePopUp>
+public class ContinuePopUp : PopUpBase_DataManage<ContinuePopUp>
 {
     //public override void RefreshPopUp()
     //{

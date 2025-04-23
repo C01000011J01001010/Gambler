@@ -135,19 +135,6 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
     }
 
-    public void InitCurrentGame()
-    {
-        foreach (CardGamePlayerBase player in playerList)
-        {
-            player.InitAttribute_All();
-        }
-        cardGameView.InitAttribute();
-
-        isDistributionCompleted = false;
-
-        ClearPrey();
-    }
-
     public void EnterCardGame()
     {
         InitPlayerList();
@@ -166,7 +153,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             }
         }
 
-        // 스타트버튼 화면에서 숨기기
+        // 스타트버튼 텍스트 초기화 후 화면에서 숨기기
+        cardGameView.InitStartButtonText();
         cardGameView.InitStartButton();
 
         // 인터페이스 초기화
@@ -193,6 +181,18 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
         }
             
+    }
+    public void InitCurrentGame()
+    {
+        foreach (CardGamePlayerBase player in playerList)
+        {
+            player.InitAttribute_All();
+        }
+        cardGameView.InitAttribute();
+
+        isDistributionCompleted = false;
+
+        ClearPrey();
     }
 
     /// <summary>
@@ -316,7 +316,9 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
                 // 플레이어가 둘 이상인 경우 게임을 지속
                 if (playerList.Count >= 2)
                     currentProgress = eOOLProgress.num501_final;
-                else if (playerList.Count == 1) // 플레이어가 1명만 남은경우
+
+                // 플레이어가 1명만 남은경우
+                else if (playerList.Count == 1) 
                     currentProgress = eOOLProgress.num502_EndGame;
                 else
                 {

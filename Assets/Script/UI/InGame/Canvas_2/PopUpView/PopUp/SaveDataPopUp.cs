@@ -2,32 +2,7 @@ using PublicSet;
 using System;
 using UnityEngine;
 
-public class SaveDataPopUp : DataManagePopUp<SavedPlayerDataPanel>
+public class SaveDataPopUp : PopUpBase_DataManage<SaveDataPopUp>
 {
-
-    //public override void RefreshPopUp()
-    //{
-    //    RefreshPopUp(DataCount,
-    //        () =>
-    //        {
-    //            int index = 0;
-    //            foreach (ePlayerSaveKey saveKey in Enum.GetValues(typeof(ePlayerSaveKey)))
-    //            {
-    //                if (saveKey == ePlayerSaveKey.None) continue;
-
-    //                SavedPlayerDataPanel panel = ActiveObjList[index++].GetComponent<SavedPlayerDataPanel>();
-    //                if (panel != null)
-    //                {
-    //                    panel.SetPanel(saveKey);
-    //                }
-    //                else
-    //                {
-    //                    Debug.LogAssertion($"{gameObject.name}의 스크립트 확인 바람");
-    //                }
-
-    //            }
-    //        });
-    //}
-
-    
+    // 필요한 것은 PopUpBase_DataManage에서 처리했고 이 스크립트는 싱글톤처리때문에 사용
 }

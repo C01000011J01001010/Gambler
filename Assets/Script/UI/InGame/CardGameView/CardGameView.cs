@@ -1,8 +1,6 @@
 using UnityEngine;
-using System;
-using System.Collections;
 using DG.Tweening;
-using PublicSet;
+using UnityEngine.UI;
 
 public class CardGameView : MonoBehaviour
 {
@@ -16,18 +14,24 @@ public class CardGameView : MonoBehaviour
     public CasinoView casinoView;
 
     public GameObject SubScreen_Card;
-    public GameObject StartButton;
+
+    public GameObject StartButtonSet;
+    public Text startButtonText;
 
     public DeckOfCards deckOfCards;
 
     // 스크립트 편집
     private Vector3 StartButtonScaleOrigin;
+    private readonly string StartMessage = "게임 시작하기";
+    private readonly string continueMessage = "게임 이어하기";
 
     public void InitAttribute()
     {
         selectCompleteButton.InitAttribute();
         diceButton.TryActivate_Button();
         cardScreenButton.TryDeactivate_Button();
+
+        InitContinueButtonText();
     }
 
     private void Awake()
@@ -37,7 +41,7 @@ public class CardGameView : MonoBehaviour
         if (cardGamePlayManager == null)
             Debug.LogAssertion($"cardGamePlayManager == null ");
 
-        StartButtonScaleOrigin = StartButton.transform.localScale;
+        StartButtonScaleOrigin = StartButtonSet.transform.localScale;
     }
 
     private void OnEnable()
@@ -89,8 +93,8 @@ public class CardGameView : MonoBehaviour
 
     public void InitStartButton()
     {
-        StartButton.transform.localScale = Vector3.zero;
-        StartButton.gameObject.SetActive(false);
+        StartButtonSet.transform.localScale = Vector3.zero;
+        StartButtonSet.gameObject.SetActive(false);
     }
     
     public void GetSequnce_StartButtonFadeOut(Sequence sequence)
@@ -100,8 +104,17 @@ public class CardGameView : MonoBehaviour
 
         // 게임 시작 누를 시 필요없는 인터페이스 비활성화
         // 화면에서 버튼의 크기를 완전히 줄인다음 실제 크기로 복귀와 동시에 비활성화
-        sequence.Append(StartButton.transform.DOScale(Vector3.zero, delay));
-        sequence.AppendCallback(() => StartButton.SetActive(false));
+        sequence.Append(StartButtonSet.transform.DOScale(Vector3.zero, delay));
+        sequence.AppendCallback(() => StartButtonSet.SetActive(false));
+    }
+
+    public void InitStartButtonText()
+    {
+        startButtonText.text = StartMessage;
+    }
+    public void InitContinueButtonText()
+    {
+        startButtonText.text = continueMessage;
     }
 
     public void PlaySequnce_StartButtonFadeIn()
@@ -116,8 +129,8 @@ public class CardGameView : MonoBehaviour
         // dotween 애니메이션 시간
         float delay = 0.5f;
 
-        sequence.AppendCallback(() => StartButton.SetActive(true));
-        sequence.Append(StartButton.transform.DOScale(StartButtonScaleOrigin, delay));
+        sequence.AppendCallback(() => StartButtonSet.SetActive(true));
+        sequence.Append(StartButtonSet.transform.DOScale(StartButtonScaleOrigin, delay));
         
     }
 
