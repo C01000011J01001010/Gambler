@@ -61,32 +61,45 @@ public class InventoryPopUp : PopUpBase_FullScreen<InventoryPopUp>
                 foreach (sItem item in playerItems)
                 {
                     // 아이템정보로 초기화될 객체(아이템칸)
-                    ItemDefault itemDefault = ActiveObjList[item.id].GetComponent<ItemDefault>();
+                    ItemOptionButton itemOption = ActiveObjList[item.id].GetComponent<ItemOptionButton>();
                     clearSlotHash.Remove(item.id); //초기화된 아이템칸의 인덱스는 해시셋에서 제거
 
                     // 아이템 종합정보를 호출
                     cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);
 
                     // 활성화된 각 객체에 정보를 초기화
-                    if (itemDefault != null)
+                    if (itemOption != null)
                     {
-                        itemDefault.InitItemData(item, itemInfo);
+                        itemOption.SetData(item, itemInfo);
+                        itemOption.InitPanel();
+
+                        // 아이템 클릭시 판넬 설정
+                        itemOption.SetCallback(
+                            itemOption,
+                            () =>
+                            {
+                                // 아이템에 대한 설명을 화면에 표시
+                                descriptionPanel.SetPanel(itemOption, itemInfo);
+
+                                // 아이템을 확인했으니 속성 변경후 리프레시
+                                itemInfo.isNeedCheck = false; 
+                                RefreshPopUp();
+
+                            });
                     }
                     else
                     {
-                        Debug.LogAssertion($"{itemDefault.gameObject.name}은 itemScript == null");
+                        Debug.LogAssertion($"{itemOption.gameObject.name}은 itemScript == null");
                     }
-
-                    // 아이템 클릭시 판넬 설정
-                    itemDefault.SetCallback(itemDefault , () => descriptionPanel.SetPanel(itemDefault, itemInfo));
                 }
 
                 // 비어있는 아이템칸 초기화
                 foreach(int ClearSlot in clearSlotHash)
                 {
-                    ItemDefault itemDefault = ActiveObjList[ClearSlot].GetComponent<ItemDefault>();
-                    itemDefault.ClearItemImage();
-                    itemDefault.ClearButtonCallback(); // 아무런 상호작용이 불가능하도록 만듬
+                    ItemOptionButton itemOption = ActiveObjList[ClearSlot].GetComponent<ItemOptionButton>();
+                    itemOption.ClearItemImage();
+                    itemOption.ClearClickGuide();
+                    itemOption.ClearButtonCallback(); // 아무런 상호작용이 불가능하도록 만듬
                 }
                 
             });

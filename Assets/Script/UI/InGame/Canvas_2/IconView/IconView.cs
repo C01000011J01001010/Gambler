@@ -66,11 +66,10 @@ public class IconView : MonoBehaviour
     public void SetOpendIconCount(int value)
     {
         OpenedIconCount = value + 1; // 0번은 아이콘뷰 온오프이니 +1을 함
-        if (OpenedIconCount != 0)
+        if (OpenedIconCount >= 1)
         {
-            for(int i = 1; // 0번 열거자 패스
-                i < OpenedIconCount && i < iconDict.Count;
-                i++)
+            // 0번 열거자 패스
+            for (int i = 1; i < OpenedIconCount; i++)
             {
                 if(Enum.IsDefined(typeof(eIcon), i))
                 {
@@ -91,7 +90,7 @@ public class IconView : MonoBehaviour
     {
         if (ViewOnOffDelay < 0.1f)
         {
-            ViewOnOffDelay = 0.3f;
+            ViewOnOffDelay = 0.5f;
         }
         SetPos();
 
@@ -128,18 +127,14 @@ public class IconView : MonoBehaviour
         IconViewClose();
         currentCoroutine = null;
     }
-
     public void IconViewOpen()
     {
         PlaySequnce_IconViewProcess(Center_anchoredPos, true);
     }
-
-
     public void IconViewClose()
     {
         PlaySequnce_IconViewProcess(OutOfScreen_anchoredPos, false);
     }
-
     private void PlaySequnce_IconViewProcess(Vector3 tragetAnchoredPos ,bool boolActive, Sequence sequenceAppend = null)
     {
         // 변수 초기화
@@ -148,8 +143,9 @@ public class IconView : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
 
         // iconView 이동
-        sequence.Append(rectTrans.DOAnchorPos(tragetAnchoredPos, ViewOnOffDelay));
+        sequence.Append(rectTrans.DOAnchorPos(tragetAnchoredPos, ViewOnOffDelay).SetEase(Ease.OutQuad));
 
+        // 아이콘뷰를 여는 경우
         if(isIconViewOpen)
         {
             // 이번에 아이콘뷰를 오픈했다면 다음차례는 닫는 것
@@ -173,7 +169,8 @@ public class IconView : MonoBehaviour
                 });
             
         }
-        else // 아이콘뷰를 닫는 경우
+        // 아이콘뷰를 닫는 경우
+        else
         {
             iconViewOnOffButton.SetButtonCallback(IconViewOpen);
             
@@ -206,7 +203,6 @@ public class IconView : MonoBehaviour
         sequence.SetLoops(1);
         sequence.Play();
     }
-
     public bool TryIconUnLock(eIcon choice)
     {
         if(iconDict.ContainsKey(choice) && choice != eIcon.IconViewOnOff)
@@ -275,7 +271,11 @@ public class IconView : MonoBehaviour
 
         // 온오프를 호출한 경우 무시함
         if (choice != eIcon.IconViewOnOff && iconDict[choice].clickGuide.gameObject.activeInHierarchy == false)
+        {
             iconDict[choice].clickGuide.gameObject.SetActive(true);
+            TryClickGuideOn(eIcon.IconViewOnOff);
+        }
+            
     }
 
     public void TryClickGuideOff(eIcon choice)
@@ -284,12 +284,17 @@ public class IconView : MonoBehaviour
         {
             case eIcon.IconViewOnOff:
                 {
-                    foreach (eIcon key in iconDict.Keys)
+                    // 닫혀있다면 가이드를 꺼야하는지 다시한번 확인
+                    if(isIconViewOpen == false)
                     {
-                        if (key == eIcon.IconViewOnOff) continue;
-                        if (iconDict[key].clickGuide.activeInHierarchy)
-                            return;
+                        foreach (eIcon key in iconDict.Keys)
+                        {
+                            if (key == eIcon.IconViewOnOff) continue;
+                            if (iconDict[key].clickGuide.activeInHierarchy) // 하나라도 켜져있다면 온오프의 가이드도 유지해야함
+                                return;
+                        }
                     }
+                    
                 }
                 break;
 

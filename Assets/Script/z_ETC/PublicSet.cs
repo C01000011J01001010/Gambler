@@ -278,8 +278,12 @@ namespace PublicSet
         }
     }
 
+    public interface iNeedCheck
+    {
+        public bool isNeedCheck { get; set; }
+    }
 
-    public class cItemInfo
+    public class cItemInfo : iNeedCheck
     {
         // 기본정보
         public eItemType type { get; set; }
@@ -295,6 +299,9 @@ namespace PublicSet
         public bool isForSale { get; set; }
         public int value_Sale { get; set; }
 
+        // 추가 정보
+        public bool isNeedCheck { get; set; }
+
         public cItemInfo()
         {
             descriptionList = new List<string>();
@@ -303,6 +310,12 @@ namespace PublicSet
             value_Use = 0;
             isForSale = false;
             value_Sale = 0;
+
+            // 로비씬 로드시 다시 초기화되는 값
+            {
+                isNeedCheck = true;
+            }
+            
         }
 
         // 스크립트에서 별도로 추가할 값들
@@ -310,7 +323,7 @@ namespace PublicSet
 
     }
 
-    public class cQuestInfo
+    public class cQuestInfo : iNeedCheck
     {
         public eQuestType type { get; set; }
         public string name { get; set; }
@@ -332,9 +345,12 @@ namespace PublicSet
         {
             descriptionList = new List<string>();
 
-            isNeedCheck = true;
-            isComplete = false;
-            hasReceivedReward = false;
+            // 로비씬 로드시 다시 초기화 되는 값
+            {
+                isNeedCheck = true;
+                isComplete = false;
+                hasReceivedReward = false;
+            }
         }
 
     }

@@ -23,6 +23,11 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
         }
     }
 
+    [SerializeField] protected Text buttonText;
+    
+
+    public UnityAction callback { get; private set; }
+
     /// <summary>
     /// 상속받는 클래스당 1개만 존재하는 공용변수
     /// </summary>
@@ -32,9 +37,6 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
     {
         UnselectThisButton();
     }
-
-    [SerializeField] protected Text buttonText;
-    public UnityAction callback { get; private set; }
 
     public void Setpanel(string value)
     {

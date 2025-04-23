@@ -17,7 +17,9 @@ public struct sItem
     // 데이터 저장을 위해 string으로 변환
     public override string ToString()
     {
-        return $"{id}:{type}";
+        // 추가 정보도 같이 저장
+        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(type);
+        return $"{id}:{type}:{itemInfo.isNeedCheck.ToString()}";
     }
 
     // string으로 저장했던 정보를 사용가능한 데이터로 변환
@@ -25,18 +27,18 @@ public struct sItem
     {
         sItem item = new sItem();
         string[] parts = data.Split(':');
-        if (parts.Length == 2 &&
+
+        if (parts.Length == 3 &&
             int.TryParse(parts[0], out item.id) &&
-            eItemType.TryParse(parts[1], out item.type))
+            eItemType.TryParse(parts[1], out item.type)&&
+            bool.TryParse(parts[2], out bool isNeedCheck))
         {
+            cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);
+            itemInfo.isNeedCheck = isNeedCheck;
+
             return item;
         }
 
-        // 값타입이 반환형인경우 각 속성이 기본값인 해당 값타입을 반환
-            // int의 기본값은 0
-            // float의 기본값은 0.0f
-            // bool의 기본값은 false
-        // 참조타입이 반환형인경우 기본값으로 null을 반환
         return default;
     }
 
@@ -91,7 +93,7 @@ public struct sQuest : IEquatable<sQuest>
         sQuest item = new sQuest();
         string[] parts = data.Split(':');
 
-        if (parts.Length == 4 &&
+        if (parts.Length == 5 &&
             int.TryParse(parts[0], out item.id) &&
             eQuestType.TryParse(parts[1], out item.type)&&
             bool.TryParse(parts[2], out bool isNeedCheck) &&
@@ -118,6 +120,7 @@ public struct sQuest : IEquatable<sQuest>
 
     public override bool Equals(object obj)
     {
+        // 패턴매칭에 의한 조건부 비교
         return obj is sQuest other && Equals(other);
         //if (obj is sQuest)
         //{
@@ -136,8 +139,7 @@ public struct sQuest : IEquatable<sQuest>
     /// </summary>
     /// <param name="id"></param>
     /// <param name="type"></param>
-    /// <param name="isNeedCheck">설정되지 않았으면 기본적으로 확인해야함</param>
-    public sQuest(int id, eQuestType type, bool isNeedCheck = true)
+    public sQuest(int id, eQuestType type)
     {
         this.id = id;
         this.type = type;

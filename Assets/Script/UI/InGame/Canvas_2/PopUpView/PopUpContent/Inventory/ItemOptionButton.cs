@@ -2,15 +2,12 @@ using PublicSet;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static PublicSet.iNeedCheck;
 
-public class ItemDefault : Selection_ButtonBase<ItemDefault>
+public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, cItemInfo>
 {
     [SerializeField] private Image itemImage;
-    sItem item;
-    cItemInfo itemInfo;
 
-    public sItem Item { get { return item; } }
-    public cItemInfo ItemInfo { get { return itemInfo; } }
     private PopUpView_InGame popUpView
     {
         get
@@ -22,13 +19,19 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
     public UnityAction useCheckCallback;
 
 
-    public void InitItemData(sItem item, cItemInfo itemInfo)
+
+    public override void InitPanel()
     {
-        this.item = new sItem(item);
-        InitItemInfo(itemInfo);
         InitItemImage();
 
-        if (itemInfo.isAvailable)
+        ClickCheck(eIcon.Inventory);
+
+        InitUseCheckCallback();
+    }
+
+    private void InitUseCheckCallback()
+    {
+        if (info.isAvailable)
         {
             useCheckCallback =
                 () =>
@@ -46,11 +49,11 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
                         () =>
                         {
                             // 아이템 콜백 실행
-                            itemInfo.itemCallback();
+                            info.itemCallback();
 
                             // 소모성인 경우 아이템 삭제 또는 개수 차감
-                            if (itemInfo.isConsumable)
-                                UsedByPlayer();
+                            if (info.isConsumable)
+                                ItemUsedByPlayer();
 
                             // 인벤토리에서 아이템칸이 클릭 가능하도록
                             UnselectThisButton();
@@ -63,39 +66,40 @@ public class ItemDefault : Selection_ButtonBase<ItemDefault>
                 };
         }
         else useCheckCallback = null;
-            
     }
 
-    public void InitItemInfo(cItemInfo itemInfo)
-    {
-        // 아이템 정보를 초기화
-        this.itemInfo = itemInfo;
-    }
     public void InitItemImage()
     {
         // 아이템 이미지 교체
         bool result = false;
-        Sprite sprite = ItemImageResource.Instance.TryGetImage(itemInfo.type, out result);
+        Sprite sprite = ItemImageResource.Instance.TryGetImage(base.info.type, out result);
         if (result)
         {
             itemImage.sprite = sprite;
         }
     }
+
     public void ClearItemImage()
     {
         itemImage.sprite = null;
     }
 
-    public void UsedByPlayer()
+    public void ClearClickGuide()
     {
-        ItemManager.Instance.PlayerLoseItem(item);
+        if(clickGuide.activeInHierarchy)
+            clickGuide.gameObject.SetActive(false);
     }
 
-    public void SoldByPlayer()
+    public void ItemUsedByPlayer()
     {
-        ItemManager.Instance.PlayerLoseItem(item);
+        ItemManager.Instance.PlayerLoseItem(defaultData);
+    }
 
-        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);
+    public void ItemSoldByPlayer()
+    {
+        ItemManager.Instance.PlayerLoseItem(defaultData);
+
+        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(defaultData.type);
         PlayManager.Instance.AddPlayerMoney(itemInfo.value_Sale);
     }
 

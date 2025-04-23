@@ -21,6 +21,16 @@ public class PopUpView_InGame : PopUpViewBase
         MakePopUpSingleTone();
         InitPopUp();
     }
+
+    private void Start()
+    {
+        // csv에 접근하지만 로드되는 씬이 다르니 문제없음
+        questPopUp.RefreshPopUp();
+        inventoryPopUp.RefreshPopUp();
+    }
+
+
+
     /// <summary>
     /// 팝업은 awake에서 싱글톤생성 호출을 하지 않음
     /// </summary>

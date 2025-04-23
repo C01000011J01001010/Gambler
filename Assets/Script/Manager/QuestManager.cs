@@ -82,18 +82,14 @@ public class QuestManager : Singleton<QuestManager>
         questInfo.isComplete = true;
         questInfo.isNeedCheck = true;
 
-        // 플레이어가 완료한 퀘스트를 확인하고 보상을 받도록 유도
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
-
         // 보상이 따로 없는 경우는 바로 완료상태가 되도록 설정
         if (questInfo.rewardCoin == 0 && questInfo.rewardItemType == eItemType.None)
         {
             questInfo.hasReceivedReward = true;
         }
-            
 
-        EventManager.Instance.SetEventMessage($"퀘스트\n{questInfo.name}\n성공!");
-        EventManager.Instance.PlaySequnce_EventAnimation();
+        // 플레이어가 완료한 퀘스트를 확인하고 보상을 받도록 유도
+        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
 
         GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
         return true;

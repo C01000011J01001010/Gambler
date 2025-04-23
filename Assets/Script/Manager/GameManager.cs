@@ -333,7 +333,8 @@ public class GameManager : Singleton<GameManager>
             case 1: 
                 {
                     SetCurrentScene(eScene.Lobby);
-                    // 퀘스트는 퀘스트 정보도 함께 초기화
+
+                    // 퀘스트 정보 초기화
                     foreach (eQuestType type in Enum.GetValues(typeof(eQuestType)))
                     {
                         if (type == eQuestType.None) continue;
@@ -342,6 +343,16 @@ public class GameManager : Singleton<GameManager>
 
                         questInfo.isNeedCheck = true;
                         questInfo.isComplete = questInfo.hasReceivedReward = false;
+                    }
+
+                    // 아이템 정보 초기화
+                    foreach(eItemType type in Enum.GetValues(typeof(eItemType)))
+                    {
+                        if(type == eItemType.None) continue;
+
+                        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(type);
+
+                        itemInfo.isNeedCheck = true;
                     }
                 }
                 break;

@@ -45,25 +45,18 @@ public class EventManager : Singleton<EventManager>
 
         // 이미지 색깔 초기화
         canvasGroup.alpha = 0f;
-        //Image stateViewImage = connector_InGame.eventView.GetComponent<Image>();
-        //stateViewImage.color = colorClearAlpha;
-        //connector_InGame.eventView.SetTextColer(Color.clear);
 
         // 이벤트 끝난 후 간격
         sequence.AppendInterval(intervalDelay);
 
         // 이벤트 화면 페이드인
         sequence.Append(canvasGroup.DOFade(1f, delay));
-        //sequence.Append(stateViewImage.DOColor(Color.white, delay));
-        //sequence.Join(eventText.DOColor(Color.black, delay));
 
         // 유지
         sequence.AppendInterval(delay);
 
         // 이벤트 화면 페이드아웃
         sequence.Append(canvasGroup.DOFade(0f, delay));
-        //sequence.Append(stateViewImage.DOColor(colorClearAlpha, delay));
-        //sequence.Join(eventText.DOColor(Color.clear, delay));
 
         // 이벤트 화면 비활성화
         sequence.AppendCallback(() => connector_InGame.eventView.gameObject.SetActive(false));

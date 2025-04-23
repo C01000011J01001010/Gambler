@@ -24,7 +24,7 @@ public class ItemDescriptionPanel : MonoBehaviour
         RegisterButton.gameObject.SetActive(active);
     }
 
-    public void SetPanel(ItemDefault item, cItemInfo itemInfo)
+    public void SetPanel(ItemOptionButton item, cItemInfo itemInfo)
     {
         // 아이템 이름 설정
         itemName.text = itemInfo.name;
