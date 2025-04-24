@@ -9,6 +9,8 @@ public class PopUpView_InGame : PopUpViewBase
 
     // ¾ÆÀÌÄÜ ÆË¾÷
     public GameObject optionPopUp;
+    public GameSettingPopUp gameSettingPopUp;
+
     public InventoryPopUp inventoryPopUp;
     public QuestPopUp questPopUp;
     public GameAssistantPopUp_OnlyOneLives gameAssistantPopUp_OnlyOneLives;
@@ -57,7 +59,13 @@ public class PopUpView_InGame : PopUpViewBase
         optionPopUp.transform.SetAsLastSibling();
     }
 
-    public void InventoryPopUpOpen()
+    public void GameSettingPopUpOpen()
+    {
+        gameSettingPopUp.gameObject.SetActive(true);
+        gameSettingPopUp.transform.SetAsLastSibling();
+    }
+
+public void InventoryPopUpOpen()
     {
         //gameObject.SetActive(true);
         inventoryPopUp.gameObject.SetActive(true);

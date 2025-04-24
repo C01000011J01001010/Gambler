@@ -561,17 +561,17 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
     }
 
 
-    private void SaveData(string key, int value)
+    public void SaveData(string key, int value)
     {
         PlayerPrefs.SetInt(key, value);
         PlayerPrefs.Save();
     }
-    private void SaveData(string key, float value)
+    public void SaveData(string key, float value)
     {
         PlayerPrefs.SetFloat(key, value);
         PlayerPrefs.Save();
     }
-    private void SaveData(string key, string value)
+    public void SaveData(string key, string value)
     {
         PlayerPrefs.SetString(key, value);
         PlayerPrefs.Save();

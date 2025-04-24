@@ -1,7 +1,6 @@
 using PublicSet;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class InventoryPopUp : PopUpBase_FullScreen<InventoryPopUp>
 {

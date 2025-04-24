@@ -5,15 +5,13 @@ public class EffactAudio : GameAudio
     [SerializeField] private AudioClip click;
     [SerializeField] private AudioClip effact;
 
-    private void Awake()
+    protected void Awake()
     {
-        volumeKey = "ButtonClickAudio";
+        volumeValueKey = $"AudioKey_EffactAudio";
+        volumeMuteKey = $"{volumeValueKey}_Mute";
+        defaultVolume = 1.0f;
     }
 
-    void Start()
-    {
-        
-    }
 
     private void Update()
     {
@@ -37,14 +35,4 @@ public class EffactAudio : GameAudio
         audioSource.Play();
     }
 
-    public override float LoadVolumeData()
-    {
-        float value = 1.0f;
-
-        //value = PlayerPrefsManager.Instance.LoadData(volumeKey, 1.0f);
-
-        audioSource.volume = value;
-
-        return value;
-    }
 }

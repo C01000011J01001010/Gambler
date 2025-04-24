@@ -1,15 +1,23 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class> 
-    where T_Class : PopUpBase_FullScreen<T_Class>
+public class PanelBase_ConstContent : MonoBehaviour
 {
+    // 에디터 연결
     public RectTransform viewPortRectTrans;
+    public RectTransform contentRectTrans;
+    public GridLayoutGroup contentGrid;
+    public ScrollRect scrollRect;  // ScrollRect 컴포넌트를 연결
 
-    protected override void Awake()
+    private int childCount;
+
+    private void Start()
     {
         AdjustContentCellSize();
+        ChangeContentRectTransform();
+        ScrollToTop();
     }
 
     bool IsPrefabLinked(GameObject obj)
@@ -19,19 +27,18 @@ public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class>
         return prefabType != PrefabAssetType.NotAPrefab;
     }
 
-
     protected virtual void AdjustContentCellSize()
     {
         // rect.size를 프리팹으로 연결한 상태에서 사용하면 로드된 실제 크기와 다른 값을 불러올 수 있음(로드 전 크기)
         // 이는 레이아웃 계산이 완료되지 않았기에 생기는 문제로 해당 연산을 먼저 처리하도록 만들어야함
-        if(IsPrefabLinked(gameObject))
+        if (IsPrefabLinked(gameObject))
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(viewPortRectTrans);
         }
         Vector2 contentCellSize = viewPortRectTrans.rect.size;
 
         // y는 스크롤축이니 그대로 유지
-        contentCellSize.y = contentGrid.cellSize.y; 
+        contentCellSize.y = contentGrid.cellSize.y;
 
         // x축에서 여백 제외한 모든 공간을 값으로 정함
         contentCellSize.x = contentCellSize.x
@@ -43,17 +50,16 @@ public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class>
         contentGrid.cellSize = contentCellSize;
     }
 
-    protected override void ChangeContentRectTransform()
+    protected virtual void ChangeContentRectTransform()
     {
-        //InitAnchor();
-        //InitGridRayout();
+        childCount = contentRectTrans.childCount;
 
         if (contentGrid != null)
         {
             Vector2 size = Vector2.zero;
 
             // 행개수 : ex) (자식개수가 4, 제약개수가 4) -> (3/4 + 1 = 1)
-            int rowCount = ((ActiveObjList.Count - 1) / (contentGrid.constraintCount)) + 1;
+            int rowCount = ((childCount - 1) / (contentGrid.constraintCount)) + 1;
             //Debug.Log($"rowCount : {rowCount}");
 
             int ColumnCount = contentGrid.constraintCount;
@@ -70,7 +76,7 @@ public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class>
                 contentGrid.spacing.y * (rowCount - 1);
             //Debug.Log($"size.y : {size.y}");
 
-            contentTrans.sizeDelta = size;
+            contentRectTrans.sizeDelta = size;
 
             //Debug.Log("CONTENT 맞춤설정 완료");
 
@@ -81,4 +87,13 @@ public abstract class PopUpBase_FullScreen<T_Class> : PopUpBase<T_Class>
         }
 
     }
+
+    // 스크롤을 위로 올리는 함수
+    public void ScrollToTop()
+    {
+        // 콘텐트를 제어하여 스크롤바를 제어
+        scrollRect.verticalNormalizedPosition = 1f;  // 1f: 맨 위
+    }
+
 }
+

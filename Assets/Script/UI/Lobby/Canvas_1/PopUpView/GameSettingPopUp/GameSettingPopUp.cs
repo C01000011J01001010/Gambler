@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -6,7 +8,7 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
     static readonly string[] GameSettingTitle =
     {
         "오디오 설정",
-        "조작 설정",
+        //"조작 설정",
         "데이터 초기화"
     };
 
@@ -20,6 +22,22 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
     {
         RefreshPopUp();
         ScrollToTop();
+
+        // 시작시 오디오 설정탭만 켜기
+        {
+            int index = 0;
+            for (int CloseIndex = 0; CloseIndex < GameSettingPanel.Length; CloseIndex++)
+            {
+                // 열려는 탭은 놔두고
+                if (index == CloseIndex)
+                    continue;
+
+                // 그 외에 모든 탭은 닫기
+                else if (GameSettingPanel[CloseIndex].activeInHierarchy)
+                    GameSettingPanel[CloseIndex].SetActive(false);
+            }
+            GameSettingPanel[index].SetActive(true);
+        }
     }
 
     public override void RefreshPopUp()

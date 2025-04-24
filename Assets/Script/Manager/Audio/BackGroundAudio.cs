@@ -1,38 +1,19 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class BackGroundMusic : GameAudio
+public class BackGroundAudio : GameAudio
 {
     [SerializeField] private AudioClip defaultMusic;
     [SerializeField] private AudioClip playMusic;
-    //public AudioClip bossMusic;
-    public static BackGroundMusic Instance { get; private set; }
 
-    private void Awake()
+    protected void Awake()
     {
-        volumeKey = "BackGroundMusic";
+        volumeValueKey = $"AudioKey_BackGroundAudio";
+        volumeMuteKey = $"{volumeValueKey}_Mute";
+        defaultVolume = 1.0f;
     }
-    void Start()
-    {
-        if (audioSource != null)
-        {
-            if(audioSource.isPlaying == false)
-            {
-                audioSource.loop = true;
-                audioSource.clip = defaultMusic;
-                audioSource.Play();
-                Debug.Log("뮤직 스타트");
-            }
-            else
-            {
-                Debug.Log("배경음악 실행중");
-            }
-        }
-        else
-        {
-            Debug.LogError("audioSource == null");
-        }
-    }
+
+
     public void DefaultPlay()
     {
         if (audioSource != null)
@@ -70,15 +51,5 @@ public class BackGroundMusic : GameAudio
         }
     }
 
-    public override float LoadVolumeData()
-    {
-        float value = 1.0f;
-
-        value = PlayerSaveManager.Instance.LoadData(volumeKey, 0.8f);
-
-        audioSource.volume = value;
-
-        return value;
-    }
 
 }

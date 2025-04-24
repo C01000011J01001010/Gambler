@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 public class ToggleBase : MonoBehaviour
 {
+
     private Toggle _toggle;
-    protected Toggle toggle
+    public Toggle toggle
     {
         get 
         {
@@ -18,6 +19,9 @@ public class ToggleBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// SetIsOn 사용후 콜백을 복구할 때 사용
+    /// </summary>
     protected UnityAction<bool> StoredCallback;
 
     public void SetInteractable(bool value)
@@ -30,6 +34,10 @@ public class ToggleBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 상호작용없이 바꿈
+    /// </summary>
+    /// <param name="value"></param>
     public void SetIsOn(bool value)
     {
         toggle.onValueChanged.RemoveAllListeners();
