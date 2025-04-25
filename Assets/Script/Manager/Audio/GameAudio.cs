@@ -66,4 +66,10 @@ public abstract class GameAudio  : MonoBehaviour
         LoadVolumeValue();
         LoadVolumeMute();
     }
+
+    public virtual void ClearAudioSettingValue()
+    {
+        PlayerPrefs.DeleteKey(volumeValueKey);
+        PlayerPrefs.DeleteKey(volumeMuteKey);
+    }
 }

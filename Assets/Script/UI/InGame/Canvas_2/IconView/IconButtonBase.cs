@@ -9,7 +9,7 @@ public abstract class IconButtonBase : ButtonBase
         {
             if (_popUpView == null)
             {
-                _popUpView = GameManager.connector_InGame.popUpView_Script;
+                _popUpView = GameManager.connector_InGame.popUpViewAsInGame;
             }
             return _popUpView;
         }

@@ -12,8 +12,8 @@ public class ContinueButton : SaveAndContinue_ButtonBase
         if(savedDate != string.Empty)
         {
             popUpView.YesOrNoPopUpOpen();
-
             yesOrNoPopUp.UpdateMainDescription($"{saveKey.ToString()}\n해당 플레이를 계속하시겠습니까?");
+            yesOrNoPopUp.SetYesText("예");
 
             yesOrNoPopUp.SetYesButtonCallBack(
                 () =>

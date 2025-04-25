@@ -81,7 +81,7 @@ namespace PublicSet
         OnPlayerWakeUp,
 
         // Ä«Áö³ë
-        GameMaster,
+        //GameMaster,
         PlayerCantPlayThis
     }
 
@@ -138,6 +138,7 @@ namespace PublicSet
     {
         None = 0,
 
+        WelcomeFromGM = 100,
         ExplainFeature = 101,
 
         

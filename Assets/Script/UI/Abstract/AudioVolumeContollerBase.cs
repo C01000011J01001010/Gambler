@@ -14,7 +14,7 @@ public abstract class AudioVolumeContollerBase : MonoBehaviour
         get { return AudioManager.Instance; }
     }
 
-    protected virtual void Start()
+    public virtual void InitController()
     {
         volumeSlider.SetSliderCallback(OnVolumeChanged);
         muteToggle.SetToggleCallback(OnMuteToggle);

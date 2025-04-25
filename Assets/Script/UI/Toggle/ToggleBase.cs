@@ -40,6 +40,7 @@ public class ToggleBase : MonoBehaviour
     /// <param name="value"></param>
     public void SetIsOn(bool value)
     {
+        // 콜백을 지워서 실행되지 않게 한 다음 토글 바꾸고 다시 콜백을 복귀
         toggle.onValueChanged.RemoveAllListeners();
         toggle.isOn = value;
         SetToggleCallback(StoredCallback);

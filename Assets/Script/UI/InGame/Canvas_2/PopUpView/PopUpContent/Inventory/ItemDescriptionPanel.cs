@@ -14,14 +14,14 @@ public class ItemDescriptionPanel : MonoBehaviour
     {
         get
         {
-            return GameManager.connector_InGame.popUpView_Script;
+            return GameManager.connector_InGame.popUpViewAsInGame;
         }
     }
 
     private void ButtonSetActive(bool active)
     {
         useButton.gameObject.SetActive(active);
-        RegisterButton.gameObject.SetActive(active);
+        //RegisterButton.gameObject.SetActive(active);
     }
 
     public void SetPanel(ItemOptionButton item, cItemInfo itemInfo)

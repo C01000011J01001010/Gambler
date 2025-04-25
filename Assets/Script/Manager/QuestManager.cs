@@ -62,7 +62,7 @@ public class QuestManager : Singleton<QuestManager>
         // 플레이어가 수주한 퀘스트를 확인하도록 유도
         GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
 
-        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
         return true;
     }
 
@@ -91,7 +91,7 @@ public class QuestManager : Singleton<QuestManager>
         // 플레이어가 완료한 퀘스트를 확인하고 보상을 받도록 유도
         GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
 
-        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
         return true;
     }
 

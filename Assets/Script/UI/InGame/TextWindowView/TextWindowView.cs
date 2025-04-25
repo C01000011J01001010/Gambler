@@ -46,6 +46,7 @@ public class TextWindowView : MonoBehaviour
         {
             StopCoroutine(currentCoroutine);
             currentCoroutine = null;
+            isTypingReady = true;
         }
 
         if (GameManager.Instance != null)

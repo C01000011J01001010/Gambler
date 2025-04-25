@@ -224,7 +224,7 @@ public class CallbackManager : Singleton<CallbackManager>
     public virtual void SavePlayerData()
     {
         TextWindowPopUp_Close();
-        GameManager.connector_InGame.popUpView_Script.SaveDataPopUpOpen();
+        GameManager.connector_InGame.popUpViewAsInGame.SaveDataPopUpOpen();
     }
 
     // 8
@@ -441,7 +441,7 @@ public class CallbackManager : Singleton<CallbackManager>
     
     public void EatMeal()
     {
-        InventoryPopUp inven = connector_InGame.popUpView_Script.inventoryPopUp.GetComponent<InventoryPopUp>();
+        InventoryPopUp inven = connector_InGame.popUpViewAsInGame.inventoryPopUp.GetComponent<InventoryPopUp>();
         if (inven != null)
         {
             cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(inven.currentClickItem.type);

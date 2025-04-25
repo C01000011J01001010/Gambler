@@ -1,9 +1,7 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PanelBase_ConstContent : MonoBehaviour
+public abstract class PanelBase_ConstContent : MonoBehaviour
 {
     // 에디터 연결
     public RectTransform viewPortRectTrans;
@@ -20,21 +18,14 @@ public class PanelBase_ConstContent : MonoBehaviour
         ScrollToTop();
     }
 
-    bool IsPrefabLinked(GameObject obj)
-    {
-        // 현재 객체가 프리팹 인스턴스인지 확인
-        var prefabType = PrefabUtility.GetPrefabAssetType(obj);
-        return prefabType != PrefabAssetType.NotAPrefab;
-    }
+    public abstract void RefreshPanel();
+
 
     protected virtual void AdjustContentCellSize()
     {
         // rect.size를 프리팹으로 연결한 상태에서 사용하면 로드된 실제 크기와 다른 값을 불러올 수 있음(로드 전 크기)
         // 이는 레이아웃 계산이 완료되지 않았기에 생기는 문제로 해당 연산을 먼저 처리하도록 만들어야함
-        if (IsPrefabLinked(gameObject))
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(viewPortRectTrans);
-        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(viewPortRectTrans);
         Vector2 contentCellSize = viewPortRectTrans.rect.size;
 
         // y는 스크롤축이니 그대로 유지

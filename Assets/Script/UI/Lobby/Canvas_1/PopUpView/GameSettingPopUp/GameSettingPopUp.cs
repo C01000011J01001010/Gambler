@@ -1,6 +1,4 @@
 using System;
-using System.Reflection;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
@@ -12,11 +10,20 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
         "데이터 초기화"
     };
 
+    public enum eSettingPanel
+    {
+        Audio,
+        Control,
+    }
+
     // 데이터 초기화를 제외한 판넬
     // 데이터 초기화는 선택팝업창 사용
-    public GameObject[] GameSettingPanel; 
+    [SerializeField] private PanelBase_ConstContent[] _gameSettingPanel;
+    public PanelBase_ConstContent[] gameSettingPanel { get { return _gameSettingPanel; } }
 
-    private PopUPView_Lobby popUPView { get { return GameManager.connector_Lobby.popUpView_Script; } }
+    public PanelBase_ConstContent currentPanel {  get; private set; }
+
+    private PopUpViewBase popUPView { get { return GameManager.connector.popUpView; } }
 
     private void OnEnable()
     {
@@ -24,28 +31,30 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
         ScrollToTop();
 
         // 시작시 오디오 설정탭만 켜기
-        {
-            int index = 0;
-            for (int CloseIndex = 0; CloseIndex < GameSettingPanel.Length; CloseIndex++)
-            {
-                // 열려는 탭은 놔두고
-                if (index == CloseIndex)
-                    continue;
+        PanelOpen((int)eSettingPanel.Audio);
+        //{
+        //    int index = 0;
+        //    for (int CloseIndex = 0; CloseIndex < gameSettingPanel.Length; CloseIndex++)
+        //    {
+        //        // 열려는 탭은 놔두고
+        //        if (index == CloseIndex)
+        //            continue;
 
-                // 그 외에 모든 탭은 닫기
-                else if (GameSettingPanel[CloseIndex].activeInHierarchy)
-                    GameSettingPanel[CloseIndex].SetActive(false);
-            }
-            GameSettingPanel[index].SetActive(true);
-        }
+        //        // 그 외에 모든 탭은 닫기
+        //        else if (gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
+        //            gameSettingPanel[CloseIndex].gameObject.SetActive(false);
+        //    }
+        //    gameSettingPanel[index].gameObject.SetActive(true);
+        //}
     }
 
     public override void RefreshPopUp()
     {
-        RefreshPopUp(GameSettingTitle.Length,
-            () =>
+        base.RefreshPopUp(GameSettingTitle.Length,
+            (Action)(() =>
             {
-                for(int i = 0; i < GameSettingTitle.Length; i++)
+                
+                for (int i = 0; i < GameSettingTitle.Length; i++)
                 {
                     int index = i;
                     GameSettingSelectionButton selectButton = ActiveObjList[index].GetComponent<GameSettingSelectionButton>();
@@ -66,7 +75,7 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
                                 popUPView.yesOrNoPopUp.SetYesButtonCallBack(
                                     () =>
                                     {
-                                        PlayerPrefs.DeleteAll();
+                                        PlayerSaveManager.Instance.PlayerDataReset();
                                         Debug.Log("모든 저장된 데이터 삭제");
                                     });
 
@@ -81,22 +90,54 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
                         selectButton.SetCallback(selectButton,
                             () =>
                             {
-                                for (int CloseIndex = 0; CloseIndex < GameSettingPanel.Length; CloseIndex++)
-                                {
-                                    // 열려는 탭은 놔두고
-                                    if (index == CloseIndex)
-                                        continue;
+                                PanelOpen(index);
+                                //for (int CloseIndex = 0; CloseIndex < this.gameSettingPanel.Length; CloseIndex++)
+                                //{
+                                //    // 열려는 탭은 놔두고
+                                //    if (index == CloseIndex)
+                                //        continue;
 
-                                    // 그 외에 모든 탭은 닫기
-                                    else if (GameSettingPanel[CloseIndex].activeInHierarchy)
-                                        GameSettingPanel[CloseIndex].SetActive(false);
-                                }
+                                //    // 그 외에 모든 탭은 닫기
+                                //    else if (this.gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
+                                //        this.gameSettingPanel[CloseIndex].gameObject.SetActive(false);
+                                //}
 
-                                GameSettingPanel[index].SetActive(true);
+                                //// 현재 오픈한 판넬을 저장하고 그 판넬을 활성화
+                                //currentPanel = this.gameSettingPanel[index];
+                                //currentPanel.gameObject.SetActive(true);
 
                             });
                     }
                 }
-            });
+            }));
+    }
+
+
+    /// <summary>
+    /// 하나의 판넬만 활성화 하고 나머지 전부 비활성화, 현재 판넬을 저장
+    /// </summary>
+    /// <param name="index"></param>
+    public void PanelOpen(int index)
+    {
+        if (index >= gameSettingPanel.Length)
+        {
+            Debug.Log("잘못된 인덱스 접근");
+            return;
+        }
+
+        for (int CloseIndex = 0; CloseIndex < gameSettingPanel.Length; CloseIndex++)
+        {
+            // 열려는 탭은 놔두고
+            if (index == CloseIndex)
+                continue;
+
+            // 그 외에 모든 탭은 닫기
+            else if (gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
+                gameSettingPanel[CloseIndex].gameObject.SetActive(false);
+        }
+
+        // 현재 오픈한 판넬을 저장하고 그 판넬을 활성화
+        currentPanel = gameSettingPanel[index];
+        currentPanel.gameObject.SetActive(true);
     }
 }

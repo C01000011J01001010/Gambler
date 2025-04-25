@@ -4,7 +4,7 @@ using UnityEngine;
 public class RewardButton : Deactivatable_ButtonBase
 {
     public cQuestInfo questInfo { get; private set; }
-    public PopUpView_InGame popUpView_InGame { get {  return GameManager.connector_InGame.popUpView_Script; } }   
+    public PopUpView_InGame popUpView_InGame { get {  return GameManager.connector_InGame.popUpViewAsInGame; } }   
 
 
     private void Start()
@@ -39,6 +39,6 @@ public class RewardButton : Deactivatable_ButtonBase
         questInfo.isNeedCheck = false;
 
         // 정보대로 팝업을 리프레시
-        GameManager.connector_InGame.popUpView_Script.questPopUp.RefreshPopUp();
+        GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
     }
 }

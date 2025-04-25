@@ -2089,7 +2089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackView: {fileID: 409012886}
-  popUpView_Script: {fileID: 165980474}
+  popUpView: {fileID: 165980474}
 --- !u!1 &1901693381
 GameObject:
   m_ObjectHideFlags: 0

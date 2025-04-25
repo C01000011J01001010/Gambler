@@ -10,7 +10,7 @@ public class BackGroundAudio : GameAudio
     {
         volumeValueKey = $"AudioKey_BackGroundAudio";
         volumeMuteKey = $"{volumeValueKey}_Mute";
-        defaultVolume = 1.0f;
+        defaultVolume = 0.8f;
     }
 
 

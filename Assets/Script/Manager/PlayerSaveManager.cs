@@ -589,4 +589,22 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
     {
         return PlayerPrefs.GetString(key, defaultValue);
     }
+
+    public void PlayerDataReset()
+    {
+        PlayerPrefs.DeleteAll();
+
+        // 초기화시 현재 환경설정창에서 보이는 판넬을 초기화시킴
+        switch (GameManager.Instance.currentScene)
+        {
+            case eScene.Lobby:
+                
+                GameManager.connector_Lobby.popUpViewAsLobby.gameSettingPopUp.currentPanel.RefreshPanel();
+                break;
+
+            case eScene.InGame:
+                GameManager.connector_InGame.popUpViewAsInGame.gameSettingPopUp.currentPanel.RefreshPanel();
+                break;
+        }
+    }
 }

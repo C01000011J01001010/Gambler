@@ -12,7 +12,7 @@ public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, c
     {
         get
         {
-            return GameManager.connector_InGame.popUpView_Script;
+            return GameManager.connector_InGame.popUpViewAsInGame;
         }
     }
 
