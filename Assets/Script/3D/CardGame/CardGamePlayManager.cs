@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using PublicSet;
 using DG.Tweening;
 using System.Linq;
-using Unity.VisualScripting.Antlr3.Runtime;
-using NUnit.Framework.Constraints;
 
 
 
@@ -210,7 +208,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         currentProgress = progress;
 
         Debug.Log($"다음 진행상황 : {currentProgress.ToString()}");
-        (GameManager.connector as Connector_InGame).textWindowView_Script.StartTextWindow(currentProgress);
+        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(currentProgress);
     }
     /// <summary>
     /// 모든 진행사항은 직접 제어하지 않고 해당 함수로 제어함
@@ -220,7 +218,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         Debug.Log($"현재 진행상황 : {currentProgress.ToString()}");
 
         if (currentProgress == eOOLProgress.num104_OnChooseFirstPlayer || 
-            currentProgress == eOOLProgress.num407_OnChooseNextPlayer)
+            currentProgress == eOOLProgress.num408_OnChooseNextPlayer)
         {
             if (Attacker != null)
             {
@@ -293,7 +291,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             currentProgress == eOOLProgress.num403_OnAttackSuccess ||
             currentProgress == eOOLProgress.num404_OnDefenceSuccess ||
             currentProgress == eOOLProgress.num405_OnHuntPrey||
-            currentProgress == eOOLProgress.num406_OnPlayerBankrupt) // 주인공의 경우 다음으로 넘어가지 않고 게임이 종료됨
+            currentProgress == eOOLProgress.num406_OnPlayerBankrupt_GetOut ||
+            currentProgress == eOOLProgress.num407_OnPlayerBankrupt_GoToMining) // 주인공의 경우 다음으로 넘어가지 않고 게임이 종료됨
         {
             // 다음차례가 있으면 큐에서 그 선수의 명단을 꺼낸 후 다음차례를 진행
             if(OrderedPlayerQueue.Count > 0)
@@ -308,7 +307,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
                 }
 
                 Attacker = OrderedPlayerQueue.Dequeue();
-                currentProgress = eOOLProgress.num407_OnChooseNextPlayer;
+                currentProgress = eOOLProgress.num408_OnChooseNextPlayer;
             }
             // 그렇지 않으면 게임을 종료
             else
@@ -539,25 +538,25 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
             case eCriteria.HuntingTime:
                 {
                     resultValue = Attacker.PresentedCardScript.trumpCardInfo.cardValue;
-                }break;
+                } break;
 
             case eCriteria.AttakkerWin:
                 {
                     resultValue = Attacker.PresentedCardScript.trumpCardInfo.cardValue -
                                     Deffender.PresentedCardScript.trumpCardInfo.cardValue;
-                    if(resultValue == 0)
+                    if (resultValue == 0)
                     {
                         resultValue = Attacker.PresentedCardScript.trumpCardInfo.cardValue;
                     }
                     resultValue = Mathf.Abs(resultValue);
-                }break;
+                } break;
             //case eCriteria.DeffenderWin: break;
             default: break; // 필요 없으나 만일을 대비
         }
 
 
         // 파산한 플레이어가 늘어날 수록 코인배수 증가(1배, 2배, 4배)
-        { 
+        {
             coinMultiple = 1;
             int bankruptPlayerNum = 4 - playerList.Count;
             if (bankruptPlayerNum > 0)
@@ -575,16 +574,46 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         int defaultMultiple = 10; //게임의 난이도에 따라 변경 할 수 있도록 만들까?
         ExpressionValue = resultValue * coinMultiple * defaultMultiple;
 
-        if(Prey != null) // 먹잇감이 있으면 2배 이벤트
+        if (Prey != null) // 먹잇감이 있으면 2배 이벤트
         {
             ExpressionValue *= 2;
         }
     }
 
+    /// <summary>
+    /// 배당금 지불 상황에 따라 다음 순서를 정함
+    /// </summary>
+    /// <param name="sequence"></param>
+    /// <param name="isBankrupt"></param>
+    /// <param name="hasDebt"></param>
+    /// <param name="doomedVictim"></param>
+    private void GetSequnce_DetermineNextProgress(Sequence sequence, bool isBankrupt, bool hasDebt, CardGamePlayerBase doomedVictim)
+    {
+        if (isBankrupt)
+        {
+            // 텍스트에 띄우기 위해 파산한 사람은 피해자로 설정
+            if(doomedVictim != Victim)
+                SetVictim(doomedVictim);
+
+            if(hasDebt)
+            {
+                sequence.AppendCallback(() => SetProgress(eOOLProgress.num407_OnPlayerBankrupt_GoToMining));
+            }
+            else
+            {
+                sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt_GetOut));
+            }
+        }
+        else
+        {
+            sequence.AppendCallback(NextProgress); // 407 또는 501로 이동
+        }
+    }
+
     public void OnJokerAppear()
     {
-        int result = Victim.TryMinusCoin(ExpressionValue, out bool isBankrupt);
-        Joker.AddCoin(result);
+        Victim.TryMinusCoin(ExpressionValue, out bool isBankrupt, out bool hasDebt);
+        Joker.AddCoin(ExpressionValue);
         
 
         Sequence sequence = DOTween.Sequence();
@@ -597,16 +626,9 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         CardGameAnimationManager.Instance.GetSequnce_OrganizeCardAnimaition(sequence, Joker, true);
         CardGameAnimationManager.Instance.GetSequnce_OrganizeCardAnimaition(sequence, Victim, true);
 
-        if(isBankrupt)
-        {
-            // 조커가 등장한 경우 이미 Victim이 설정되어있음
-            sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt));
-        }
-        else
-        {
-            sequence.AppendCallback(NextProgress); // 407 또는 501로 이동
-        }
-        
+        GetSequnce_DetermineNextProgress(sequence, isBankrupt, hasDebt, Victim);
+
+
 
         sequence.SetLoops(0);
         sequence.Play();
@@ -614,8 +636,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
     public void OnAttackSuccess()
     {
-        int result = Deffender.TryMinusCoin(ExpressionValue, out bool isBankrupt);
-        Attacker.AddCoin(result);
+        Deffender.TryMinusCoin(ExpressionValue, out bool isBankrupt, out bool hasDebt);
+        Attacker.AddCoin(ExpressionValue);
 
         Sequence sequence = DOTween.Sequence();
 
@@ -628,15 +650,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         CardGameAnimationManager.Instance.GetSequnce_OrganizeCardAnimaition(sequence, Attacker, true);
         CardGameAnimationManager.Instance.GetSequnce_OrganizeCardAnimaition(sequence, Deffender, true);
 
-        if (isBankrupt)
-        {
-            SetVictim(Deffender); // 정산은 마쳤으니 스크립트에서 변수로 활용하기 위해  Victim으로 통일
-            sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt));
-        }
-        else
-        {
-            sequence.AppendCallback(NextProgress); // 407 또는 501로 이동
-        }
+        GetSequnce_DetermineNextProgress(sequence, isBankrupt, hasDebt, Deffender);
 
 
         sequence.SetLoops(0);
@@ -663,8 +677,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
     public void OnHuntPrey()
     {
-        int result = Prey.TryMinusCoin(ExpressionValue, out bool isBankrupt);
-        Attacker.AddCoin(result);
+        Prey.TryMinusCoin(ExpressionValue, out bool isBankrupt, out bool hasDebt);
+        Attacker.AddCoin(ExpressionValue);
 
         Sequence sequence = DOTween.Sequence();
 
@@ -675,15 +689,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         Attacker.PresentedCardScript.UnselectThisCard_OnPlayTime(Attacker);
         CardGameAnimationManager.Instance.GetSequnce_OrganizeCardAnimaition(sequence, Attacker, true);
 
-        if (isBankrupt)
-        {
-            SetVictim(Prey);
-            sequence.AppendCallback(() => SetProgress(eOOLProgress.num406_OnPlayerBankrupt));
-        }
-        else
-        {
-            sequence.AppendCallback(NextProgress); // 407 또는 501로 이동
-        }
+        GetSequnce_DetermineNextProgress(sequence, isBankrupt, hasDebt, Prey);
 
         sequence.SetLoops(0);
         sequence.Play();

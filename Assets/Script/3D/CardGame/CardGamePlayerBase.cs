@@ -121,9 +121,11 @@ public abstract class CardGamePlayerBase : MonoBehaviour
     /// <summary>
     /// 플레이어가 소지한 금액에서 현재 값을 차감했을 때 파산여부를 알 수 있음
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns>차감하는데 성공한 금액</returns>
-    public abstract int TryMinusCoin(int value, out bool isBankrupt);
+    /// <param name="value">플레어가 지불해야하는 배당금</param>
+    /// <param name="isBankrupt">플레이어가 가진 금액이 0 이하로 떨어졌는지 체크</param>
+    /// <param name="hasDebt">플레이어가 가진 돈이 부족하여 빚을 냈는지 체크</param>
+    /// <returns></returns>
+    public abstract void TryMinusCoin(int value, out bool isBankrupt, out bool hasDebt);
 
     public void SetCharacterInfo(cCharacterInfo info)
     {

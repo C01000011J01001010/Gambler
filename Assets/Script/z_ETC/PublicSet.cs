@@ -115,9 +115,10 @@ namespace PublicSet
         num404_OnDefenceSuccess,
         num405_OnHuntPrey,
 
-        num406_OnPlayerBankrupt,
+        num406_OnPlayerBankrupt_GetOut,
+        num407_OnPlayerBankrupt_GoToMining,
 
-        num407_OnChooseNextPlayer,
+        num408_OnChooseNextPlayer,
 
 
         num501_final = 501,
@@ -208,7 +209,14 @@ namespace PublicSet
         LearnHowToSave,
         StartFirstGame,
         GoToSleep,
-        Collect2000Coins
+        CheckTheBoxEveryDay,
+        TryUseDarkWebMarket,
+
+        // 게임 목적 관련
+        Collect2000Coins,
+        Collect5000Coins,
+        Collect8000Coins,
+        Collect10000Coins
     }
 
 

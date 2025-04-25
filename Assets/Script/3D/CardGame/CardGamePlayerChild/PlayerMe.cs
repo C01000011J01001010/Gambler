@@ -39,23 +39,27 @@ public class PlayerMe : CardGamePlayerBase
     /// </summary>
     /// <param name="value">양수를 값으로 받음</param>
     /// <returns></returns>
-    public override int TryMinusCoin(int value, out bool isBankrupt)
+    public override void TryMinusCoin(int value, out bool isBankrupt, out bool hasDebt)
     {
-        if (coin <= value) //파산
-        {
-            value = coin; // 남은돈에 한해서 상대방에게 지급함
-            coin = 0;
-            isBankrupt = true;
-        }
-        else
-        {
-            coin = coin - value;
-            isBankrupt = false;
-        }
-        PlayManager.Instance.AddPlayerMoney(-value);
+        isBankrupt = false;
+        hasDebt = false;
 
-        // 플레이어가 소지한 금액이 최대값
-        return value;
+        // 파산 여부 체크
+        if (coin <= value)
+        {
+            isBankrupt = true;
+
+            // 지불할 돈이 부족한지 체크
+            if(coin < value)
+            {
+                hasDebt = true;
+            }
+        }
+
+        // coin이 (-)마이너스가 된다면 주최측이 빚으로 달고 대신 내준다는 설정
+        coin = coin - value;
+
+        PlayManager.Instance.AddPlayerMoney(-value);
     }
 
 

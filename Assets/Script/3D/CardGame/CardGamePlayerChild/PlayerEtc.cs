@@ -18,21 +18,27 @@ public class PlayerEtc : CardGamePlayerBase
         AsisstantPanel.PlayerBalanceUpdate();
     }
 
-    public override int TryMinusCoin(int value, out bool isBankrupt)
+    public override void TryMinusCoin(int value, out bool isBankrupt, out bool hasDebt)
     {
+        isBankrupt = false;
+        hasDebt = false;
+
+        // 파산 여부 체크
         if (coin <= value)
         {
-            value = coin; // 남은돈에 한하여 상대방에게 지급함
-            coin = 0;
             isBankrupt = true;
+
+            // 지불할 돈이 부족한지 체크
+            if (coin < value)
+            {
+                hasDebt = true;
+            }
         }
-        else
-        {
-            coin = coin - value;
-            isBankrupt = false;
-        }
+
+        // coin이 (-)마이너스가 된다면 주최측이 빚으로 달고 대신 내준다는 설정
+        coin = coin - value;
+
         AsisstantPanel.PlayerBalanceUpdate();
-        return value;
     }
 
     public void SelectCard_OnStartTime()
