@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class MasterVolumeController : AudioVolumeContollerBase
+public class MasterAudioController : AudioContollerBase
 {
     /// <summary>
     /// 마스터키를 제외한 모든 컨트롤러
     /// </summary>
-    public AudioVolumeContollerBase[] totalController;
+    public AudioContollerBase[] totalController;
 
 
     
     public override void LoadSavedData()
     {
-        float volume = audioManager.LoadMasterVolumeValue();
+        float volume = audioManager.masterAudio.LoadAudioVolume();
         volumeSlider.slider.value = volume;
 
-        bool isMute = audioManager.LoadMasterVolumeMute();
+        bool isMute = audioManager.masterAudio.LoadAudioMute();
         muteToggle.toggle.isOn = isMute;
     }
 
@@ -23,7 +23,7 @@ public class MasterVolumeController : AudioVolumeContollerBase
         // 0~1 이내의 값으로 스케일링
         value /= volumeSlider.slider.maxValue;
 
-        audioManager.UpdateMasterVolumeValue(value);
+        audioManager.masterAudio.UpdateAudioVolume(value);
 
         //AudioListener.volume = value;
         //PlayerPrefs.SetFloat(audioManager.masterVolumeValueKey, value);
@@ -40,7 +40,7 @@ public class MasterVolumeController : AudioVolumeContollerBase
         audioManager.SavePreviousStateAndSyncCurrent_Mute(totalController, isMuted);
 
         // 뮤트 업데이트
-        audioManager.UpdateMasterVolumeMute(isMuted);
+        audioManager.masterAudio.UpdateAudioMute(isMuted);
     }
 
     

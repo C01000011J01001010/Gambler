@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AudioSettingPanel : PanelBase_ConstContent
 {
-    [SerializeField] AudioVolumeContollerBase[] audioControllerArr;
+    [SerializeField] AudioContollerBase[] audioControllerArr;
 
     
 
@@ -22,7 +22,7 @@ public class AudioSettingPanel : PanelBase_ConstContent
     public void ResetAudioSetting()
     {
         // 키에 저장된 모든 값을 제거
-        AudioManager.Instance.ClearTotalAudioSettingValue();
+        AudioManager.Instance.ClearTotalAudioSetting();
 
         // 저장된 값이 없으니 기본값으로 초기화됨
         RefreshPanel();

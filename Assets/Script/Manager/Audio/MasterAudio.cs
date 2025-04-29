@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class GameAudio  : MonoBehaviour, IAudioDefault
+public class MasterAudio : MonoBehaviour, IAudioDefault // AudioSource를 사용하지 않으니 따로 만듬 
 {
     public string volumeValueKey { get; protected set; }
     public string volumeMuteKey { get; protected set; }
@@ -16,59 +16,54 @@ public abstract class GameAudio  : MonoBehaviour, IAudioDefault
         }
     }
 
-    private AudioSource _audioSource;
-    public AudioSource audioSource
+    private void Awake()
     {
-        get
-        {
-            if(_audioSource == null) _audioSource = GetComponent<AudioSource>();
-            return _audioSource;
-        }
+        volumeValueKey = "AudioKey_Master";
+        volumeMuteKey = $"{volumeValueKey}_Mute";
+        defaultVolume = 0.7f;
     }
 
-    public virtual float UpdateAudioVolume(float value)
+    public float UpdateAudioVolume(float value)
     {
-        audioSource.volume = value;
+        AudioListener.volume = value;
         PlayerSaveManager.Instance.SaveData(volumeValueKey, value);
         Debug.Log("Master Volume Value == " + value.ToString());
 
         return value;
     }
 
-    public virtual bool UpdateAudioMute(bool isMute)
+    public bool UpdateAudioMute(bool isMute)
     {
-        audioSource.mute = isMute;
-        PlayerPrefs.SetInt(volumeMuteKey, isMute ? 1 : 0);
+        AudioListener.pause = isMute;
+        PlayerSaveManager.Instance.SaveData(volumeMuteKey, isMute ? 1 : 0);
         Debug.Log("Master Volume Muted == " + isMute.ToString());
 
         return isMute;
     }
 
-    public virtual float LoadAudioVolume()
+    public float LoadAudioVolume()
     {
         float value = PlayerSaveManager.Instance.LoadData(volumeValueKey, defaultVolume);
-        audioSource.volume = value;
+        AudioListener.volume = value;
 
         return value;
     }
 
-    public virtual bool LoadAudioMute()
+    public bool LoadAudioMute()
     {
         bool isMute = PlayerSaveManager.Instance.LoadData(volumeMuteKey, 0) == 1 ? true : false;
-        audioSource.mute = isMute;
+        AudioListener.pause = isMute;
 
         return isMute;
     }
 
-    // 이 아래는 공통사항
-
-    public virtual void LoadTotalSetting()
+    public void LoadTotalSetting()
     {
         LoadAudioVolume();
         LoadAudioMute();
     }
 
-    public virtual void ClearAudioSetting()
+    public void ClearAudioSetting()
     {
         PlayerPrefs.DeleteKey(volumeValueKey);
         PlayerPrefs.DeleteKey(volumeMuteKey);

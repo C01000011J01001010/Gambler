@@ -8,7 +8,7 @@ public class PopUpView_InGame : PopUpViewBase
     // 에디터 연결
 
     // 아이콘 팝업
-    public GameObject optionPopUp;
+    public OptionPopUp optionPopUp;
     public GameSettingPopUp gameSettingPopUp;
 
     public InventoryPopUp inventoryPopUp;
@@ -55,7 +55,7 @@ public class PopUpView_InGame : PopUpViewBase
     public void OptionPopUpOpen()
     {
         //gameObject.SetActive(true);
-        optionPopUp.SetActive(true);
+        optionPopUp.gameObject.SetActive(true);
         optionPopUp.transform.SetAsLastSibling();
     }
 

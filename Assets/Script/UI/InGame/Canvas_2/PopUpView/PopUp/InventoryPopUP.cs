@@ -48,6 +48,9 @@ public class InventoryPopUp : PopUpBase_FullScreen<InventoryPopUp>
         descriptionPanel.ClearPanel();
     }
 
+    /// <summary>
+    /// 클릭가이드 활성화를 itemOption.InitPanel()의 ClickCheck(eIcon.Inventory)에서 수행함
+    /// </summary>
     public override void RefreshPopUp()
     {
         RefreshPopUp(ItemSlotSize,

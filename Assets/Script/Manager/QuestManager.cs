@@ -9,6 +9,11 @@ public class QuestManager : Singleton<QuestManager>
     /// </summary>
     static public HashSet<sQuest> questHashSet { get; private set; }
 
+    /// <summary>
+    /// 반복 가능한 퀘스트를 관리
+    /// </summary>
+    static public HashSet<cQuestInfo> repeatableQuestInfo {  get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -60,9 +65,9 @@ public class QuestManager : Singleton<QuestManager>
         Debug.Log($"Quest {questId} 수주 성공.");
 
         // 플레이어가 수주한 퀘스트를 확인하도록 유도
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
+        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
+        questInfo.isNeedCheck = true;
 
-        GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
         return true;
     }
 
@@ -80,7 +85,7 @@ public class QuestManager : Singleton<QuestManager>
 
         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
         questInfo.isComplete = true;
-        questInfo.isNeedCheck = true;
+        
 
         // 보상이 따로 없는 경우는 바로 완료상태가 되도록 설정
         if (questInfo.rewardCoin == 0 && questInfo.rewardItemType == eItemType.None)
@@ -89,9 +94,14 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         // 플레이어가 완료한 퀘스트를 확인하고 보상을 받도록 유도
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
+        questInfo.isNeedCheck = true;
 
-        GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
+        // 반복 가능한 퀘스트이면 다음날로 넘어갈 때 초기화 하기 위해 따로 보관
+        if (questInfo.isRepeatable && repeatableQuestInfo.Contains(questInfo) == false)
+        {
+            repeatableQuestInfo.Add(questInfo);
+        }
+
         return true;
     }
 

@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class BackGroundVolumeController : AudioVolumeContollerBase
+public class EffactAudioController : AudioContollerBase
 {
-    public BackGroundAudio backGroundAudio { get { return audioManager.backGroundAudio; } }
+    public EffactAudio effactAudio { get { return audioManager.effactAudio; } }
 
     public override void LoadSavedData()
     {
-        float volume = backGroundAudio.LoadVolumeValue();
+        float volume = effactAudio.LoadAudioVolume();
         volumeSlider.slider.value = volume;
 
-        bool isMute = backGroundAudio.LoadVolumeMute();
+        bool isMute = effactAudio.LoadAudioMute();
         muteToggle.toggle.isOn = isMute;
     }
 
@@ -18,7 +18,7 @@ public class BackGroundVolumeController : AudioVolumeContollerBase
         // 0~1 이내의 값으로 스케일링
         value /= volumeSlider.slider.maxValue;
 
-        backGroundAudio.UpdateVolumeValue(value);
+        effactAudio.UpdateAudioVolume(value);
         Debug.Log("Master Volume Value == " + value.ToString());
     }
 
@@ -28,7 +28,7 @@ public class BackGroundVolumeController : AudioVolumeContollerBase
         // 뮤트가 false면 상호작용 가능
         volumeSlider.slider.interactable = !isMuted;
 
-        backGroundAudio.UpdateVolumeMute(isMuted);
+        effactAudio.UpdateAudioMute(isMuted);
         Debug.Log("Master Volume Muted == " + isMuted.ToString());
     }
 }

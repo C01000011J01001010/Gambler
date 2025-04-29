@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using PublicSet;
 using System.IO;
+using UnityEngine.UI;
+using UnityEditor.Build;
 
 
 
@@ -569,18 +571,8 @@ public class CsvManager : Singleton<CsvManager>
                         case 2:
                             if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
                             {
-                                if(intField == 0)
-                                {
-                                    itemInfo.isAvailable = false;
-                                }
-                                else if(intField == 1)
-                                {
-                                    itemInfo.isAvailable = true;
-                                }
-                                else
-                                {
-                                    Debug.LogWarning($"{intField}는 정의되지 않은 데이터");
-                                }
+                                itemInfo.isAvailable = ConvertIntToBool(intField);
+
                             }
                             else
                             {
@@ -594,18 +586,7 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
                                 {
-                                    if (intField == 0)
-                                    {
-                                        itemInfo.isConsumable = false;
-                                    }
-                                    else if (intField == 1)
-                                    {
-                                        itemInfo.isConsumable = true;
-                                    }
-                                    else
-                                    {
-                                        Debug.LogWarning($"{intField}는 정의되지 않은 데이터");
-                                    }
+                                    itemInfo.isConsumable = ConvertIntToBool(intField);
                                 }
                                 else
                                 {
@@ -633,18 +614,7 @@ public class CsvManager : Singleton<CsvManager>
                         case 5:
                             if (int.TryParse(field, out intField)) // 문자열을 정수형으로 캐스팅
                             {
-                                if (intField == 0)
-                                {
-                                    itemInfo.isForSale = false;
-                                }
-                                else if (intField == 1)
-                                {
-                                    itemInfo.isForSale = true;
-                                }
-                                else
-                                {
-                                    Debug.LogWarning($"{intField}는 정의되지 않은 데이터");
-                                }
+                                itemInfo.isForSale = ConvertIntToBool(intField);
                             }
                             else
                             {
@@ -793,7 +763,8 @@ public class CsvManager : Singleton<CsvManager>
                             if (eQuestType.TryParse(field, out eQuestType enumField))
                             {
                                 questInfo.type = enumField; // 기본키
-                                questInfo.callback_endConditionCheck = CallbackManager.Instance.CallBackList_QuestCheck(enumField); // 체크
+                                questInfo.endConditionCheck = CallbackManager.Instance.CallBackList_QuestCheck(enumField); // 체크
+                                questInfo.endEvent = CallbackManager.Instance.CallBackList_QuestEndEvent(enumField);
 
                                 // 로비로 씬로드시 할당되니 삭제
                                 //questInfo.isComplete = false;
@@ -836,28 +807,11 @@ public class CsvManager : Singleton<CsvManager>
                         case 4:
                             if (int.TryParse(field, out intField)) 
                             {
-                                if (intField == 0)
-                                {
-                                    questInfo.isRepeatable = false;
-                                }
-                                else if (intField == 1)
-                                {
-                                    questInfo.isRepeatable = true;
-                                }
-                                else
-                                {
-                                    Debug.LogWarning($"{intField}는 정의되지 않은 데이터");
-                                }
+                                questInfo.isRepeatable = ConvertIntToBool(intField);
                             }
                             else
                             {
                                 Debug.LogWarning($"{field}는 정수로 캐스팅 불가");
-                            }
-                            break;
-                        case 5:
-                            if (int.TryParse(field, out intField))
-                            {
-                                Debug.LogWarning("수정중");
                             }
                             break;
 
@@ -1278,6 +1232,18 @@ public class CsvManager : Singleton<CsvManager>
         {
             Debug.LogAssertion($"{resourceName} 파일이 존재하지 않습니다.");
         }
+    }
+
+    /// <summary>
+    /// 1 -> true / 0 -> false
+    /// </summary>
+    /// <param name="inputValue">0 또는 1</param>
+    private bool ConvertIntToBool(int inputValue)
+    {
+        if (inputValue == 0) return false;
+        if (inputValue == 1) return true;
+
+        throw new ArgumentException($"입력값 {inputValue}는 0 또는 1이어야 합니다.");
     }
 
 

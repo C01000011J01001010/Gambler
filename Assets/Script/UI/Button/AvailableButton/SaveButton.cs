@@ -33,7 +33,7 @@ public class SaveButton : SaveAndContinue_ButtonBase
         if (QuestManager.questHashSet.Contains(quest))
         {
             cQuestInfo quesInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (quesInfo.isComplete == false) quesInfo.callback_endConditionCheck();
+            if (quesInfo.isComplete == false) quesInfo.endConditionCheck();
         }
 
         GameManager.Instance.SetPlayerSaveKey(saveKey);

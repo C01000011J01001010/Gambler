@@ -2,7 +2,6 @@ using PublicSet;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static PublicSet.iNeedCheck;
 
 public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, cItemInfo>
 {

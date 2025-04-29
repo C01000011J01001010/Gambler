@@ -1,7 +1,7 @@
 using PublicSet;
 using UnityEngine;
 using UnityEngine.UI;
-using static PublicSet.iNeedCheck;
+using static PublicSet.INeedCheck;
 
 public class QuestOptionButton : PopUpOptionButtonBase<QuestOptionButton, sQuest,  cQuestInfo>
 {

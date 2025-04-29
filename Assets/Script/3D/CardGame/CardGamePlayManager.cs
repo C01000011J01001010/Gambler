@@ -176,7 +176,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         if (QuestManager.questHashSet.Contains(quest))
         {
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+            if (questInfo.isComplete == false) questInfo.endConditionCheck();
         }
             
     }

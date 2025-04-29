@@ -287,17 +287,20 @@ namespace PublicSet
         }
     }
 
-    public interface iNeedCheck
+    public interface INeedCheck
     {
+        public bool _isNeedCheck { get;}
         public bool isNeedCheck { get; set; }
+
+        public void InitBool();
     }
 
-    public class cItemInfo : iNeedCheck
+    public class cItemInfo : INeedCheck
     {
         // 기본정보
         public eItemType type { get; set; }
         public string name { get; set; }
-        public List<string> descriptionList { get; set; }
+        
 
         // 사용이 가능한 경우 
         public bool isAvailable { get; set; }
@@ -309,7 +312,35 @@ namespace PublicSet
         public int value_Sale { get; set; }
 
         // 추가 정보
-        public bool isNeedCheck { get; set; }
+        public bool _isNeedCheck { get; private set; }
+
+        /// <summary>
+        /// 팝업 리프레시와 클릭가이드 활성화를 포함
+        /// </summary>
+        public bool isNeedCheck
+        {
+            get
+            {
+                return _isNeedCheck;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    //GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Inventory);
+                    GameManager.connector_InGame.popUpViewAsInGame.inventoryPopUp.RefreshPopUp();
+                }
+                _isNeedCheck = value;
+            }
+        }
+
+        public void InitBool()
+        {
+            _isNeedCheck = true;
+        }
+
+        public List<string> descriptionList { get; set; }
 
         public cItemInfo()
         {
@@ -321,10 +352,7 @@ namespace PublicSet
             value_Sale = 0;
 
             // 로비씬 로드시 다시 초기화되는 값
-            {
-                isNeedCheck = true;
-            }
-            
+            InitBool();
         }
 
         // 스크립트에서 별도로 추가할 값들
@@ -332,21 +360,48 @@ namespace PublicSet
 
     }
 
-    public class cQuestInfo : iNeedCheck
+    public class cQuestInfo : INeedCheck
     {
+        // type으로 묶어서 처리
         public eQuestType type { get; set; }
+        public UnityAction endConditionCheck { get; set; }
+        public UnityAction endEvent {  get; set; }
+
+
+        // 나머지 컬럼으로 처리
         public string name { get; set; }
-        public UnityAction callback_endConditionCheck { get; set; }
         public int rewardCoin { get; set; }
         public eItemType rewardItemType { get; set; }
         public bool isRepeatable { get; set; }
 
         // 별도 관리
-        public bool isNeedCheck { get; set; }
+        public bool _isNeedCheck { get; private set; }
+        public bool isNeedCheck
+        {
+            get
+            {
+                return _isNeedCheck;
+            }
+
+            set
+            {
+                if(value) 
+                { 
+                    //GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.Quest);
+                    GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
+                }
+
+                _isNeedCheck = value;
+            }
+        }
         public bool isComplete { get; set; }
         public bool hasReceivedReward { get; set; }
 
-        
+        public void InitBool()
+        {
+            _isNeedCheck = true;
+            isComplete = hasReceivedReward = false;
+        }
 
         public List<string> descriptionList { get; set; }
 
@@ -355,11 +410,7 @@ namespace PublicSet
             descriptionList = new List<string>();
 
             // 로비씬 로드시 다시 초기화 되는 값
-            {
-                isNeedCheck = true;
-                isComplete = false;
-                hasReceivedReward = false;
-            }
+            InitBool();
         }
 
     }

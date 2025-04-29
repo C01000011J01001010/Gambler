@@ -26,6 +26,10 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
         InitializePool(10);
     }
 
+    /// <summary>
+    /// 클릭가이드 활성화를 questPanel.InitPanel()의 ClickCheck(eIcon.Quest)에서 수행함 <br/>
+    /// 줄바꿈 테스트
+    /// </summary>
     public override void RefreshPopUp()
     {
         Debug.Log($"playerQuestHash.Count == {playerQuestHash.Count}");
@@ -59,7 +63,6 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
                                 {
                                     questInfo.isNeedCheck = false; 
                                     RefreshPopUp();
-                                    
                                 }
 
                                 // 보상이 없는 경우 확인시 바로 처리

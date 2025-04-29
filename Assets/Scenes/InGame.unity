@@ -8670,11 +8670,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3102072997520585702, guid: 788cdc6cb06270b49b1570b37cfee47c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00012207031
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4403416915942661648, guid: 788cdc6cb06270b49b1570b37cfee47c, type: 3}
       propertyPath: m_Name
       value: GameSettingPopUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5987236152202459347, guid: 788cdc6cb06270b49b1570b37cfee47c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00024414062
+      objectReference: {fileID: 0}
+    - target: {fileID: 7433450480282237071, guid: 788cdc6cb06270b49b1570b37cfee47c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00012207031
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -67620,7 +67628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   yesOrNoPopUp: {fileID: 8640778249425148257}
   checkPopUp: {fileID: 6777244095000991380}
-  optionPopUp: {fileID: 1625923187549463464}
+  optionPopUp: {fileID: 6834864329773280036}
   gameSettingPopUp: {fileID: 631591720}
   inventoryPopUp: {fileID: 4561853298050109070}
   questPopUp: {fileID: 7574297556674844519}
@@ -71429,8 +71437,7 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 467710740781809383, guid: 5598c4a5076d8fd4994efe1220d37add, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5598c4a5076d8fd4994efe1220d37add, type: 3}

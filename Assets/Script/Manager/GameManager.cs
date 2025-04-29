@@ -91,6 +91,25 @@ public class GameManager : Singleton<GameManager>
     public void CountDownRemainingPeriod()
     {
         currentRemainingPeriod--;
+
+
+        bool isChanged = false;
+        // 반복 가능한 퀘스트의 초기화
+        foreach(cQuestInfo questInfo in QuestManager.repeatableQuestInfo)
+        {
+            //보상을 받은 경우에만 초기화
+            if(questInfo.hasReceivedReward)
+            {
+                questInfo.isComplete = false;
+                questInfo.hasReceivedReward = false;
+                questInfo.isNeedCheck = true;
+
+                isChanged = true;
+            }
+        }
+
+        // 변경 사항 있으면 즉시 반영
+        if (isChanged) connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
     }
 
     public Dictionary<eStage, string> stageMessageDict;
@@ -341,8 +360,7 @@ public class GameManager : Singleton<GameManager>
 
                         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(type);
 
-                        questInfo.isNeedCheck = true;
-                        questInfo.isComplete = questInfo.hasReceivedReward = false;
+                        questInfo.InitBool();
                     }
 
                     // 아이템 정보 초기화
@@ -352,7 +370,7 @@ public class GameManager : Singleton<GameManager>
 
                         cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(type);
 
-                        itemInfo.isNeedCheck = true;
+                        itemInfo.InitBool();
                     }
                 }
                 break;

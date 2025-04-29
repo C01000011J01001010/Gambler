@@ -182,7 +182,7 @@ public class CallbackManager : Singleton<CallbackManager>
                     if(QuestManager.questHashSet.Contains(quest))
                     {
                         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-                        if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+                        if (questInfo.isComplete == false) questInfo.endConditionCheck();
                     }
                 }
             );
@@ -207,7 +207,7 @@ public class CallbackManager : Singleton<CallbackManager>
 
             // 퀘스트의 완료조건 확인하여 퀘스트 완료
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (!questInfo.isComplete) questInfo.callback_endConditionCheck();
+            if (!questInfo.isComplete) questInfo.endConditionCheck();
         }
             
     }
@@ -433,7 +433,7 @@ public class CallbackManager : Singleton<CallbackManager>
         if (QuestManager.questHashSet.Contains(quest))
         {
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (questInfo.isComplete == false) questInfo.callback_endConditionCheck();
+            if (questInfo.isComplete == false) questInfo.endConditionCheck();
         }
             
     }
@@ -463,7 +463,14 @@ public class CallbackManager : Singleton<CallbackManager>
             case eQuestType.LearnHowToSave: return LearnHowToSave;
             case eQuestType.StartFirstGame: return StartFirstGame;
             case eQuestType.GoToSleep: return GoToSleep;
+            case eQuestType.CheckTheBoxEveryDay: return CheckTheBoxEveryDay;
+            case eQuestType.TryUseDarkWebMarket: return TryUseDarkWebMarket;
+
             case eQuestType.Collect2000Coins: return Collect2000Coins;
+            case eQuestType.Collect5000Coins: return Collect5000Coins;
+            case eQuestType.Collect8000Coins: return Collect8000Coins;
+            case eQuestType.Collect10000Coins: return Collect10000Coins;
+
             default: { Debug.LogError("존재하지 않는 퀘스트"); return null; } 
         }
     }
@@ -498,11 +505,64 @@ public class CallbackManager : Singleton<CallbackManager>
         QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.GoToSleep);
         QuestManager.Instance.TryPlayerGetQuest(eQuestType.Collect2000Coins);
     }
+    public void CheckTheBoxEveryDay()
+    {
+        Debug.LogWarning("수정중");
+    }
+
+    public void TryUseDarkWebMarket()
+    {
+        Debug.LogWarning("수정중");
+    }
+
+
+
     public void Collect2000Coins()
     {
         if(playerStatus.coin >= 2000)
         {
             QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect2000Coins);
         }
+    }
+
+    public void Collect5000Coins()
+    {
+        if (playerStatus.coin >= 5000)
+        {
+            QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect5000Coins);
+        }
+    }
+
+    public void Collect8000Coins()
+    {
+        if (playerStatus.coin >= 8000)
+        {
+            QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect8000Coins);
+        }
+    }
+
+    public void Collect10000Coins()
+    {
+        if (playerStatus.coin >= 10000)
+        {
+            QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect10000Coins);
+        }
+    }
+
+
+    //----------------------------------------------------------------------------------------
+    public UnityAction CallBackList_QuestEndEvent(eQuestType type)
+    {
+        switch (type)
+        {
+            case eQuestType.Collect10000Coins: return GameEnding;
+
+            default: { Debug.Log($"{type.ToString()}는 종료이벤트가 존재하지 않음"); return null; }
+        }
+    }
+
+    public void GameEnding()
+    {
+        Debug.LogWarning("수정중");
     }
 }

@@ -27,6 +27,10 @@ public class RewardButton : Deactivatable_ButtonBase
         {
             ItemManager.Instance.PlayerGetItem(questInfo.rewardItemType);
         }
+        if(questInfo.endEvent != null)
+        {
+            questInfo.endEvent();
+        }
 
         popUpView_InGame.checkPopUp.RefreshPopUp(questInfo);
         popUpView_InGame.CheckPopUpOpen();

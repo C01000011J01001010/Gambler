@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class AudioVolumeContollerBase : MonoBehaviour
+public abstract class AudioContollerBase : MonoBehaviour 
 {
     [SerializeField] protected SliderBase _volumeSlider;
     [SerializeField] protected ToggleBase _muteToggle;

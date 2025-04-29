@@ -1,7 +1,7 @@
 using PublicSet;
 using System.Linq.Expressions;
 using UnityEngine;
-using static PublicSet.iNeedCheck;
+using static PublicSet.INeedCheck;
 
 /// <summary>
 /// 
@@ -12,7 +12,7 @@ using static PublicSet.iNeedCheck;
 public abstract class PopUpOptionButtonBase<T_Class, sDefaultData ,cInfo> : Selection_ButtonBase<T_Class> 
     where T_Class : PopUpOptionButtonBase<T_Class, sDefaultData, cInfo>
     where sDefaultData : struct
-    where cInfo : class, iNeedCheck
+    where cInfo : class, INeedCheck
 {
     [SerializeField] protected GameObject clickGuide;
 

@@ -948,6 +948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackView: {fileID: 224415486}
+  popUpView: {fileID: 0}
 --- !u!1001 &1770508906
 PrefabInstance:
   m_ObjectHideFlags: 0

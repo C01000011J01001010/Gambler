@@ -20,7 +20,7 @@ public class NPC_MunDuckBea : InteractableObject
             if (QuestManager.questHashSet.Contains(quest))
             {
                 cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-                if (!questInfo.isComplete) questInfo.callback_endConditionCheck();
+                if (!questInfo.isComplete) questInfo.endConditionCheck();
             }
                 
 

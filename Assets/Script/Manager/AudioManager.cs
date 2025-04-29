@@ -1,18 +1,34 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
+
+
+public interface IAudioDefault
+{
+    string volumeValueKey { get; }
+    string volumeMuteKey { get; }
+
+    public float UpdateAudioVolume(float value);
+    public bool UpdateAudioMute(bool isMute);
+    public float LoadAudioVolume();
+    public bool LoadAudioMute();
+    public void LoadTotalSetting();
+    public void ClearAudioSetting();
+}
 
 public class AudioManager : Singleton<AudioManager>
 {
+    [SerializeField] private MasterAudio _masterAudio;
     [SerializeField] private BackGroundAudio _backGroundAudio;
     [SerializeField] private EffactAudio _effactAudio;
 
 
+    public MasterAudio masterAudio{ get { return _masterAudio; } }
     public BackGroundAudio backGroundAudio { get { return _backGroundAudio; } }
     public EffactAudio effactAudio { get { return _effactAudio; } }
+    public List<IAudioDefault> TotalAudio { get; private set; } // 동일한 인터페이스를 사용중인 클래스를 묶을 예정
 
-    public string masterVolumeValueKey { get; private set; }
-    public string masterVolumeMuteKey { get; private set; }
+
+
     public string previousMuteKey { get; private set; }
 
     /// <summary>
@@ -35,78 +51,45 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
-    private float _defaultVolume;
-    protected float defaultVolume
-    {
-        get { return _defaultVolume; }
-        set
-        {
-            // 상한값을 1로 제한 (최대 볼륨은 1)
-            _defaultVolume = Mathf.Clamp(value, 0f, 1f);
-        }
-    }
-
 
     protected override void Awake()
     {
         base.Awake();
-        masterVolumeValueKey = "AudioKey_Master";
-        masterVolumeMuteKey = $"{masterVolumeValueKey}_Mute";
+        InitAudioSet();
         previousMuteKey = "previousMuteKey";
+    }
 
-        defaultVolume = 0.7f;
+    private void InitAudioSet()
+    {
+        TotalAudio = new List<IAudioDefault>(3);
+        TotalAudio.Add(masterAudio);
+        TotalAudio.Add(backGroundAudio);
+        TotalAudio.Add(effactAudio);
     }
 
     private void Start()
     {
-        LoadTotalData();
-        backGroundAudio.LoadTotalData();
-        effactAudio.LoadTotalData();
+        for (int i = 0; i < TotalAudio.Count; i++)
+        {
+            TotalAudio[i].LoadTotalSetting();
+        }
 
         backGroundAudio.DefaultPlay();
     }
 
-    public float UpdateMasterVolumeValue(float value)
+    /// <summary>
+    /// 오디오 키에 저장된 값만을 제거
+    /// </summary>
+    public void ClearTotalAudioSetting()
     {
-        AudioListener.volume = value;
-        PlayerSaveManager.Instance.SaveData(masterVolumeValueKey, value);
-        Debug.Log("Master Volume Value == " + value.ToString());
-
-        return value;
+        for (int i = 0; i < TotalAudio.Count; i++)
+        {
+            TotalAudio[i].ClearAudioSetting();
+        }
     }
 
-    public virtual bool UpdateMasterVolumeMute(bool isMute)
-    {
-        AudioListener.pause = isMute;
-        PlayerSaveManager.Instance.SaveData(masterVolumeMuteKey, isMute ? 1 : 0);
-        Debug.Log("Master Volume Muted == " + isMute.ToString());
 
-        return isMute;
-    }
-
-    public virtual float LoadMasterVolumeValue()
-    {
-        float value = PlayerSaveManager.Instance.LoadData(masterVolumeValueKey, defaultVolume);
-        AudioListener.volume = value;
-
-        return value;
-    }
-
-    public virtual bool LoadMasterVolumeMute()
-    {
-        bool isMute = PlayerSaveManager.Instance.LoadData(masterVolumeMuteKey, 0) == 1 ? true : false;
-        AudioListener.pause = isMute;
-
-        return isMute;
-    }
-
-    public virtual void LoadTotalData()
-    {
-        LoadMasterVolumeValue();
-        LoadMasterVolumeMute();
-    }
-
-    public void SavePreviousStateAndSyncCurrent_Mute(AudioVolumeContollerBase[] ControllerArray, bool currentMute)
+    public void SavePreviousStateAndSyncCurrent_Mute(AudioContollerBase[] ControllerArray, bool currentMute)
     {
         // 모든 컨트롤러 동기화
         for (int i = 0; i < ControllerArray.Length; i++)
@@ -134,19 +117,6 @@ public class AudioManager : Singleton<AudioManager>
                 // 이전 상태 복귀
                 ControllerArray[i].muteToggle.toggle.isOn = previousMuteStatusArr[i];
             }
-        }
-    }
-
-    /// <summary>
-    /// 오디오 키에 저장된 값만을 제거
-    /// </summary>
-    public void ClearTotalAudioSettingValue()
-    {
-        {
-            PlayerPrefs.DeleteKey(masterVolumeValueKey);
-            PlayerPrefs.DeleteKey(masterVolumeMuteKey);
-            backGroundAudio.ClearAudioSettingValue();
-            effactAudio.ClearAudioSettingValue();
         }
     }
 }
