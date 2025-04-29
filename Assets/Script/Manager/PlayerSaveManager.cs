@@ -1,6 +1,7 @@
 using PublicSet;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -254,35 +255,37 @@ public struct sPlayerStatus
 
 public class PlayerSaveManager : Singleton<PlayerSaveManager>
 {
-    string currentPlayerSavaKey { get { return GameManager.Instance.currentPlayerSaveKey.ToString(); } }
+    string currentPlayerSaveKey { get { return GameManager.Instance.currentPlayerSaveKey.ToString(); } }
 
-    public const string defaultSaveKey_SavedDate = "savedDate"; // 데이터가 저장된 날짜와 시간을 저장
+    public const string defaultSaveKey_SavedDate = "SavedDate"; // 데이터가 저장된 날짜와 시간을 저장
     public const string defaultSaveKey_Items = "SavedItems";
     public const string defaultSaveKey_Quests = "SavedQuests";
     public const string defaultSaveKey_RemainingPeriod = "SavedRemainingPeriod";
     public const string defaultSaveKey_Stage = "SavedStage";
     public const string defaultSaveKey_PlayerStatus = "SavedPlayerStatus";
     public const string defaultSaveKey_OpenedIconCount = "SavedOpenedIconCount";
+    public const string defaultSaveKey_DynamicInteractable = "SavedDynamicInteractable";
 
     public string currentPlayerSaveKey_SavedDate
-    { get { return (currentPlayerSavaKey + defaultSaveKey_SavedDate); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_SavedDate); } }
     public string currentPlayerSaveKey_Items
-    { get { return (currentPlayerSavaKey + defaultSaveKey_Items); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_Items); } }
     public string currentPlayerSaveKey_Quests
-    { get { return (currentPlayerSavaKey + defaultSaveKey_Quests); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_Quests); } }
     public string currentPlayerSaveKey_RemainingPeriod
-    { get { return (currentPlayerSavaKey + defaultSaveKey_RemainingPeriod); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_RemainingPeriod); } }
     public string currentPlayerSaveKey_Stage
-    { get { return (currentPlayerSavaKey + defaultSaveKey_Stage); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_Stage); } }
     public string currentPlayerSaveKey_PlayerStatus
-    { get { return (currentPlayerSavaKey + defaultSaveKey_PlayerStatus); } }
-
+    { get { return (currentPlayerSaveKey + defaultSaveKey_PlayerStatus); } }
     public string currentPlayerSaveKey_OpenedIconCount
-    { get { return (currentPlayerSavaKey + defaultSaveKey_OpenedIconCount); } }
+    { get { return (currentPlayerSaveKey + defaultSaveKey_OpenedIconCount); } }
+    public string currentPlayerSaveKey_DynamicInteractable
+    { get { return (currentPlayerSaveKey + defaultSaveKey_DynamicInteractable); } }
 
     public void SaveTotalData()
     {
-        Debug.Log($"SaveData -> currentPlayer : {currentPlayerSavaKey}");
+        Debug.Log($"SaveData -> currentPlayer : {currentPlayerSaveKey}");
 
         // 저장되는 날짜
         string SavedDate = DateTime.Now.ToString("yyyy년 MM월 dd일:HH시 mm분 ss초");
@@ -311,27 +314,30 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
 
         int openedIconCount = GameManager.connector_InGame.iconView_Script.OpenedIconCount;
         SaveData(currentPlayerSaveKey_OpenedIconCount, openedIconCount);
+
+        string dynamicIntaractableData = DynamicInteractableBase.GetStringToSave();
+        SaveData(currentPlayerSaveKey_DynamicInteractable, dynamicIntaractableData);
     }
     
 
-    private void OnDisable()
-    {
-        DeleteDefaultData();
-    }
+    //private void OnDisable()
+    //{
+    //    DeleteDefaultData();
+    //}
 
-    /// <summary>
-    /// 게임 종료시 더미데이터는 모두 삭제
-    /// </summary>
-    private void DeleteDefaultData()
-    {
-        string playerKey = ePlayerSaveKey.None.ToString();
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_SavedDate);
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Items);
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Quests);
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_RemainingPeriod);
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Stage);
-        PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_PlayerStatus);
-    }
+    ///// <summary>
+    ///// 게임 종료시 더미데이터는 모두 삭제
+    ///// </summary>
+    //private void DeleteDefaultData()
+    //{
+    //    string playerKey = ePlayerSaveKey.None.ToString();
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_SavedDate);
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Items);
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Quests);
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_RemainingPeriod);
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_Stage);
+    //    PlayerPrefs.DeleteKey(playerKey + defaultSaveKey_PlayerStatus);
+    //}
 
     
 
@@ -342,36 +348,8 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
     {
         base.Awake();
         
-        
-
-        //currentPlayerSaveKey_Items = ePlayerSaveKey.None.ToString()+defaultSaveKey_Items;
     }
 
-    
-
-    
-
-    //public void ItemsDataSave(int itemId, eItemType serialNum, Action<sItem> middleCallback, Action endCallback)
-    //{
-    //    // 더미데이터에 저장된 데이터를 불러오고
-    //    LoadItems(ePlayerSaveKey.None);
-
-    //    // 입력된 아이템 코드에 맞는 임시데이터를 생성
-    //    sItem newItem = new sItem(itemId, serialNum);
-
-    //    // 아이템 획득, 삭제에 따른
-    //    middleCallback(newItem);
-
-    //    // 새로운 아이템 목록을 PlayerPrefs를 이용하여 레지스트리에 저장
-    //    // Join : 구분자(첫번째 변수)로 데이터목록을 묶음
-    //    // Join의 두번째 인수에서 ToString 메소드가 사용됨
-    //    SaveData(ePlayerSaveKey.None.ToString() + defaultSaveKey_Items, string.Join(",", ItemManager.ItemHashSet));
-
-    //    endCallback();
-
-    //    // 아이템에 변화가 생겼으니 인벤토리창을 새로고침
-    //    GameManager.connector_InGame.popUpView_Script.inventoryPopUp.GetComponent<InventoryPopUp>().RefreshPopUp();
-    //}
 
     public string LoadSavedDate(ePlayerSaveKey saveKey)
     {
@@ -560,7 +538,20 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         return savedData;
     }
 
+    public void LoadDynamicInteractable(ePlayerSaveKey saveKey)
+    {
+        //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
+        string savedData = LoadData(saveKey.ToString() + defaultSaveKey_DynamicInteractable, string.Empty);
 
+        Debug.Log($"savedData : {savedData}");
+        if (savedData == string.Empty) Debug.LogWarning("데이터가 비었음 : LoadOpenedIconCount");
+
+        else Debug.Log("데이터 로딩 성공 : LoadDynamicInteractable");
+
+        DynamicInteractableBase.SetFileNumToLoad(savedData);
+    }
+
+    // --------------------
     public void SaveData(string key, int value)
     {
         PlayerPrefs.SetInt(key, value);

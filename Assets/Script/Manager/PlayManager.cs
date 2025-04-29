@@ -1,6 +1,4 @@
 using PublicSet;
-using Unity.Collections.LowLevel.Unsafe;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayManager : Singleton<PlayManager>
@@ -95,13 +93,13 @@ public class PlayManager : Singleton<PlayManager>
 
     public void StartPlayerMonologue()
     {
-        CallbackManager.Instance.TextWindowPopUp_Open();
+        CallbackBase.TextWindowPopUp_Open();
         GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerMonologue);
     }
 
     public void StartPlayerMonologue_OnPlayerWakeUp()
     {
-        CallbackManager.Instance.TextWindowPopUp_Open();
+        CallbackBase.TextWindowPopUp_Open();
         GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.OnPlayerWakeUp);
     }
 }

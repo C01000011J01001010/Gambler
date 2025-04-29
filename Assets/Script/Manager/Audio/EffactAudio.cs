@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EffactAudio : GameAudio
+public class EffactAudio : AudioBase
 {
     [SerializeField] private AudioClip click;
     [SerializeField] private AudioClip effact;

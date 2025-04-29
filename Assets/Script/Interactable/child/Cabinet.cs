@@ -1,6 +1,6 @@
 using UnityEngine;
 using PublicSet;
-public class Cabinet : InteractableObject
+public class Cabinet : InteractableObjectBase
 {
     public override eTextScriptFile GetInteractableEnum()
     {

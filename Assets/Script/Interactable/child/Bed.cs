@@ -1,7 +1,7 @@
 using UnityEngine;
 using PublicSet;
 
-public class Bed : InteractableObject
+public class Bed : InteractableObjectBase
 {
 
     public override eTextScriptFile GetInteractableEnum()

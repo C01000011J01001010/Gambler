@@ -5,6 +5,7 @@ using PublicSet;
 using System.IO;
 using UnityEngine.UI;
 using UnityEditor.Build;
+using System.Runtime.CompilerServices;
 
 
 
@@ -14,6 +15,9 @@ public class CsvManager : Singleton<CsvManager>
     [SerializeField] private ItemTable itemPlusInfoTable;
 
     // 스크립트
+
+    private CallbackManager callbackManager { get { return CallbackManager.Instance ; } }
+
     // OnlyOneLives PlayerInfo 자료
     private Dictionary<eCharacterType,cCharacterInfo> CharacterInfo_Dict;
 
@@ -367,7 +371,7 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 if (int.TryParse(field, out intField))
                                 {
-                                    info.endCallback = CallbackManager.Instance.CallbackList_OnlyOneLivesText(intField);
+                                    info.endCallback = callbackManager.onlyOneLivesCallback.CallbackList(intField);
                                 }
                                 else
                                 {
@@ -496,7 +500,7 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 if (int.TryParse(field, out intField))
                                 {
-                                    info.endCallback = CallbackManager.Instance.CallbackList_OnlyOneLivesText(intField);
+                                    Debug.Log("정의된 콜백없음");
                                 }
                                 else
                                 {
@@ -668,7 +672,7 @@ public class CsvManager : Singleton<CsvManager>
 
                 // 콜백리스트에서 아이템에 해당하는 콜백함수를 저장하도록 함
                 ItemInfo_Dict[itemType].itemCallback +=
-                    CallbackManager.Instance.CallBackList_Item(itemPlusInfo.itemCallbackIndex);
+                    callbackManager.itemCallback.CallbackList(itemPlusInfo.itemCallbackIndex);
             }
 
         }
@@ -763,8 +767,9 @@ public class CsvManager : Singleton<CsvManager>
                             if (eQuestType.TryParse(field, out eQuestType enumField))
                             {
                                 questInfo.type = enumField; // 기본키
-                                questInfo.endConditionCheck = CallbackManager.Instance.CallBackList_QuestCheck(enumField); // 체크
-                                questInfo.endEvent = CallbackManager.Instance.CallBackList_QuestEndEvent(enumField);
+
+                                questInfo.endConditionCheck = callbackManager.questCheckCallback.CallbackList(enumField); // 체크
+                                questInfo.endEvent = callbackManager.questEndEventCallback.CallbackList(enumField);
 
                                 // 로비로 씬로드시 할당되니 삭제
                                 //questInfo.isComplete = false;
@@ -1114,7 +1119,8 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 if (int.TryParse(field, out intField))
                                 {
-                                    info.endCallback = CallbackManager.Instance.CallBackList_DefaultText(intField);
+                                    info.endCallback = callbackManager.interactiveTextCallback.CallbackList(intField);
+                                    //info.endCallback = CallbackManager.Instance.CallBackList_DefaultText(intField);
                                 }
                                 else
                                 {
@@ -1159,7 +1165,7 @@ public class CsvManager : Singleton<CsvManager>
                                         // 선택지에 따른 처리
                                         if (int.TryParse(field, out intField))
                                         {
-                                            info.SelectionCallback.Add(CallbackManager.Instance.CallBackList_DefaultText(intField));
+                                            info.SelectionCallback.Add(callbackManager.interactiveTextCallback.CallbackList(intField));
                                         }
                                         else
                                         {

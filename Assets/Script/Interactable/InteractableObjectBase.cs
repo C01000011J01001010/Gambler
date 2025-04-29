@@ -1,7 +1,8 @@
 using UnityEngine;
 using PublicSet;
 
-public abstract class InteractableObject : MonoBehaviour
+public abstract class InteractableObjectBase : MonoBehaviour
 {
+    
     public abstract eTextScriptFile GetInteractableEnum();
 }

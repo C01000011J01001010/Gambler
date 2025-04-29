@@ -20,7 +20,7 @@ public class OnlyOneLivesButton : GameEnterButtonBase
             return;
         }
 
-        CallbackManager.Instance.PlaySequnce_BlackViewProcess(2.0f,
+        CallbackBase.PlaySequnce_BlackViewProcess(2.0f,
             () =>
             {
                 GameManager.connector_InGame.canvas0_InGame.CloseAllOfView();

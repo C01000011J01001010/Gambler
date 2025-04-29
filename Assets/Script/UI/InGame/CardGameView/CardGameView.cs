@@ -137,7 +137,7 @@ public class CardGameView : MonoBehaviour
     // 백버튼 콜백
     public void ReturnCasino()
     {
-        CallbackManager.Instance.EnterCasino();
+        CallbackBase.CasinoViewOpen();
     }
 
 }

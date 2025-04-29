@@ -1,7 +1,7 @@
 using PublicSet;
 using UnityEngine;
 
-public class NPC_Caesar : InteractableObject
+public class NPC_Caesar : InteractableObjectBase
 {
     public override eTextScriptFile GetInteractableEnum()
     {

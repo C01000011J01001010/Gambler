@@ -1,27 +1,29 @@
 using UnityEngine;
 using PublicSet;
 using System.Collections.Generic;
-public class Box : InteractableObject
+public class Box : DynamicInteractableBase
 {
-    eTextScriptFile current;
     public List<eItemType> itemList;
 
     private void Start()
     {
-        current = eTextScriptFile.None;
+        defaultFile = eTextScriptFile.Box_Empty;
     }
 
     public override eTextScriptFile GetInteractableEnum()
     {
-        return current;
+        return currentFile;
     }
 
 #nullable enable
     public void FillUpBox(List<eItemType> list)
     {
-        if(list != null && list.Count >0)
+        // 플레이어가 상호작용 할 수 있도록 태그 변경
+        gameObject.tag = "Interactable";
+
+        if (list != null && list.Count >0)
         {
-            current = eTextScriptFile.Box_Full;
+            currentFile = eTextScriptFile.Box_Full;
 
             // 박스에 아이템이 없는 경우
             if (itemList == null || itemList.Count == 0)
@@ -42,7 +44,10 @@ public class Box : InteractableObject
 
     public void EmptyOutBox()
     {
-        current = eTextScriptFile.Box_Empty;
+        // 플레이어가 상호작용 할 수 있도록 태그 변경
+        gameObject.tag = "Interactable";
+
+        currentFile = eTextScriptFile.Box_Empty;
 
         // 박스에 들어있는 아이템을 플레이어가 획득
         foreach (var item in itemList)

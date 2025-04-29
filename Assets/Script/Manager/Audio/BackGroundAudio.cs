@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class BackGroundAudio : GameAudio
+public class BackGroundAudio : AudioBase
 {
     [SerializeField] private AudioClip defaultMusic;
     [SerializeField] private AudioClip playMusic;

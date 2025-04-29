@@ -1,14 +1,13 @@
 using PublicSet;
 
-public class NPC_MunDuckBea : InteractableObject
+public class NPC_MunDuckBea : DynamicInteractableBase
 {
-    eTextScriptFile currentFile;
     eStage currentStage { get { return GameManager.Instance.currentStage; } }
     eStage LastStage;
 
     private void Start()
     {
-        currentFile = eTextScriptFile.NPC_MunDuckBea_Encounter;
+        defaultFile = eTextScriptFile.NPC_MunDuckBea_Encounter;
     }
     public override eTextScriptFile GetInteractableEnum()
     {

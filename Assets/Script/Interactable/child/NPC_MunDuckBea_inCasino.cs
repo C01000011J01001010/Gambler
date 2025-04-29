@@ -1,7 +1,7 @@
 using PublicSet;
 using UnityEngine;
 
-public class NPC_MunDuckBea_inCasino : InteractableObject
+public class NPC_MunDuckBea_inCasino : InteractableObjectBase
 {
     public override eTextScriptFile GetInteractableEnum()
     {

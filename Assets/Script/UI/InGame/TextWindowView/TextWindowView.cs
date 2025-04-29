@@ -205,7 +205,7 @@ public class TextWindowView : MonoBehaviour
             {
                 // csv데이터 가져오기
 
-                InteractableObject Script = curruntObject.GetComponent<InteractableObject>();
+                InteractableObjectBase Script = curruntObject.GetComponent<InteractableObjectBase>();
                 eTextScriptFile interactionFileEnum = Script.GetInteractableEnum();
 
                 // 성공적으로 파일번호를 받아왔으면 데이터를 저장
@@ -218,7 +218,7 @@ public class TextWindowView : MonoBehaviour
                 // 파일번호를 아직 받지 못한 객체이면 텍스트창을 종료
                 else
                 {
-                    CallbackManager.Instance.TextWindowPopUp_Close();
+                    CallbackBase.TextWindowPopUp_Close();
                 }
                 
             }
@@ -273,7 +273,7 @@ public class TextWindowView : MonoBehaviour
         if (TextIndex >= textScriptDataList.Count)
         {
             Debug.Log($"현재 실행된 문자열의 개수 == {textScriptDataList.Count}");
-            CallbackManager.Instance.TextWindowPopUp_Close();
+            CallbackBase.TextWindowPopUp_Close();
 
             // 대화창을 한번 끄고 나서 엔드콜백을 실행함
             if (textScriptData.hasEndCallback == eHasEndCallback.yes)

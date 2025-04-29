@@ -173,7 +173,7 @@ public class GameManager : Singleton<GameManager>
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Debug.Log("테스트 시작");
-            CallbackManager.Instance.EnterCasino();
+            CallbackManager.Instance.interactiveTextCallback.EnterCasino();
         }
     }
 #endif
@@ -315,9 +315,10 @@ public class GameManager : Singleton<GameManager>
         PlayerSaveManager.Instance.LoadOpenedIconCount(currentPlayerSaveKey); // 여기서 Set함
         PlayerSaveManager.Instance.LoadItems(currentPlayerSaveKey);
         PlayerSaveManager.Instance.LoadQuests(currentPlayerSaveKey);
+        PlayerSaveManager.Instance.LoadDynamicInteractable(currentPlayerSaveKey);
 
-        
-        
+
+
 
         connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
         SceneLoadView(
@@ -333,7 +334,7 @@ public class GameManager : Singleton<GameManager>
     public void GameOver()
     {
         float delay = 2f;
-        CallbackManager.Instance.PlaySequnce_BlackViewProcess(
+        CallbackBase.PlaySequnce_BlackViewProcess(
             delay,
             () => connector_InGame.youLoseView_Script.gameObject.SetActive(true));
     }

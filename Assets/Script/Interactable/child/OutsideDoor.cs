@@ -1,7 +1,7 @@
 using UnityEngine;
 using PublicSet;
 
-public class OutsideDoor : InteractableObject
+public class OutsideDoor : InteractableObjectBase
 {
     public override eTextScriptFile GetInteractableEnum()
     {

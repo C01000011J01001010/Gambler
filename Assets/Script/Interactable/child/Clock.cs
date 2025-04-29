@@ -1,6 +1,6 @@
 using UnityEngine;
 using PublicSet;
-public class Clock : InteractableObject
+public class Clock : InteractableObjectBase
 {
     public override eTextScriptFile GetInteractableEnum()
     {

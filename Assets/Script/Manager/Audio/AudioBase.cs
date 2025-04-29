@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class GameAudio  : MonoBehaviour, IAudioDefault
+public abstract class AudioBase  : MonoBehaviour, IAudioDefault
 {
     public string volumeValueKey { get; protected set; }
     public string volumeMuteKey { get; protected set; }

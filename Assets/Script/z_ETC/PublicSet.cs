@@ -220,13 +220,6 @@ namespace PublicSet
     }
 
 
-
-    public enum eQuestCallback
-    {
-        None,
-        Tutorial,
-    }
-
     public enum eHasEndCallback
     {
         No,
