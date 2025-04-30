@@ -92,10 +92,11 @@ public class PlayerMe : CardGamePlayerBase
         CardGamePlayManager.Instance.NextProgress(); // 201을 실행
 
         // 내 카드 보기 활성화
-        CardGamePlayManager.Instance.cardGameView.cardScreenButton.TryActivate_Button();
+        CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryActivate_Button();
 
-        // 게임어시스턴트로 선택이 가능하도록 만듬
-        GameAssistantPopUp_OnlyOneLives.Instance.LiftRestrictionToAllSelections();
+        // TargetDisplay에서 대상을 선택할 수 있도록 만듬
+        CardGamePlayManager.Instance.cardGameView.targetImageDisplay.LiftRestrictionToAllSelections();
+        //GameAssistantPopUp_OnlyOneLives.Instance.LiftRestrictionToAllSelections();
 
         // 버튼 클릭시 콜백을 변경
         isAttack = true;
@@ -110,7 +111,7 @@ public class PlayerMe : CardGamePlayerBase
         CardGamePlayManager.Instance.NextProgress(); // 301을 실행
 
         // 내 카드 보기 활성화
-        CardGamePlayManager.Instance.cardGameView.cardScreenButton.TryActivate_Button();
+        CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryActivate_Button();
 
         // 버튼 클릭시 콜백을 변경
         isAttack = false;

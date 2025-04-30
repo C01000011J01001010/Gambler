@@ -7,7 +7,7 @@ public class CardScreenBackGround : MonoBehaviour
     public RectTransform canvas;
 
     [SerializeField] private RectTransform rectTransform;
-    [SerializeField] private CardScreenButton cardScreenButton;
+    [SerializeField] private CardScreenButton cardScreenOpenButton;
     
     bool isCardScreenInCenter;
     Vector2 OutOfScreenAnchoredPos;
@@ -51,11 +51,11 @@ public class CardScreenBackGround : MonoBehaviour
             sequence.Append(rectTransform.DOAnchorPos(CenterAnchoredPos, delay));
 
             // 화면이 올라오면 ui사용방법을 설명
-            sequence.AppendCallback(
-                () => GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.HowToCardSelect)
-                );
+            //sequence.AppendCallback(
+            //    () => GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.HowToCardSelect)
+            //    );
 
-            cardScreenButton.SetButtonCallback(cardScreenButton.PlaySequnce_SubScreenClose);
+            cardScreenOpenButton.gameObject.SetActive(false);
             return true;
         }
 
@@ -77,7 +77,8 @@ public class CardScreenBackGround : MonoBehaviour
         {
             isCardScreenInCenter = false;
             sequence.Append(rectTransform.DOAnchorPos(OutOfScreenAnchoredPos, delay));
-            cardScreenButton.SetButtonCallback(cardScreenButton.PlaySequnce_SubScreenOpen);
+
+            cardScreenOpenButton.gameObject.SetActive(true);
             return true;
         }
 

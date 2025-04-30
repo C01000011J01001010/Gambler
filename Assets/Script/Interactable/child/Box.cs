@@ -5,6 +5,7 @@ public class Box : DynamicInteractableBase
 {
     public List<eItemType> itemList;
 
+    
     private void Start()
     {
         defaultFile = eTextScriptFile.Box_Empty;
@@ -19,7 +20,7 @@ public class Box : DynamicInteractableBase
     public void FillUpBox(List<eItemType> list)
     {
         // 플레이어가 상호작용 할 수 있도록 태그 변경
-        gameObject.tag = "Interactable";
+        gameObject.layer = InteractableLayer;
 
         if (list != null && list.Count >0)
         {
@@ -45,7 +46,7 @@ public class Box : DynamicInteractableBase
     public void EmptyOutBox()
     {
         // 플레이어가 상호작용 할 수 있도록 태그 변경
-        gameObject.tag = "Interactable";
+        gameObject.layer = InteractableLayer;
 
         currentFile = eTextScriptFile.Box_Empty;
 

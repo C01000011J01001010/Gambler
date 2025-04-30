@@ -7,18 +7,17 @@ public class CardGameView : MonoBehaviour
     // 에디터 연결
     public PlayerInterface_CardGame playerInterface;
     public CardGamePlayManager cardGamePlayManager;
-    public CardScreenButton cardScreenButton;
     public CardScreenBackGround cardScreenBackGround;
     public DiceButton diceButton;
     public SelectCompleteButton selectCompleteButton;
     public CasinoView casinoView;
-
+    public GameObject cardScreenButtonSet;
+    public CardScreenButton cardScreenOpenButton;
     public GameObject SubScreen_Card;
-
     public GameObject StartButtonSet;
     public Text startButtonText;
-
     public DeckOfCards deckOfCards;
+    public TargetDisplay targetImageDisplay;
 
     // 스크립트 편집
     private Vector3 StartButtonScaleOrigin;
@@ -29,7 +28,6 @@ public class CardGameView : MonoBehaviour
     {
         selectCompleteButton.InitAttribute();
         diceButton.TryActivate_Button();
-        cardScreenButton.TryDeactivate_Button();
 
         InitContinueButtonText();
     }

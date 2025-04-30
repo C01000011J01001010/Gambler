@@ -164,8 +164,10 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         // 게임어시스턴트를 사용할 수 있도록 시도
         GameManager.connector_InGame.iconView_Script.TryIconUnLock(eIcon.GameAssistant);
 
-        // 게임어시스턴트의 선택 기능은 사용순간까지 제한
-        gameAssistantPopUp.PlaceRestrictionToAllSelections();
+        // TargetDisplay의 선택기능은 필요한 순간까지 제한
+        cardGameView.targetImageDisplay.InitAttribute();
+        cardGameView.targetImageDisplay.PlaceRestrictionToAllSelections();
+        //gameAssistantPopUp.PlaceRestrictionToAllSelections();
 
         // 게임 진행도 초기화
         SetProgress_EnterGame();

@@ -71,73 +71,76 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase_Window<GameAssistantPop
                         cCharacterInfo info = CsvManager.Instance.GetCharacterInfo((eCharacterType)playerIndex);
                         players[i].SetCharacterInfo(info);
                         playerPanelScript.InitPlayerInfo(players[i], i, info);
+                        
                     }
                     else Debug.LogAssertion("잘못된 프리팹");
                 }
             });
     }
 
-    /// <summary>
-    /// 유일한 한명을 선택했을 시 다른 대상을 선택하지 못하도록 만듬
-    /// </summary>
-    /// <param name="exception"></param>
-    public void PlaceRestrictionToSelections(SelectAsTarget_Toggle exception)
-    {
-        for (int i = 0; i < ActiveObjList.Count; i++)
-        {
-            OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
+    
 
-            if (panel.selectAsTarget_Toggle == exception) continue;
-            else
-            {
-                panel.selectAsTarget_Toggle.SetInteractable(false);
-            }
-        }
+    ///// <summary>
+    ///// 유일한 한명을 선택했을 시 다른 대상을 선택하지 못하도록 만듬
+    ///// </summary>
+    ///// <param name="exception"></param>
+    //public void PlaceRestrictionToSelections(SelectAsTarget_Toggle exception)
+    //{
+    //    for (int i = 0; i < ActiveObjList.Count; i++)
+    //    {
+    //        OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
 
-        // 플레이어가 공격대상을 설정할 필요가 없어짐
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
-    }
+    //        if (panel.selectAsTarget_Toggle == exception) continue;
+    //        else
+    //        {
+    //            panel.selectAsTarget_Toggle.SetInteractable(false);
+    //        }
+    //    }
 
-    public void PlaceRestrictionToAllSelections()
-    {
-        for (int i = 0; i < ActiveObjList.Count; i++)
-        {
-            OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
-            panel.selectAsTarget_Toggle.SetInteractable(false);
-        }
+    //    // 플레이어가 공격대상을 설정할 필요가 없어짐
+    //    GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
+    //}
 
-        // 플레이어가 공격대상을 설정할 필요가 없어짐
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
-    }
+    //public void PlaceRestrictionToAllSelections()
+    //{
+    //    for (int i = 0; i < ActiveObjList.Count; i++)
+    //    {
+    //        OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
+    //        panel.selectAsTarget_Toggle.SetInteractable(false);
+    //    }
 
-    public void LiftRestrictionToSelections(SelectAsTarget_Toggle exception)
-    {
-        for (int i = 0; i < ActiveObjList.Count; i++)
-        {
-            OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
+    //    // 플레이어가 공격대상을 설정할 필요가 없어짐
+    //    GameManager.connector_InGame.iconView_Script.TryClickGuideOff(eIcon.GameAssistant);
+    //}
 
-            if (panel.selectAsTarget_Toggle == exception) continue;
-            else
-            {
-                panel.selectAsTarget_Toggle.SetInteractable(true);
-            }
-        }
+    //public void LiftRestrictionToSelections(SelectAsTarget_Toggle exception)
+    //{
+    //    for (int i = 0; i < ActiveObjList.Count; i++)
+    //    {
+    //        OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
 
-        // 플레이어가 공격대상을 설정하도록 유도
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
-    }
+    //        if (panel.selectAsTarget_Toggle == exception) continue;
+    //        else
+    //        {
+    //            panel.selectAsTarget_Toggle.SetInteractable(true);
+    //        }
+    //    }
 
-    public void LiftRestrictionToAllSelections()
-    {
-        for (int i = 0; i < ActiveObjList.Count; i++)
-        {
-            OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
-            panel.selectAsTarget_Toggle.SetInteractable(true);
-        }
+    //    // 플레이어가 공격대상을 설정하도록 유도
+    //    GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
+    //}
 
-        // 플레이어가 공격대상을 설정하도록 유도
-        GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
-    }
+    //public void LiftRestrictionToAllSelections()
+    //{
+    //    for (int i = 0; i < ActiveObjList.Count; i++)
+    //    {
+    //        OnlyOneLivesPlayerPanel panel = ActiveObjList[i].GetComponent<OnlyOneLivesPlayerPanel>();
+    //        panel.selectAsTarget_Toggle.SetInteractable(true);
+    //    }
+
+    //    // 플레이어가 공격대상을 설정하도록 유도
+    //    GameManager.connector_InGame.iconView_Script.TryClickGuideOn(eIcon.GameAssistant);
+    //}
 
 
 }

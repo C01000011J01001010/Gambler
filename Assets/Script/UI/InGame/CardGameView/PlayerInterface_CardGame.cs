@@ -4,7 +4,7 @@ public class PlayerInterface_CardGame : MonoBehaviour
 {
     //에디터
     public RectTransform rectTransform;
-    public CardScreenButton cardScreenButton;
+    //public CardScreenButton cardScreenButton;
     public DiceButton diceButton;
     public GameObject SubScreen_Dice;
 
@@ -22,11 +22,6 @@ public class PlayerInterface_CardGame : MonoBehaviour
 
     private void Start()
     {
-        if(cardScreenButton == null)
-        {
-            Debug.LogAssertion("cardScreenButton == null");
-        }
-
         if (diceButton == null)
         {
             Debug.LogAssertion("diceButton == null");
@@ -66,12 +61,10 @@ public class PlayerInterface_CardGame : MonoBehaviour
         // 활성화되면 밖에서 대기
         rectTransform.anchoredPosition = OutOfScreenAnchoredPos;
 
-        cardScreenButton.TryDeactivate_Button();
         diceButton.TryDeactivate_Button();
 
         // content에 활성화할 객체 초기화
         DiceSetAcive(true);
-        cardScreenButton.gameObject.SetActive(false);
     }
 
     public void returnInterface()
@@ -81,7 +74,6 @@ public class PlayerInterface_CardGame : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         GetSequnce_InterfaceOff(sequence);
         sequence.AppendCallback(()=>DiceSetAcive(true));
-        sequence.AppendCallback(()=>cardScreenButton.gameObject.SetActive(false));
 
         sequence.SetLoops(1);
         sequence.Play();
@@ -92,13 +84,8 @@ public class PlayerInterface_CardGame : MonoBehaviour
         // 인터페이스를 숨기고
         GetSequnce_InterfaceOff(sequence);
 
-        // 내용물을 변경한 다음
+        // 필요없는 인터페이스 비활성화
         sequence.AppendCallback(() => DiceSetAcive(false));
-        sequence.AppendCallback(() => cardScreenButton.gameObject.SetActive(true));
-        sequence.AppendCallback(() => cardScreenButton.TryActivate_Button());
-
-        // 다시 등장
-        GetSequnce_InterfaceOn(sequence);
     }
 
     public void GetSequnce_InterfaceOn(Sequence sequence)

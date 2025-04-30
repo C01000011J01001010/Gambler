@@ -10,7 +10,6 @@ public abstract class Deactivatable_ButtonBase : ButtonBase
     /// </summary>
     public virtual bool TryDeactivate_Button()
     {
-
         button.interactable = false;
 
         // 상호작용을 하지 않을 시 기본으로 적용되는 반투명 제거

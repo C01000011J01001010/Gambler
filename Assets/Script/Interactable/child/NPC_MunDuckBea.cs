@@ -8,9 +8,12 @@ public class NPC_MunDuckBea : DynamicInteractableBase
     private void Start()
     {
         defaultFile = eTextScriptFile.NPC_MunDuckBea_Encounter;
+        LastStage = currentStage;
     }
     public override eTextScriptFile GetInteractableEnum()
     {
+        InitCurrentFile();
+
         // 최초 조우시 Encounter 파일번호 반환
         if (currentFile == eTextScriptFile.NPC_MunDuckBea_Encounter)
         {
@@ -35,7 +38,7 @@ public class NPC_MunDuckBea : DynamicInteractableBase
         
     }
 
-    private void FixedUpdate()
+    private void InitCurrentFile()
     {
         // 스테이지 변경시 해당스테이지의 Encounter를 시작하도록 조정
         if (LastStage != currentStage)

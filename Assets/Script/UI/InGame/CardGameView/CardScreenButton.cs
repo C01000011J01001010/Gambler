@@ -1,14 +1,11 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardScreenButton : Deactivatable_ButtonBase
 {
     [SerializeField] CardScreenBackGround cardScreen;
 
-    private void Start()
-    {
-        SetButtonCallback(PlaySequnce_SubScreenOpen);
-    }
 
     public void PlaySequnce_SubScreenOpen()
     {

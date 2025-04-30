@@ -32,7 +32,8 @@ public abstract class ButtonBase : MonoBehaviour
         if (button != null)
         {
             button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(callback);
+
+            if(callback != null) button.onClick.AddListener(callback);
         }
         else
         {
@@ -46,5 +47,10 @@ public abstract class ButtonBase : MonoBehaviour
         {
             button.onClick.RemoveAllListeners();
         }
+    }
+
+    public void SetButtonInteractable(bool interactable)
+    {
+        button.interactable = false;
     }
 }

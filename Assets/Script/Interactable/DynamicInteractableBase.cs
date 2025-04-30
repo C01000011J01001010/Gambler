@@ -1,9 +1,11 @@
 using PublicSet;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class DynamicInteractableBase : InteractableObjectBase
 {
+    
     private eTextScriptFile _currentFile;
     protected eTextScriptFile defaultFile;
     public eTextScriptFile currentFile
@@ -16,19 +18,15 @@ public abstract class DynamicInteractableBase : InteractableObjectBase
         protected set => _currentFile = value;
     }
 
-    
 
-    private static Dictionary<string, DynamicInteractableBase> _dynamicInteractableDict = new();
-    public static Dictionary<string, DynamicInteractableBase> dynamicInteractableDict => _dynamicInteractableDict;
+    public static Dictionary<string, DynamicInteractableBase> dynamicInteractableDict = new();
 
-    private void Awake()
+    public void InitDict()
     {
-        currentFile = eTextScriptFile.None;
-        dynamicInteractableDict.Add(gameObject.name, this);
-        //if(dynamicInteractableObjectList.Contains(this))
-        //{
-        //    Debug.LogWarning($"dynamicInteractableObjectList.count == {dynamicInteractableObjectList.Count}");
-        //}
+        if (dynamicInteractableDict == null) dynamicInteractableDict = new();
+
+        if (dynamicInteractableDict.ContainsKey(gameObject.name) == false) dynamicInteractableDict.Add(gameObject.name, this);
+        else dynamicInteractableDict[gameObject.name] = this;
     }
 
     /// <summary>
@@ -62,11 +60,12 @@ public abstract class DynamicInteractableBase : InteractableObjectBase
                Enum.IsDefined(typeof(eTextScriptFile), intEnum)
                )
             {
-                eTextScriptFile currentFile = (eTextScriptFile)intEnum;
-                if (currentFile != eTextScriptFile.None)
+                eTextScriptFile SavedTextFile = (eTextScriptFile)intEnum;
+                if (SavedTextFile != eTextScriptFile.None)
                 {
-                    dynamicInteractableDict[Data[0]].tag = "Interactable";
+                    dynamicInteractableDict[Data[0]].gameObject.layer = InteractableLayer;
                     dynamicInteractableDict[Data[0]].currentFile = (eTextScriptFile)intEnum;
+                    Debug.Log("데이터 로딩 성공");
                 }
                 
             }

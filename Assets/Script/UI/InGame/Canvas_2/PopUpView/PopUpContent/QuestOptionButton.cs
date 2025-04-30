@@ -12,7 +12,7 @@ public class QuestOptionButton : PopUpOptionButtonBase<QuestOptionButton, sQuest
     /// </summary>
     public override void InitPanel()
     {
-        Setpanel(info.name);
+        Setpanel_Text(info.name);
 
         // 확인이 필요하면 객체를 활성화 시키고 그렇지 않으면 비활성화
         ClickCheck(eIcon.Quest);

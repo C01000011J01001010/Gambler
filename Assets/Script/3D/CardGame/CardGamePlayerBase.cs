@@ -445,11 +445,11 @@ public abstract class CardGamePlayerBase : MonoBehaviour
             Debug.Log("자기 자신을 공격대상으로 삼을 수 없음");
             return false;
         }
-        else if(AttackTarget != null)
-        {
-            Debug.Log($"이미 공격대상을 {AttackTarget.characterInfo.CharacterName}으로 선택했습니다.");
-            return false;
-        }
+        //else if(AttackTarget != null)
+        //{
+        //    Debug.Log($"이미 공격대상을 {AttackTarget.characterInfo.CharacterName}으로 선택했습니다.");
+        //    return false;
+        //}
         else
         {
             AttackTarget = target;

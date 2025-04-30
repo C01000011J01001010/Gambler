@@ -8,6 +8,9 @@ public class PlayerEtc : CardGamePlayerBase
     public OnlyOneLivesPlayerPanel AsisstantPanel {  get; private set; }
     public List<CardGamePlayerBase> PlayerList { get { return CardGamePlayManager.Instance.playerList; } }
     public CardGamePlayerBase Prey { get { return CardGamePlayManager.Instance.Prey; } }
+
+
+
     public void SetAsisstantPanel(OnlyOneLivesPlayerPanel value)
     {
         AsisstantPanel = value;

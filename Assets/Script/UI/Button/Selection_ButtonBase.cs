@@ -10,7 +10,7 @@ using UnityEngine.Events;
 public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase where T_Class : Selection_ButtonBase<T_Class>
 {
     private Image _image = null;
-    protected Image image
+    public Image image
     {
         get
         {
@@ -38,7 +38,7 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
         UnselectThisButton();
     }
 
-    public void Setpanel(string value)
+    public virtual void Setpanel_Text(string value)
     {
         buttonText.text = value;
     }
@@ -55,10 +55,6 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
     }
 
 
-    /// <summary>
-    /// 각 자식클래스의 start에서 호출되어야함
-    /// </summary>
-    /// <param name="currentObj"></param>
     public virtual void TrySelectThisButton(T_Class currentObj)
     {
         if (currentSelectedObj == null)

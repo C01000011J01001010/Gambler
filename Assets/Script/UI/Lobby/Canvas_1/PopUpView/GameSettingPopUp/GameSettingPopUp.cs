@@ -60,7 +60,7 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
                     GameSettingSelectionButton selectButton = ActiveObjList[index].GetComponent<GameSettingSelectionButton>();
 
                     // 문자열 초기화
-                    selectButton.Setpanel(GameSettingTitle[i]);
+                    selectButton.Setpanel_Text(GameSettingTitle[i]);
 
                     if(index == GameSettingTitle.Length - 1)
                     {
@@ -91,21 +91,6 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
                             () =>
                             {
                                 PanelOpen(index);
-                                //for (int CloseIndex = 0; CloseIndex < this.gameSettingPanel.Length; CloseIndex++)
-                                //{
-                                //    // 열려는 탭은 놔두고
-                                //    if (index == CloseIndex)
-                                //        continue;
-
-                                //    // 그 외에 모든 탭은 닫기
-                                //    else if (this.gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
-                                //        this.gameSettingPanel[CloseIndex].gameObject.SetActive(false);
-                                //}
-
-                                //// 현재 오픈한 판넬을 저장하고 그 판넬을 활성화
-                                //currentPanel = this.gameSettingPanel[index];
-                                //currentPanel.gameObject.SetActive(true);
-
                             });
                     }
                 }

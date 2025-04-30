@@ -34,7 +34,7 @@ public class CardGameRulePopUp : PopUpBase_FullScreen<CardGameRulePopUp>
                 {
                     
                     RuleButton ruleButton = ActiveObjList[i].GetComponent<RuleButton>();
-                    ruleButton.Setpanel(gameRules[i].Title); // 버튼 텍스트 수정
+                    ruleButton.Setpanel_Text(gameRules[i].Title); // 버튼 텍스트 수정
 
                     int localI = i; // 클로저 참조를 생각하여 람다에 사용할 i값은 지역변수로 사용
                     ruleButton.SetCallback(ruleButton, // 버튼 클릭시 우측 텍스트 수정

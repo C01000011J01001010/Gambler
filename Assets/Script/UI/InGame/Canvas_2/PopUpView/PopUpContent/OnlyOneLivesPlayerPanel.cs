@@ -18,7 +18,7 @@ public class OnlyOneLivesPlayerPanel : MonoBehaviour
     public Text PlayerFeature;
     public Text CurrentPosition;
     public Text SelectAsTarget_Label;
-    public SelectAsTarget_Toggle selectAsTarget_Toggle;
+    //public SelectAsTarget_Toggle selectAsTarget_Toggle;
 
     // 스크립트
     public PlayerEtc player {  get; private set; }
@@ -42,13 +42,14 @@ public class OnlyOneLivesPlayerPanel : MonoBehaviour
         { 
             player = inputPlayer;
             player.SetAsisstantPanel(this);
-            selectAsTarget_Toggle.SetPlayer(player);
+            //selectAsTarget_Toggle.SetPlayer(player);
 
             // 객체 이름 변경
             gameObject.name = $"{playerInfo.CharacterName}_Info";
 
             // 이미지 변경
-            TryChangePortraitImage(playerInfo.CharaterIndex);
+            TryChangePortraitImage(playerInfo.CharaterIndex, clockwiseOrder);
+            
 
             // text 변경
             PlayerName.text = PlayerTemplate.PlayerName + playerInfo.CharacterName;
@@ -72,13 +73,14 @@ public class OnlyOneLivesPlayerPanel : MonoBehaviour
         }
     }
 
-    public bool TryChangePortraitImage(eCharacterType characterIndex)
+    public bool TryChangePortraitImage(eCharacterType characterIndex, int order)
     {
         bool isSueccessed = false;
         Sprite sprite = PortraitImageResource.Instance.TryGetImage(characterIndex, out isSueccessed);
         if (isSueccessed)
         {
             PlayerImage.sprite = sprite;
+
             Debug.Log("이미지 전환 성공");
         }
         else
