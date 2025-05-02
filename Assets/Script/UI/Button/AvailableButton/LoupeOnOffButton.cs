@@ -20,7 +20,7 @@ public class LoupeOnOffButton : ImageChange_ButtonBase
         }
 
         // 사용방법 텍스트로 설명
-        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(PublicSet.eSystemGuide.HowToUseLoupe);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(PublicSet.eSystemGuide.HowToUseLoupe);
 
         // 버튼 전환
         Loupe.SetActive(true);

@@ -8,7 +8,7 @@ public class IconViewOnOffButton : IconButtonBase
     {
         get
         {
-            if (_iconview == null) _iconview = GameManager.connector_InGame.iconView_Script;
+            if (_iconview == null) _iconview = GameManager.connector_InGame.Canvas1.IconView;
             return _iconview;
         }
     }

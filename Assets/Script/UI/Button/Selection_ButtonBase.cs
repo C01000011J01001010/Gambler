@@ -21,6 +21,7 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
             }
             return _image; 
         }
+        protected set { _image = value; }
     }
 
     [SerializeField] protected Text buttonText;
@@ -31,11 +32,16 @@ public abstract class Selection_ButtonBase<T_Class> : Deactivatable_ButtonBase w
     /// <summary>
     /// 상속받는 클래스당 1개만 존재하는 공용변수
     /// </summary>
-    protected static T_Class currentSelectedObj;
+    private static T_Class currentSelectedObj;
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         UnselectThisButton();
+    }
+
+    public static void ClearCurrentSelectedObj()
+    {
+        currentSelectedObj = null;
     }
 
     public virtual void Setpanel_Text(string value)

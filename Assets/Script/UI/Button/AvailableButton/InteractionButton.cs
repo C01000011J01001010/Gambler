@@ -8,8 +8,6 @@ public class InteractionButton : Deactivatable_ButtonBase
     }
     public void StartInteraction()
     {
-        CallbackBase.TextWindowPopUp_Open();
-        TextWindowView textView = (GameManager.connector as Connector_InGame).textWindowView.GetComponent<TextWindowView>();
-        textView.StartTextWindow();
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow();
     }
 }

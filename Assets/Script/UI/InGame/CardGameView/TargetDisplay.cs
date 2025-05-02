@@ -11,27 +11,22 @@ public class TargetDisplay : MonoBehaviour
 
     public void InitAttribute()
     {
-        InitPlayers();
         targetButtonList = new List<TargetButton>(targetButtonArr);
 
-        foreach (var button in targetButtonArr)
-        {
-            button.TryActivate_Button();
-        }
-    }
-
-    public void InitPlayers()
-    {
-        for(int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
             targetButtonArr[i].SetPlayer(players[i]);
+            targetButtonArr[i].PlayerReadyToPlay();
         }
     }
 
     public void PlaceRestrictionToAllSelections()
     {
         // 클릭가이드 종료
-        eyeOpenCloseClickGuide.SetActive(false);
+        //eyeOpenCloseClickGuide.SetActive(false);
+
+        // 파산하지 않은 모든 객체에 동일한 처리를 함
+        TargetButton.ClearCurrentSelectedObj();
 
         for (int i = 0; i < targetButtonList.Count; i++)
         {
@@ -52,6 +47,23 @@ public class TargetDisplay : MonoBehaviour
             // 공격 대상 선택시 기본 콜백함수 호출 후 클릭가이드 종료
             targetButtonList[i].InitCallback(()=>eyeOpenCloseClickGuide.SetActive(false));
         }
+    }
+
+    public void TargetBankrupt(PlayerEtc bankruptTarget)
+    {
+        for(int i = 0; i< targetButtonList.Count; i++)
+        {
+            bool result = targetButtonList[i].ComparePlayer(bankruptTarget);
+
+            if (result)
+            {
+                targetButtonList[i].PlayerBankrupt();
+                targetButtonList.RemoveAt(i);
+                break;
+            }
+        }
+
+
     }
 
 }

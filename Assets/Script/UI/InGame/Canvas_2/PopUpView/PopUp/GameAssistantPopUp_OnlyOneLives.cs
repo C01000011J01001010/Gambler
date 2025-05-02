@@ -17,7 +17,7 @@ public class GameAssistantPopUp_OnlyOneLives : PopUpBase_Window<GameAssistantPop
         ScrollToTop();
 
         // 팝업의 용도를 설명
-        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.HowToUseGameAssistant_OnlyOneLives);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eSystemGuide.HowToUseGameAssistant_OnlyOneLives);
     }
 
     public void InitPlayerList()

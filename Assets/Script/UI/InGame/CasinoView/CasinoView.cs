@@ -15,11 +15,6 @@ public class CasinoView : MonoBehaviour
 
     public void StartDealerDialogue()
     {
-        TextWindowView textViewScript = (GameManager.connector as Connector_InGame).textWindowView.GetComponent<TextWindowView>();
-        if (textViewScript != null)
-        {
-            textViewScript.StartTextWindow(eSystemGuide.WelcomeFromGM);
-            //textViewScript.StartTextWindow(eTextScriptFile.GameMaster);
-        }
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eSystemGuide.WelcomeFromGM);
     }
 }

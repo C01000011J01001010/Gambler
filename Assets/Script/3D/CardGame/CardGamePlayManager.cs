@@ -156,17 +156,18 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         cardGameView.InitStartButton();
 
         // 인터페이스 초기화
-        cardGameView.playerInterface.InitInterface();
+        cardGameView.diceSet.Init();
+        cardGameView.cardScreenButtonSet.Init();
 
         // 게임 어시스턴트 초기화
         popUpView.gameAssistantPopUp_OnlyOneLives.RefreshPopUp();
-        
+
         // 게임어시스턴트를 사용할 수 있도록 시도
-        GameManager.connector_InGame.iconView_Script.TryIconUnLock(eIcon.GameAssistant);
+        GameManager.connector_InGame.Canvas1.IconView.TryIconUnLock(eIcon.GameAssistant);
 
         // TargetDisplay의 선택기능은 필요한 순간까지 제한
-        cardGameView.targetImageDisplay.InitAttribute();
-        cardGameView.targetImageDisplay.PlaceRestrictionToAllSelections();
+        cardGameView.targetDisplay.InitAttribute();
+        cardGameView.targetDisplay.PlaceRestrictionToAllSelections();
         //gameAssistantPopUp.PlaceRestrictionToAllSelections();
 
         // 게임 진행도 초기화
@@ -201,7 +202,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     public void SetProgress_EnterGame()
     {
         currentProgress = eOOLProgress.num101_BeforeStartGame;
-        (GameManager.connector as Connector_InGame).textWindowView_Script.StartTextWindow(currentProgress);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(currentProgress);
     }
 
     public void SetProgress(eOOLProgress progress)
@@ -210,7 +211,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         currentProgress = progress;
 
         Debug.Log($"다음 진행상황 : {currentProgress.ToString()}");
-        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(currentProgress);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(currentProgress);
     }
     /// <summary>
     /// 모든 진행사항은 직접 제어하지 않고 해당 함수로 제어함
@@ -340,7 +341,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
 
         Debug.Log($"다음 진행상황 : {currentProgress.ToString()}");
-        (GameManager.connector as Connector_InGame).textWindowView_Script.StartTextWindow(currentProgress);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(currentProgress);
 
         
     }
@@ -415,7 +416,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
         // Interface 변경
         Sequence appendSequence = DOTween.Sequence();
-        cardGameView.playerInterface.GetSequnce_ChangeInterfaceNext(appendSequence);
+        cardGameView.diceSet.GetSequnce_ChangeInterfaceNext(appendSequence);
         sequence.Append(appendSequence);
 
         // 필요없어진 카드덱을 제거
@@ -730,9 +731,13 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
                 }
             }
         }
+        PlayerEtc bankruptTarget = Victim as PlayerEtc;
 
         // 게임어시스턴트에서 해당 플레이어 삭제, PlayerMe는 "if (Victim.CompareTag("Player"))" 에서 걸러졌음
-        GameAssistantPopUp_OnlyOneLives.Instance.ReturnObject((Victim as PlayerEtc).AsisstantPanel.gameObject);
+        GameAssistantPopUp_OnlyOneLives.Instance.ReturnObject(bankruptTarget.AsisstantPanel.gameObject);
+
+        // 게임 타겟에서 해당 플레이어 삭제
+        cardGameView.targetDisplay.TargetBankrupt(bankruptTarget);
 
         NextProgress();
     }

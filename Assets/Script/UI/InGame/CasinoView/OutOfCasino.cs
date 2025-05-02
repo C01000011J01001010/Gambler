@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class OutOfCasino : MonoBehaviour
 {
-    public Canvas0_InGame MainCanvas;
+    public InGame_Canvas0 MainCanvas;
 
     public void Button_OutOfCasino()
     {

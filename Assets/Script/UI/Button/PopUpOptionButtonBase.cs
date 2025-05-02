@@ -37,13 +37,13 @@ public abstract class PopUpOptionButtonBase<T_Class, sDefaultData ,cInfo> : Sele
         // 확인이 필요하면 객체를 활성화 시키고 그렇지 않으면 비활성화
         if (info.isNeedCheck)
         {
-            GameManager.connector_InGame.iconView_Script.TryClickGuideOn(icon);
+            GameManager.connector_InGame.Canvas1.IconView.TryClickGuideOn(icon);
             if (clickGuide.activeInHierarchy == false)
                 clickGuide.SetActive(true);
         }
         else
         {
-            GameManager.connector_InGame.iconView_Script.TryClickGuideOff(icon);
+            GameManager.connector_InGame.Canvas1.IconView.TryClickGuideOff(icon);
             if (clickGuide.activeInHierarchy)
                 clickGuide.SetActive(false);
         }

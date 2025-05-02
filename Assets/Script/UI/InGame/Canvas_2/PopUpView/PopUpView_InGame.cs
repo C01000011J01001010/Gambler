@@ -97,7 +97,7 @@ public void InventoryPopUpOpen()
         }
         else
         {
-            GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eSystemGuide.GameAssistantNotAvailable);
+            GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eSystemGuide.GameAssistantNotAvailable);
             return;
         }
         

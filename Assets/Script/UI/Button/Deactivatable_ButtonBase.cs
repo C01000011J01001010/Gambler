@@ -5,37 +5,39 @@ using UnityEngine.UI;
 public abstract class Deactivatable_ButtonBase : ButtonBase
 {
 
+    public bool isInteractable => button.interactable;
+
     /// <summary>
     /// 버튼클릭 비활성화
     /// </summary>
-    public virtual bool TryDeactivate_Button()
+    public virtual void TryDeactivate_Button()
     {
+        if (!isInteractable) return;
+
         button.interactable = false;
 
-        // 상호작용을 하지 않을 시 기본으로 적용되는 반투명 제거
-        ColorBlock colorBlock = button.colors;
-        Color color = colorBlock.disabledColor;
+        if (button.colors.disabledColor.a > 0.99f) return;
 
-        color.a = 1.0f;
+        else
+        {
+            // 상호작용을 하지 않을 시 기본으로 적용되는 반투명 제거
+            ColorBlock colorBlock = button.colors;
+            Color color = colorBlock.disabledColor;
 
-        colorBlock.disabledColor = color;
-        button.colors = colorBlock;
+            color.a = 1.0f;
 
-        return true;
+            colorBlock.disabledColor = color;
+            button.colors = colorBlock;
+        }
     }
 
     /// <summary>
     /// 버튼클릭 활성화
     /// </summary>
-    public virtual bool TryActivate_Button()
+    public virtual void TryActivate_Button()
     {
-        if (gameObject.activeSelf == false)
-        {
-            Debug.Log($"{gameObject.name}은 활성화되지 않았음");
-            return false;
-        }
+        if (isInteractable) return;
 
         button.interactable = true;
-        return true;
     }
 }

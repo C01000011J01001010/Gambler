@@ -58,10 +58,6 @@ public class CardSelectButton : ImageChange_ButtonBase
         
     }
 
-    public void CantSelectThisCard(TrumpCardDefault trumpCardScript)
-    {
-        Debug.Log($"카드{trumpCardScript.trumpCardInfo.cardName}를 선택할 수 없습니다. 라는 문구가 나와야 됨");
-    }
 
     private void CheckProperties()
     {
@@ -96,7 +92,7 @@ public class CardSelectButton : ImageChange_ButtonBase
             }
             else
             {
-                CantSelectThisCard(trumpCardScript);
+                GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eSystemGuide.violationOfGameSettingRules);
                 return;
             }
         }
@@ -138,7 +134,7 @@ public class CardSelectButton : ImageChange_ButtonBase
         }
         else
         {
-            CantSelectThisCard(trumpCardScript);
+            GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eSystemGuide.makeSureOfYourChoice);
             return;
         }
         

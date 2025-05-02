@@ -31,4 +31,5 @@ public class CardScreenButton : Deactivatable_ButtonBase
             sequence.Play();
         }
     }
+
 }

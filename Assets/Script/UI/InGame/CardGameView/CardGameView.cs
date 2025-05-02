@@ -5,19 +5,20 @@ using UnityEngine.UI;
 public class CardGameView : MonoBehaviour
 {
     // 에디터 연결
-    public PlayerInterface_CardGame playerInterface;
+    public DiceSet diceSet;
     public CardGamePlayManager cardGamePlayManager;
     public CardScreenBackGround cardScreenBackGround;
     public DiceButton diceButton;
     public SelectCompleteButton selectCompleteButton;
     public CasinoView casinoView;
-    public GameObject cardScreenButtonSet;
+    public CardScreenButtonSet cardScreenButtonSet;
     public CardScreenButton cardScreenOpenButton;
+
     public GameObject SubScreen_Card;
     public GameObject StartButtonSet;
     public Text startButtonText;
     public DeckOfCards deckOfCards;
-    public TargetDisplay targetImageDisplay;
+    public TargetDisplay targetDisplay;
 
     // 스크립트 편집
     private Vector3 StartButtonScaleOrigin;
@@ -42,10 +43,6 @@ public class CardGameView : MonoBehaviour
         StartButtonScaleOrigin = StartButtonSet.transform.localScale;
     }
 
-    private void OnEnable()
-    {
-        cardGamePlayManager.EnterCardGame();
-    }
 
     private void OnDisable()
     {
@@ -58,7 +55,7 @@ public class CardGameView : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
 
         // 인터페이스 초기화
-        playerInterface.returnInterface();
+        diceSet.returnInterface();
 
         // start버튼 삭제
         GetSequnce_StartButtonFadeOut(sequence);
@@ -71,7 +68,7 @@ public class CardGameView : MonoBehaviour
         sequence.AppendInterval(2f); // 카드가 중력으로 바닥에 떨어질때까지 기다림
 
         // 인터페이스 활성화
-        playerInterface.GetSequnce_InterfaceOn(sequence);
+        diceSet.GetSequnce_InterfaceOn(sequence);
 
         sequence.AppendCallback(
             () =>

@@ -7,17 +7,24 @@ public class QuestManager : Singleton<QuestManager>
     /// <summary>
     /// 완료되었던 퀘스트를 포함한 모든 퀘스트
     /// </summary>
-    static public HashSet<sQuest> questHashSet { get; private set; }
+    public static HashSet<sQuest> questHashSet { get; private set; }
 
     /// <summary>
     /// 반복 가능한 퀘스트를 관리
     /// </summary>
-    static public HashSet<cQuestInfo> repeatableQuestInfo {  get; private set; }
+    public static HashSet<cQuestInfo> repeatableQuestInfo {  get; private set; }
+
+    public static void HashSetAllClear()
+    {
+        questHashSet.Clear();
+        repeatableQuestInfo.Clear();
+    }
 
     protected override void Awake()
     {
         base.Awake();
         questHashSet = new HashSet<sQuest>();
+        repeatableQuestInfo = new HashSet<cQuestInfo>();
     }
 
     public int GetNewLastId()
@@ -70,8 +77,7 @@ public class QuestManager : Singleton<QuestManager>
 
         return true;
     }
-
-
+    
     public bool TryPlayerCompleteQuest(eQuestType questType)
     {
         // 수주된 퀘스트인지 확인
@@ -97,12 +103,43 @@ public class QuestManager : Singleton<QuestManager>
         questInfo.isNeedCheck = true;
 
         // 반복 가능한 퀘스트이면 다음날로 넘어갈 때 초기화 하기 위해 따로 보관
-        if (questInfo.isRepeatable && repeatableQuestInfo.Contains(questInfo) == false)
-        {
-            repeatableQuestInfo.Add(questInfo);
-        }
+        TryAddRefeatableQuest(questInfo);
 
         return true;
     }
 
+    public static bool TryAddRefeatableQuest(cQuestInfo questInfo)
+    {
+        if (questInfo.isRepeatable)
+        {
+            repeatableQuestInfo.Add(questInfo);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 반복퀘스트가 있을 경우 날짜가 바뀔때마다 초기화됨
+    /// </summary>
+    public static void InitRefeatableQuest()
+    {
+        bool isChanged = false;
+
+        // 반복 가능한 퀘스트의 초기화
+        foreach (cQuestInfo questInfo in repeatableQuestInfo)
+        {
+            //보상을 받은 경우에만 초기화
+            if (questInfo.hasReceivedReward)
+            {
+                questInfo.isComplete = false;
+                questInfo.hasReceivedReward = false;
+                questInfo.isNeedCheck = true;
+
+                isChanged = true;
+            }
+        }
+
+        // 변경 사항 있으면 즉시 반영
+        if (isChanged) GameManager.connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
+    }
 }

@@ -23,18 +23,18 @@ public abstract class CallbackBase : MonoBehaviour
 
     public static void TextWindowPopUp_Open()
     {
-        GameManager.connector_InGame.textWindowView.SetActive(true);
-        GameManager.connector_InGame.interfaceView.SetActive(false);
+        GameManager.connector_InGame.Canvas1.TextWindowView.gameObject.SetActive(true);
+        GameManager.connector_InGame.Canvas0.InterfaceView.SetActive(false);
     }
 
     public static void TextWindowPopUp_Close()
     {
-        GameManager.connector_InGame.textWindowView.SetActive(false);
+        GameManager.connector_InGame.Canvas1.TextWindowView.gameObject.SetActive(false);
 
         // 카지노 게임뷰가 아닌 경우에만 인터페이스를 활성화
         if (GameManager.Instance.isCasinoGameView == false)
         {
-            GameManager.connector_InGame.interfaceView.SetActive(true);
+            GameManager.connector_InGame.Canvas0.InterfaceView.SetActive(true);
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class CallbackBase : MonoBehaviour
         //isBlakcViewReady = false;
 
         // 대화창 끄고 일시정지
-        GameManager.connector_InGame.textWindowView.SetActive(false);
+        GameManager.connector_InGame.Canvas1.TextWindowView.gameObject.SetActive(false);
         GameManager.Instance.Pause_theGame();
 
         // 먼저 화면가림막 활성화
@@ -56,7 +56,7 @@ public abstract class CallbackBase : MonoBehaviour
         }
 
         // 시퀀스 생성
-        Sequence sequence = DOTween.Sequence();
+        Sequence sequence = MethodManager.GetNewSequnce_SingleUse(GameManager.connector.blackView);
 
         // 시퀀스 설정
         sequence.AppendCallback(() => blackViewImage.color = Color.clear);
@@ -69,24 +69,22 @@ public abstract class CallbackBase : MonoBehaviour
 
         sequence.Append(blackViewImage.DOColor(Color.clear, delay / 2));
 
+        // 게임 상태 회복
         sequence.AppendCallback(
-        () =>
-        {
-            // 비활성화를 해야 화면 클릭이 가능함
-            GameManager.connector.blackView.SetActive(false);
+            () =>
+            {
+                // 비활성화를 해야 화면 클릭이 가능함
+                GameManager.connector.blackView.SetActive(false);
 
-            // 게임 지속
-            GameManager.Instance.Continue_theGame();
-
-            //isBlakcViewReady = true;
-        }
-        );
+                // 게임 지속
+                GameManager.Instance.Continue_theGame();
+            }
+            );
 
         if (endCallback != null)
         {
             sequence.AppendCallback(() => endCallback());
         }
-
 
         sequence.SetLoops(1);
 
@@ -101,11 +99,11 @@ public abstract class CallbackBase : MonoBehaviour
         PlaySequnce_BlackViewProcess(delay,
             () =>
             {
-                GameManager.connector_InGame.canvas0_InGame.CasinoViewOpen();
+                GameManager.connector_InGame.Canvas0.CasinoViewOpen();
             },
             () =>
             {
-                GameManager.connector_InGame.canvas0_InGame.casinoView.StartDealerDialogue();
+                GameManager.connector_InGame.Canvas0.CasinoView.StartDealerDialogue();
             }
             );
     }

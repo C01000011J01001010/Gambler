@@ -38,10 +38,10 @@ public class EventManager : Singleton<EventManager>
     public void GetSequnce_EventAnimation(Sequence sequence, CanvasGroup canvasGroup)
     {
         //Debug.Log("stage 애니메이션 시작");
-        
+
 
         // 이벤트화면 활성화
-        connector_InGame.eventView.gameObject.SetActive(true);
+        connector_InGame.Canvas2.EventView.gameObject.SetActive(true);
 
         // 이미지 색깔 초기화
         canvasGroup.alpha = 0f;
@@ -59,19 +59,19 @@ public class EventManager : Singleton<EventManager>
         sequence.Append(canvasGroup.DOFade(0f, delay));
 
         // 이벤트 화면 비활성화
-        sequence.AppendCallback(() => connector_InGame.eventView.gameObject.SetActive(false));
+        sequence.AppendCallback(() => connector_InGame.Canvas2.EventView.gameObject.SetActive(false));
     }
 
 
     public void SetEventMessage(string message)
     {
-        connector_InGame.eventView.SetTextContent(message); // 이미지 내부 텍스트 설정
+        connector_InGame.Canvas2.EventView.SetTextContent(message); // 이미지 내부 텍스트 설정
     }
 
     public void PlaySequnce_EventAnimation()
     {
         Sequence sequence = DOTween.Sequence();
-        GetSequnce_EventAnimation(sequence, connector_InGame.eventView.canvasGroup);
+        GetSequnce_EventAnimation(sequence, connector_InGame.Canvas2.EventView.canvasGroup);
 
         sequence.SetLoops(1);
         sequence.Play();

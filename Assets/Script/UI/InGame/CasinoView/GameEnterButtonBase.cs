@@ -16,7 +16,7 @@ public abstract class GameEnterButtonBase : ButtonBase
     public virtual void SetPlayerCantPlayThis()
     {
         SetButtonCallback(
-            () => GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerCantPlayThis)
+            () => GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eTextScriptFile.PlayerCantPlayThis)
             );
     }
 }

@@ -4,7 +4,7 @@ using PublicSet;
 public class OnlyOneLivesButton : GameEnterButtonBase
 {
     public CardGameView CardGameView;
-    public CardGamePlayManager cardGamePlayManager;
+    public CardGamePlayManager cardGamePlayManager => CardGamePlayManager.Instance;
     public Bed bed;
 
     public override void EnterGame()
@@ -23,8 +23,9 @@ public class OnlyOneLivesButton : GameEnterButtonBase
         CallbackBase.PlaySequnce_BlackViewProcess(2.0f,
             () =>
             {
-                GameManager.connector_InGame.canvas0_InGame.CloseAllOfView();
+                GameManager.connector_InGame.Canvas0.CloseAllOfView();
                 CardGameView.gameObject.SetActive(true);
+                cardGamePlayManager.EnterCardGame();
             }
             );
     }
@@ -34,7 +35,7 @@ public class OnlyOneLivesButton : GameEnterButtonBase
         SetButtonCallback(
             () =>
             {
-                GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerCantPlayThis);
+                GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eTextScriptFile.PlayerCantPlayThis);
 
                 QuestManager.Instance.TryPlayerGetQuest(eQuestType.GoToSleep);
             }

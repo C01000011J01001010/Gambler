@@ -256,10 +256,9 @@ public class DeckOfCards : MonoBehaviour
         // 플레이어(Me)의 카드 배분이 끝났으면 자기 카드를 확인 할 수 있도록 만듬
         if (player.layer == cardGamePlayManager.layerOfMe)
         {
-            //Debug.Log("내 카드 보기 활성화!");
             sequence.AppendCallback(()=> 
             {
-                cardGamePlayManager.cardGameView.cardScreenOpenButton.TryActivate_Button();
+                cardGamePlayManager.cardGameView.cardScreenButtonSet.PlaySequence_FadeIn();
                 cardGamePlayManager.CardButtonMemoryPool.InitCardButton(playerScript.closeBox.transform);
             });
         }

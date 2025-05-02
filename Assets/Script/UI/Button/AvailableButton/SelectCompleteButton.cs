@@ -88,12 +88,16 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
 
         // 내카드 보기 비활성화
         CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryDeactivate_Button();
+        
 
         // 애니메이션 실행
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
         CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
+
+        // 내 카드 보기 페이드 아웃
+        CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.GetSequence_FadeOut(sequence);
 
         // 카드 이동 및 공개
         CardGameAnimationManager.Instance.GetSequnce_ChooseCardsToReveal_Aniamaition(sequence);
@@ -116,14 +120,17 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryDeactivate_Button();
 
         // 역할이 끝난 게임어시스턴트의 선택기능 종료
-        CardGamePlayManager.Instance.cardGameView.targetImageDisplay.PlaceRestrictionToAllSelections();
-        //GameAssistantPopUp_OnlyOneLives.Instance.PlaceRestrictionToAllSelections();
+        if(CardGamePlayManager.Instance.Attacker == playerMe)
+            CardGamePlayManager.Instance.cardGameView.targetDisplay.PlaceRestrictionToAllSelections();
 
         // 애니메이션 실행
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
         CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
+
+        // 내 카드 보기 페이드 아웃
+        CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.GetSequence_FadeOut(sequence);
 
         // 카드 제시하기
         playerMe.GetSequnce_PresentCard(sequence,playerMe.isAttack);
@@ -136,7 +143,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         TryDeactivate_Button();
     }
 
-    public override bool TryActivate_Button()
+    public override void TryActivate_Button()
     {
         switch (CardGamePlayManager.Instance.currentProgress)
         {
@@ -146,41 +153,31 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
                     if (CardGamePlayManager.Instance.isDistributionCompleted && playerMe.isCompleteSelect_OnGameSetting)
                     {
                         button.interactable = true;
-                        return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return;
                 }
             case eOOLProgress.num201_AttackTurnPlayer:
                 {
                     if(playerMe.AttackTarget != null && playerMe.isCompleteSelect_OnPlayTime)
                     {
                         button.interactable = true;
-                        return true;
+                        
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return;
                 }
             case eOOLProgress.num301_DefenseTrun_Player:
                 {
                     if (playerMe.isCompleteSelect_OnPlayTime)
                     {
                         button.interactable = true;
-                        return true;
+                        
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return;
                 }
             default:
                 {
                     Debug.LogAssertion("잘못된 접근");
-                    return false;
+                    return;
                 }
 
         }

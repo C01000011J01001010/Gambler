@@ -9,7 +9,7 @@ public class PlayManager : Singleton<PlayManager>
         get
         {
             if (_playerMoneyViewText == null) _playerMoneyViewText =
-                    GameManager.connector_InGame.playerMoneyView_Script.coinResult;
+                    GameManager.connector_InGame.Canvas1.PlayerMoneyView.coinResult;
             return _playerMoneyViewText;
         }
     }
@@ -20,7 +20,7 @@ public class PlayManager : Singleton<PlayManager>
     {
         get
         {
-            if (_moneyAnimation == null) _moneyAnimation = GameManager.connector_InGame.playerMoneyView_Script.GetComponent<PlayerMoneyAnimation>();
+            if (_moneyAnimation == null) _moneyAnimation = GameManager.connector_InGame.Canvas1.PlayerMoneyView.GetComponent<PlayerMoneyAnimation>();
             return _moneyAnimation;
         }
     }
@@ -94,12 +94,12 @@ public class PlayManager : Singleton<PlayManager>
     public void StartPlayerMonologue()
     {
         CallbackBase.TextWindowPopUp_Open();
-        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.PlayerMonologue);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eTextScriptFile.PlayerMonologue);
     }
 
     public void StartPlayerMonologue_OnPlayerWakeUp()
     {
         CallbackBase.TextWindowPopUp_Open();
-        GameManager.connector_InGame.textWindowView_Script.StartTextWindow(eTextScriptFile.OnPlayerWakeUp);
+        GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eTextScriptFile.OnPlayerWakeUp);
     }
 }

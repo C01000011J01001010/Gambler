@@ -8,7 +8,12 @@ public class ItemManager : Singleton<ItemManager>
     // 현재 플레이어가 소유하고있는 아이템
     // HashSet(집합) : 중복되는 데이터는 무시함
     // 참조타입을 자료형 파라미터에 넣을경우 참조(주소)를 비교하여 실 데이터가 중복될 수 있음
-    static public HashSet<sItem> ItemHashSet { get; private set; }
+    public static HashSet<sItem> ItemHashSet { get; private set; }
+
+    public static void HashSetAllClear()
+    {
+        ItemHashSet.Clear();
+    }
 
     protected override void Awake()
     {

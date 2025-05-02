@@ -312,7 +312,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         string playerStatus = PlayManager.Instance.currentPlayerStatus.ToString();
         SaveData(currentPlayerSaveKey_PlayerStatus, playerStatus);
 
-        int openedIconCount = GameManager.connector_InGame.iconView_Script.OpenedIconCount;
+        int openedIconCount = GameManager.connector_InGame.Canvas1.IconView.OpenedIconCount;
         SaveData(currentPlayerSaveKey_OpenedIconCount, openedIconCount);
 
         string dynamicIntaractableData = DynamicInteractableBase.GetStringToSave();
@@ -370,6 +370,8 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
 
     public HashSet<sItem> LoadItems(ePlayerSaveKey saveKey)
     {
+        ItemManager.HashSetAllClear();
+
         //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
         string savedData = LoadData(saveKey.ToString() + defaultSaveKey_Items, string.Empty);
         
@@ -377,7 +379,6 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         if (string.IsNullOrEmpty(savedData))
         {
             Debug.LogWarning("저장된 데이터가 없음 : LoadItems");
-            ItemManager.ItemHashSet.Clear();
             return new HashSet<sItem>();
         }
 
@@ -395,12 +396,6 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
                 continue;
             }
 
-            // 해쉬셋에서 이미 존재하는 데이터는 무시됨
-            else if (ItemManager.ItemHashSet.Contains(item))
-            {
-                continue;
-            }
-
             // 올바른 데이터를 해쉬셋에 추가
             else
             {
@@ -414,6 +409,8 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
 
     public HashSet<sQuest> LoadQuests(ePlayerSaveKey saveKey)
     {
+        QuestManager.HashSetAllClear();
+
         //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
         string savedData = LoadData(saveKey.ToString() + defaultSaveKey_Quests, string.Empty);
 
@@ -430,6 +427,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         {
             // id : serail
             sQuest quest = sQuest.DataSplit(questString);
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
 
             // 데이터가 잘못된경우 패스
             if (quest.id == 0 && quest.type == 0)
@@ -437,16 +435,12 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
                 continue;
             }
 
-            // 해쉬셋에서 이미 존재하는 데이터는 무시됨
-            else if (QuestManager.questHashSet.Contains(quest))
-            {
-                continue;
-            }
-
             // 올바른 데이터를 해쉬셋에 추가
             else
             {
+                
                 QuestManager.questHashSet.Add(quest);
+                QuestManager.TryAddRefeatableQuest(questInfo);
             }
         }
         return QuestManager.questHashSet;
@@ -534,7 +528,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         if (savedData == 0) Debug.LogWarning("데이터가 비었음 : LoadOpenedIconCount");
         else Debug.Log("데이터 로딩 성공 : LoadOpenedIconCount");
 
-        GameManager.connector_InGame.iconView_Script.SetOpendIconCount(savedData);
+        GameManager.connector_InGame.Canvas1.IconView.SetOpendIconCount(savedData);
         return savedData;
     }
 

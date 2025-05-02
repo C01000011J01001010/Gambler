@@ -1,23 +1,38 @@
+using DG.Tweening;
 using PublicSet;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class TargetButton : Selection_ButtonBase<TargetButton>
 {
-    private CardGamePlayerBase player;
+    private CardGamePlayerBase mPlayer;
 
+
+    protected override void OnDisable()
+    {
+        // 껐다 켜도 화면이 유지되어야함
+    }
 
     public void SetPlayer(CardGamePlayerBase player)
     {
-        this.player = player;
-        button.interactable = true;
+        mPlayer = player;
         TryChangePortraitImage();
+    }
+
+    public bool ComparePlayer(object player)
+    {
+        if(player != null && mPlayer == (player as CardGamePlayerBase))
+        {
+            return true;
+        }
+        return false;
     }
 
     public bool TryChangePortraitImage()
     {
         bool isSueccessed = false;
-        Sprite sprite = PortraitImageResource.Instance.TryGetImage(player.characterInfo.CharaterIndex, out isSueccessed);
+        Sprite sprite = PortraitImageResource.Instance.TryGetImage(mPlayer.characterInfo.CharaterIndex, out isSueccessed);
         if (isSueccessed)
         {
             image.sprite = sprite;
@@ -34,7 +49,7 @@ public class TargetButton : Selection_ButtonBase<TargetButton>
 
     public void SelectPlayer()
     {
-        bool result = CardGamePlayManager.Instance.playerMe.TrySetAttackTarget(player);
+        bool result = CardGamePlayManager.Instance.playerMe.TrySetAttackTarget(mPlayer);
         CardGamePlayManager.Instance.cardGameView.selectCompleteButton.TryActivate_Button();
     }
 
@@ -49,5 +64,31 @@ public class TargetButton : Selection_ButtonBase<TargetButton>
             });
     }
 
-    
+    public void PlayerReadyToPlay()
+    {
+        SetBackruptMark(false);
+        TryActivate_Button();
+    }
+
+    public void PlayerBankrupt()
+    {
+        SetBackruptMark(true);
+        TryDeactivate_Button();
+    }
+
+    private void SetBackruptMark(bool value)
+    {
+        if (value)
+        {
+            
+
+            float delay = 0.5f;
+            MethodManager.PlaySequence_FadeIn(buttonText.gameObject, delay);
+        }
+        else
+        {
+            buttonText.gameObject.SetActive(value);
+        }    
+        
+    }
 }

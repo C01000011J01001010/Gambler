@@ -149,6 +149,8 @@ namespace PublicSet
         HowToUseGameAssistant_OnlyOneLives = 2002,
         HowToUseLoupe = 2003,
 
+        violationOfGameSettingRules = 3000,
+        makeSureOfYourChoice = 3001
     }
 
 

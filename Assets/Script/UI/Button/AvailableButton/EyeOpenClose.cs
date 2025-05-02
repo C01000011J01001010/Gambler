@@ -5,7 +5,7 @@ public class EyeOpenClose : ImageChange_ButtonBase
     public Sprite eyeOpen;
     public Sprite eyeClose;
 
-    private TargetDisplay targetImageDisplay { get { return CardGamePlayManager.Instance.cardGameView.targetImageDisplay; } }
+    private TargetDisplay targetImageDisplay { get { return CardGamePlayManager.Instance.cardGameView.targetDisplay; } }
 
     private void Start()
     {

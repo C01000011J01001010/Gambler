@@ -5,6 +5,7 @@ using PublicSet;
 using DG.Tweening;
 using UnityEngine.UI;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 
 
@@ -46,6 +47,7 @@ public class GameManager : Singleton<GameManager>
 
     // 스크립트에서 수정
     public bool isGamePause {  get; private set; }
+    public bool isGameOver { get; private set; }
     public bool isCasinoGameView {  get; private set; }
     public float gameSpeed { get; private set; }
 
@@ -88,32 +90,27 @@ public class GameManager : Singleton<GameManager>
     {
         currentRemainingPeriod = value;
     }
-    public void CountDownRemainingPeriod()
+    public void CountDownRemainingPeriod(out bool isGameOver)
     {
+        isGameOver = false;
+
         currentRemainingPeriod--;
 
-
-        bool isChanged = false;
-        // 반복 가능한 퀘스트의 초기화
-        foreach(cQuestInfo questInfo in QuestManager.repeatableQuestInfo)
+        if (currentRemainingPeriod == 0)
         {
-            //보상을 받은 경우에만 초기화
-            if(questInfo.hasReceivedReward)
-            {
-                questInfo.isComplete = false;
-                questInfo.hasReceivedReward = false;
-                questInfo.isNeedCheck = true;
-
-                isChanged = true;
-            }
+            GameOver();
+            return;
         }
 
-        // 변경 사항 있으면 즉시 반영
-        if (isChanged) connector_InGame.popUpViewAsInGame.questPopUp.RefreshPopUp();
+        QuestManager.InitRefeatableQuest();
     }
 
     public Dictionary<eStage, string> stageMessageDict;
 
+    private void InitCurrentGame()
+    {
+        isGameOver = false;
+    }
     public void Init_StageMessageDict()
     {
         stageMessageDict = new Dictionary<eStage, string>();
@@ -236,50 +233,6 @@ public class GameManager : Singleton<GameManager>
         currentStage++;
     }
 
-    //public void PlaySequnce_StageAnimation()
-    //{
-    //    //Debug.Log("stage 애니메이션 시작");
-
-    //    // 이미지 활성화
-    //    connector_InGame.EventView.SetActive(true);
-
-    //    // 이미지 색깔 초기화
-    //    Image stateViewImage = connector_InGame.EventView.GetComponent<Image>();
-    //    Color colorBack = new Color(1,1,1,0);
-    //    stateViewImage.color = colorBack;
-
-    //    // 이미지 내부 텍스트 초기화
-    //    Text StageViewText = connector_InGame.EventView.transform.GetChild(0).gameObject.GetComponent<Text>();
-    //    StageViewText.text = StageMessageDict[currentStage];
-    //    StageViewText.color = Color.clear;
-
-    //    Sequence sequence = DOTween.Sequence();
-
-    //    float intervalDelay = 0.5f; // 이벤트 종료후 스테이지화면 등장 대기시간
-    //    float startDelay = 1f; // 화면 등장시간
-    //    float middleDelay = 1; // 유지시간
-    //    float endDelay = 1f; // 퇴장시간
-
-    //    // 등장
-    //    sequence.AppendInterval(intervalDelay)
-
-    //            .Append(stateViewImage.DOColor(Color.white, startDelay))
-    //            .Join(StageViewText.DOColor(Color.black, startDelay))
-
-    //            .AppendInterval(middleDelay)
-
-    //            .Append(stateViewImage.DOColor(colorBack, endDelay))
-    //            .Join(StageViewText.DOColor(Color.clear, endDelay))
-
-    //            .AppendCallback(() =>
-    //            {
-    //                connector_InGame.EventView.SetActive(false);
-    //            })
-
-    //            .SetLoops(1);
-
-    //    sequence.Play();
-    //}
 
     private void StartNewGame()
     {
@@ -289,11 +242,11 @@ public class GameManager : Singleton<GameManager>
         // 기본값으로 설정
         PlayManager.Instance.InitPlayerStatus();
         SetStage(eStage.Stage1);
-        connector_InGame.iconView_Script.SetOpendIconCount(0);
-        ItemManager.ItemHashSet.Clear();
-        QuestManager.questHashSet.Clear();
+        connector_InGame.Canvas1.IconView.SetOpendIconCount(0);
+        ItemManager.HashSetAllClear();
+        QuestManager.HashSetAllClear();
 
-        connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
+        connector_InGame.Map.ChangeMapTo(eMap.InsideOfHouse);
         SetStage(eStage.Stage1);
         SceneLoadView(
             () =>
@@ -320,7 +273,7 @@ public class GameManager : Singleton<GameManager>
 
 
 
-        connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse);
+        connector_InGame.Map.ChangeMapTo(eMap.InsideOfHouse);
         SceneLoadView(
             () =>
             {
@@ -333,10 +286,20 @@ public class GameManager : Singleton<GameManager>
 
     public void GameOver()
     {
-        float delay = 2f;
-        CallbackBase.PlaySequnce_BlackViewProcess(
+        isGameOver = true;
+        
+        // 이미 검은화면이면 바로 게임 종료
+        if (connector.blackView.activeInHierarchy)
+        {
+            connector_InGame.Canvas2.YouLoseView.gameObject.SetActive(true);
+        }
+        else
+        {
+            float delay = 1f;
+            CallbackBase.PlaySequnce_BlackViewProcess(
             delay,
-            () => connector_InGame.youLoseView_Script.gameObject.SetActive(true));
+            () => connector_InGame.Canvas2.YouLoseView.gameObject.SetActive(true));
+        }
     }
 
 
@@ -377,6 +340,7 @@ public class GameManager : Singleton<GameManager>
                 break;
             case 2:
                 {
+                    InitCurrentGame();
                     SetCurrentScene(eScene.InGame); 
                     switch (currentPlayerSaveKey)
                     {

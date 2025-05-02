@@ -40,8 +40,8 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         float delay = 2.0f;
         // 암막 중에 실행될 처리를 람다함수로 전달
         PlaySequnce_BlackViewProcess(delay,
-            () => GameManager.connector_InGame.map_Script.ChangeMapTo(eMap.OutsideOfHouse),
-            () => GameManager.connector_InGame.interfaceView.SetActive(true)
+            () => GameManager.connector_InGame.Map.ChangeMapTo(eMap.OutsideOfHouse),
+            () => GameManager.connector_InGame.Canvas0.InterfaceView.SetActive(true)
         );
 
     }
@@ -52,8 +52,8 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         float delay = 2.0f;
         // 암막 중에 실행될 처리를 람다함수로 전달
         PlaySequnce_BlackViewProcess(delay,
-            () => GameManager.connector_InGame.map_Script.ChangeMapTo(eMap.InsideOfHouse),
-            () => GameManager.connector_InGame.interfaceView.SetActive(true)
+            () => GameManager.connector_InGame.Map.ChangeMapTo(eMap.InsideOfHouse),
+            () => GameManager.connector_InGame.Canvas0.InterfaceView.SetActive(true)
         );
 
     }
@@ -61,24 +61,29 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
     // 4
     public void GoToNextDay()
     {
-        float delay = 4.0f;
+        float delay = 2.0f;
+        bool isGameOver = false;
 
         PlaySequnce_BlackViewProcess(delay,
                 () =>
                 {
-                    GameManager.Instance.CountDownRemainingPeriod();
-                    GameManager.connector_InGame.canvas0_InGame.casinoView.onlyOneLivesButton.InitButtonCallback();
+                    GameManager.Instance.CountDownRemainingPeriod(out isGameOver);
+                    GameManager.connector_InGame.Canvas0.CasinoView.onlyOneLivesButton.InitButtonCallback();
                 },
                 () =>
                 {
-                    PlayManager.Instance.StartPlayerMonologue_OnPlayerWakeUp();
-
-                    // 퀘스트를 수주한 경우
-                    sQuest quest = new sQuest(0, eQuestType.GoToSleep);
-                    if (QuestManager.questHashSet.Contains(quest))
+                    // 게임 오버되지 않았으면 게임을 속행
+                    if (!isGameOver)
                     {
-                        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-                        if (questInfo.isComplete == false) questInfo.endConditionCheck();
+                        PlayManager.Instance.StartPlayerMonologue_OnPlayerWakeUp();
+
+                        // 퀘스트를 수주한 경우
+                        sQuest quest = new sQuest(0, eQuestType.GoToSleep);
+                        if (QuestManager.questHashSet.Contains(quest))
+                        {
+                            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                            if (questInfo.isComplete == false) questInfo.endConditionCheck();
+                        }
                     }
                 }
             );
@@ -91,7 +96,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
     public virtual void BoxOpen()
     {
         // false키에 "Interactable_Box_Empty"저장되어있음
-        GameManager.connector_InGame.box_Script.EmptyOutBox();
+        GameManager.connector_InGame.Box.EmptyOutBox();
         TextWindowPopUp_Close();
 
         // 퀘스트를 수주한 경우
@@ -99,7 +104,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         if (QuestManager.questHashSet.Contains(quest))
         {
             // 첫 아이템 획득이니 아이콘을 해방
-            GameManager.connector_InGame.iconView_Script.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
+            GameManager.connector_InGame.Canvas1.IconView.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
 
             // 퀘스트의 완료조건 확인하여 퀘스트 완료
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
@@ -111,8 +116,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
     //6
     public virtual void TextHoldOn()
     {
-        TextWindowView textWindowView_Script = GameManager.connector_InGame.textWindowView.GetComponent<TextWindowView>();
-        textWindowView_Script.PrintText();
+        GameManager.connector_InGame.Canvas1.TextWindowView.PrintText();
         return;
     }
 
@@ -144,8 +148,8 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         PlaySequnce_BlackViewProcess(delay,
             () =>
             {
-                GameManager.connector_InGame.map_Script.ChangeMapTo(eMap.Casino);
-                GameManager.connector_InGame.interfaceView.SetActive(true);
+                GameManager.connector_InGame.Map.ChangeMapTo(eMap.Casino);
+                GameManager.connector_InGame.Canvas0.InterfaceView.SetActive(true);
             }
         );
     }
@@ -159,7 +163,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
     // 12
     public virtual void TellmeOneMoreTime()
     {
-        GameManager.connector_InGame.textWindowView.GetComponent<TextWindowView>().TextIndexInit(0);
+        GameManager.connector_InGame.Canvas1.TextWindowView.gameObject.GetComponent<TextWindowView>().TextIndexInit(0);
         TextHoldOn();
     }
 
@@ -175,7 +179,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         EventManager.Instance.SetEventMessage(stageMessageDict[currentStage]);
         EventManager.Instance.PlaySequnce_EventAnimation();
         QuestManager.Instance.TryPlayerGetQuest(eQuestType.LetsLookAroundOutside);
-        GameManager.connector_InGame.iconView_Script.TryIconUnLock(eIcon.Quest);
+        GameManager.connector_InGame.Canvas1.IconView.TryIconUnLock(eIcon.Quest);
     }
 
     // 15
@@ -188,7 +192,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
             List<eItemType> list = new List<eItemType>();
             list.Add(eItemType.CasinoEntryTicket);
             list.Add(eItemType.Notice_Stage1);
-            GameManager.connector_InGame.box_Script.FillUpBox(list);
+            GameManager.connector_InGame.Box.FillUpBox(list);
         }
     }
 }
