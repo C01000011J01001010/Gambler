@@ -37,10 +37,10 @@ public class TextWindowView : MonoBehaviour
 
     private void TextViewStartProcess_FrontEnd()
     {
-        if(gameObject.activeInHierarchy == false) gameObject.SetActive(true);
+        gameObject.SetActive(true);
 
         // 셀렉션뷰가 처음부터 켜져있는 오류 방지
-        if (selectionView.activeSelf == true) selectionView.SetActive(false);
+        selectionView.SetActive(false);
 
         if (currentCoroutine != null) // 대화창이 진행중이면 현재대화창을 안전하게 종료
         {
@@ -105,7 +105,7 @@ public class TextWindowView : MonoBehaviour
     /// <param name="system"></param>
     public void StartTextWindow(eSystemGuide system)
     {
-        if (gameObject.activeInHierarchy)
+        if (gameObject.activeSelf)
         {
             Debug.Log("이미 실행중인 텍스트가 있음");
             return;

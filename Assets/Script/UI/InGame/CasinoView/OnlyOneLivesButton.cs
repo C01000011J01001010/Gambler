@@ -29,18 +29,4 @@ public class OnlyOneLivesButton : GameEnterButtonBase
             }
             );
     }
-
-    public override void SetPlayerCantPlayThis()
-    {
-        SetButtonCallback(
-            () =>
-            {
-                GameManager.connector_InGame.Canvas1.TextWindowView.StartTextWindow(eTextScriptFile.PlayerCantPlayThis);
-
-                QuestManager.Instance.TryPlayerGetQuest(eQuestType.GoToSleep);
-            }
-
-            );
-    }
-
 }

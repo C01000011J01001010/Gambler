@@ -10,12 +10,19 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
     // 에디터 연결
     //public CardGamePlayManager cardGamePlayManager;
     public PlayerMe playerMe;
-    public CardButtonMemoryPool cardButtonMemoryPool;
     public Text textComp;
+    [SerializeField] private CardButtonMemoryPool _cardButtonMemoryPool;
+    [SerializeField] private GameObject _clickGuide;
 
     // 스크립트 편집
+    public CardButtonMemoryPool cardButtonMemoryPool => _cardButtonMemoryPool;
+    public GameObject clickGuide => _clickGuide;
+
+
     public readonly string onFirstButtonText = "선택한 카드\n오픈하기";
     public readonly string onAttackOrDeffenceButtonText = "선택한 카드\n제시하기";
+
+
 
     public void InitAttribute()
     {
@@ -55,12 +62,16 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
             {
                 playerMe.Set_isCompleteSelect_OnGameSetting(false);
                 Debug.Log("카드 선택이 완료되지 않음");
+
+                cardButtonMemoryPool.CheckClickGuide(false);
                 TryDeactivate_Button();
                 return;
             }
         }
         playerMe.Set_isCompleteSelect_OnGameSetting(true);
         // 선택이 완료됐으면 버튼을 활성화 시도
+        
+        cardButtonMemoryPool.CheckClickGuide(true);
         TryActivate_Button();
     }
 
@@ -94,7 +105,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
-        CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
+        CardGamePlayManager.Instance.cardGameView.cardScreen.GetSequnce_TryCardScrrenClose(sequence);
 
         // 내 카드 보기 페이드 아웃
         CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.GetSequence_FadeOut(sequence);
@@ -127,7 +138,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         Sequence sequence = DOTween.Sequence();
 
         // 서브스크린 닫기
-        CardGamePlayManager.Instance.cardGameView.cardScreenBackGround.GetSequnce_TryCardScrrenClose(sequence);
+        CardGamePlayManager.Instance.cardGameView.cardScreen.GetSequnce_TryCardScrrenClose(sequence);
 
         // 내 카드 보기 페이드 아웃
         CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.GetSequence_FadeOut(sequence);
@@ -150,9 +161,10 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
             case eOOLProgress.num102_BeforeRotateDiceAndDistribution:
             case eOOLProgress.num103_BeforeChooseCardsToReveal:
                 {
-                    if (CardGamePlayManager.Instance.isDistributionCompleted && playerMe.isCompleteSelect_OnGameSetting)
+                    //if (CardGamePlayManager.Instance.isDistributionCompleted && playerMe.isCompleteSelect_OnGameSetting)
+                    if (playerMe.isCompleteSelect_OnGameSetting)
                     {
-                        button.interactable = true;
+                        SetButtonInteractable(true);
                     }
                     return;
                 }
@@ -160,8 +172,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
                 {
                     if(playerMe.AttackTarget != null && playerMe.isCompleteSelect_OnPlayTime)
                     {
-                        button.interactable = true;
-                        
+                        SetButtonInteractable(true);
                     }
                     return;
                 }
@@ -169,8 +180,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
                 {
                     if (playerMe.isCompleteSelect_OnPlayTime)
                     {
-                        button.interactable = true;
-                        
+                        SetButtonInteractable(true);
                     }
                     return;
                 }
@@ -183,5 +193,11 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         }
     }
 
-    
+
+    public override void SetButtonInteractable(bool isOn)
+    {
+        base.SetButtonInteractable(isOn);
+        clickGuide.SetActive(isOn);
+        cardButtonMemoryPool.CheckClickGuide(isOn);
+    }
 }

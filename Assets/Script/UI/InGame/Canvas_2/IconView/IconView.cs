@@ -258,11 +258,10 @@ public class IconView : MonoBehaviour
                 if (key == eIcon.IconViewOnOff) continue;
 
                 // 하나라도 켜진 알람이 있으면
-                if (iconDict[key].clickGuide.activeInHierarchy)
+                if (iconDict[key].clickGuide.activeSelf)
                 {
                     // 아이콘뷰 오픈을 유도
-                    if (iconDict[eIcon.IconViewOnOff].clickGuide.gameObject.activeInHierarchy == false)
-                        iconDict[eIcon.IconViewOnOff].clickGuide.gameObject.SetActive(true);
+                    iconDict[eIcon.IconViewOnOff].clickGuide.gameObject.SetActive(true);
 
                     break; // 반복문 탈출
                 }
@@ -270,7 +269,7 @@ public class IconView : MonoBehaviour
         }
 
         // 온오프를 호출한 경우 무시함
-        if (choice != eIcon.IconViewOnOff && iconDict[choice].clickGuide.gameObject.activeInHierarchy == false)
+        if (choice != eIcon.IconViewOnOff)
         {
             iconDict[choice].clickGuide.gameObject.SetActive(true);
             TryClickGuideOn(eIcon.IconViewOnOff);
@@ -290,7 +289,7 @@ public class IconView : MonoBehaviour
                         foreach (eIcon key in iconDict.Keys)
                         {
                             if (key == eIcon.IconViewOnOff) continue;
-                            if (iconDict[key].clickGuide.activeInHierarchy) // 하나라도 켜져있다면 온오프의 가이드도 유지해야함
+                            if (iconDict[key].clickGuide.activeSelf) // 하나라도 켜져있다면 온오프의 가이드도 유지해야함
                                 return;
                         }
                     }
@@ -333,18 +332,14 @@ public class IconView : MonoBehaviour
                 break;
         }
 
-        // 활성화 되어있는 경우만 비활성화
-        if (iconDict[choice].clickGuide.gameObject.activeInHierarchy)
-        {
-            iconDict[choice].clickGuide.gameObject.SetActive(false);
+        // 활성화 되어있으면 비활성화
+        iconDict[choice].clickGuide.gameObject.SetActive(false);
 
-            // 다른 아이콘뷰의 확인을 마친경우에만 실행
-            if(choice != eIcon.IconViewOnOff)
-            {
-                // 아이콘뷰가 닫혀있을 때 확인을 끝낸 경우 아이콘뷰onOff에 대한 확인을 재검토
-                TryClickGuideOff(eIcon.IconViewOnOff);
-            }
-            
+        // 다른 아이콘뷰의 확인을 마친경우에만 실행
+        if (choice != eIcon.IconViewOnOff)
+        {
+            // 아이콘뷰가 닫혀있을 때 확인을 끝낸 경우 아이콘뷰onOff에 대한 확인을 재검토
+            TryClickGuideOff(eIcon.IconViewOnOff);
         }
             
     }

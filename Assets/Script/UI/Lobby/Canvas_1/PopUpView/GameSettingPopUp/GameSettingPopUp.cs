@@ -32,20 +32,6 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
 
         // 시작시 오디오 설정탭만 켜기
         PanelOpen((int)eSettingPanel.Audio);
-        //{
-        //    int index = 0;
-        //    for (int CloseIndex = 0; CloseIndex < gameSettingPanel.Length; CloseIndex++)
-        //    {
-        //        // 열려는 탭은 놔두고
-        //        if (index == CloseIndex)
-        //            continue;
-
-        //        // 그 외에 모든 탭은 닫기
-        //        else if (gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
-        //            gameSettingPanel[CloseIndex].gameObject.SetActive(false);
-        //    }
-        //    gameSettingPanel[index].gameObject.SetActive(true);
-        //}
     }
 
     public override void RefreshPopUp()
@@ -117,8 +103,8 @@ public class GameSettingPopUp : PopUpBase_FullScreen<GameSettingPopUp>
                 continue;
 
             // 그 외에 모든 탭은 닫기
-            else if (gameSettingPanel[CloseIndex].gameObject.activeInHierarchy)
-                gameSettingPanel[CloseIndex].gameObject.SetActive(false);
+            else gameSettingPanel[CloseIndex].gameObject.SetActive(false);
+                
         }
 
         // 현재 오픈한 판넬을 저장하고 그 판넬을 활성화

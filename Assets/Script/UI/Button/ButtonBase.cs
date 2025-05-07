@@ -6,7 +6,7 @@ public abstract class ButtonBase : MonoBehaviour
 {
     private Button _button;
 
-    protected Button button
+    private Button button
     {
         get
         {
@@ -21,7 +21,7 @@ public abstract class ButtonBase : MonoBehaviour
         }
     }
 
-
+    public bool isInteractable => button.interactable;
 
     /// <summary>
     /// 콜백함수는 오로지 하나만 넣을 수 있으며, 여러 개를 넣을 시 람다함수로 여러 함수를 묶어야함
@@ -49,8 +49,25 @@ public abstract class ButtonBase : MonoBehaviour
         }
     }
 
-    public void SetButtonInteractable(bool interactable)
+    public virtual void SetButtonInteractable(bool isOn)
     {
-        button.interactable = false;
+        button.interactable = isOn;
+    }
+
+    public virtual void SetDisabledColorAlpha_1()
+    {
+        if (button.colors.disabledColor.a > 0.99f) return;
+
+        else
+        {
+            // 상호작용을 하지 않을 시 기본으로 적용되는 반투명 제거
+            ColorBlock colorBlock = button.colors;
+            Color color = colorBlock.disabledColor;
+
+            color.a = 1.0f;
+
+            colorBlock.disabledColor = color;
+            button.colors = colorBlock;
+        }
     }
 }

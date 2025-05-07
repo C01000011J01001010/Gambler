@@ -118,7 +118,51 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
             cardSelectButtonList.Add(Buttonscript);
         }
 
+        // 카드 버튼은 생성 직후 활용되지 않음
+        // 모든 플레이어한테 카드의 분배가 완료된 후 활용
+        SetAllButtonInteractable(false);
+
     }
 
-    
+    /// <summary>
+    /// 카드 분배가 완료되고 게임 세팅을 시작하면 클릭가이드 활성화하도록 함
+    /// </summary>
+    /// <param name="isOn"></param>
+    public void SetAllButtonInteractable(bool isOn)
+    {
+        foreach (CardSelectButton cardButton in cardSelectButtonList)
+        {
+            cardButton.SetButtonInteractable(isOn);
+            cardButton.clickGuide.SetActive(isOn);
+        }
+    }
+
+
+    /// <summary>
+    /// 선택이 완료되면 다 꺼지고 <br/>
+    /// 그렇지 않으면 선택 가능한 카드만 켜짐
+    /// </summary>
+    /// <param name="SelectDone"></param>
+    public void CheckClickGuide(bool SelectDone)
+    {
+        if (SelectDone) ClearClickGuide();
+        else ActiveClickGuide();
+    }
+
+    public void ClearClickGuide()
+    {
+        foreach(CardSelectButton cardButton in cardSelectButtonList)
+        {
+            cardButton.clickGuide.SetActive(false);
+        }
+    }
+
+    public void ActiveClickGuide()
+    {
+        foreach (CardSelectButton cardButton in cardSelectButtonList)
+        {
+            if(cardButton.isOn)
+                cardButton.clickGuide.SetActive(true);
+        }
+    }
 }

@@ -10,10 +10,16 @@ public class CardSelectButton : ImageChange_ButtonBase
     // 에디터 연결
     public Sprite[] sprites;
 
+    [SerializeField] GameObject _clickGuide;
+
+
     // 스크립트 편집
+    public bool isOn {  get; private set; }
     public CardButtonMemoryPool parent {  get; private set; }
     public GameObject ButtonToCard {  get; private set; }
     public TrumpCardDefault trumpCardScript { get; private set; }
+
+    public GameObject clickGuide => _clickGuide;
 
     // 메모리풀에서 꺼내질때마다 실행
     private void OnEnable()
@@ -129,8 +135,10 @@ public class CardSelectButton : ImageChange_ButtonBase
             // 버튼 전환
             ChangeOff();
             SetButtonCallback(UnselectThisCard_OnPlayTime);
-
             CardGamePlayManager.Instance.cardGameView.selectCompleteButton.TryActivate_Button();
+
+            // 선택가능한 카드가 하나뿐이나 선택이 완료되면 모든 ClickGuide를 종료
+            parent.CheckClickGuide(true);
         }
         else
         {
@@ -148,7 +156,23 @@ public class CardSelectButton : ImageChange_ButtonBase
         // 버튼 전환
         ChangeOn();
         SetButtonCallback(SelectThisCard_OnPlayTime);
-
         CardGamePlayManager.Instance.cardGameView.selectCompleteButton.TryDeactivate_Button();
+
+        // 선택이 취소되면 모든 ClickGuide를 활성화
+        parent.CheckClickGuide(false);
+    }
+
+    protected override void ChangeOn()
+    {
+        base.ChangeOn();
+        clickGuide.SetActive(true);
+        isOn = true;
+    }
+
+    protected override void ChangeOff()
+    {
+        base.ChangeOff();
+        clickGuide.SetActive(false);
+        isOn = false;
     }
 }

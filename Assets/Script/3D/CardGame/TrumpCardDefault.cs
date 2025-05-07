@@ -86,11 +86,6 @@ public class TrumpCardDefault : MonoBehaviour
         }
     }
 
-    private void CantSelectThisCard()
-    {
-        // 화면에 메세지를 띄워야함
-        Debug.Log("현재 카드는 선택될 수 없음");
-    }
 
     public bool TrySelectThisCard_OnGameSetting(CardGamePlayerBase player)
     {
@@ -113,7 +108,6 @@ public class TrumpCardDefault : MonoBehaviour
         }
         else
         {
-            CantSelectThisCard();
             return false;
         }
 

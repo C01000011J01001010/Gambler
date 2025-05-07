@@ -259,7 +259,7 @@ public class DeckOfCards : MonoBehaviour
             sequence.AppendCallback(()=> 
             {
                 cardGamePlayManager.cardGameView.cardScreenButtonSet.PlaySequence_FadeIn();
-                cardGamePlayManager.CardButtonMemoryPool.InitCardButton(playerScript.closeBox.transform);
+                cardGamePlayManager.cardButtonMemoryPool.InitCardButton(playerScript.closeBox.transform);
             });
         }
 

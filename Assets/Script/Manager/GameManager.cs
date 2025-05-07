@@ -14,6 +14,9 @@ public class GameManager : Singleton<GameManager>
 {
     // 싱글톤과 논싱글톤의 연결자
     static private Connector _connector;
+    static private Connector_Lobby _connector_Lobby;
+    static private Connector_InGame _connector_InGame;
+
     static public Connector connector
     {
         get
@@ -22,21 +25,44 @@ public class GameManager : Singleton<GameManager>
             return _connector;
         }
     }
-
     static public Connector_Lobby connector_Lobby
     {
         get
         {
-            if (connector is Connector_Lobby) return (connector as Connector_Lobby);
-            else { Debug.LogAssertion("커넥터 캐스팅 실패 : connector_Lobby"); return null; }
+            if(_connector_Lobby == null)
+            {
+                if(connector is Connector_Lobby)
+                {
+                    _connector_Lobby = connector as Connector_Lobby; 
+                }
+                else 
+                {
+                    Debug.LogWarning("커넥터 캐스팅 실패 : connector_Lobby"); 
+                    return null; 
+                }
+            }
+
+            return _connector_Lobby;
         }
     }
     static public Connector_InGame connector_InGame
     {
         get
         {
-            if (connector is Connector_InGame) return (connector as Connector_InGame);
-            else { Debug.LogAssertion("커넥터 캐스팅 실패 : connector_InGame"); return null; }
+            if (_connector_InGame == null)
+            {
+                if (connector is Connector_InGame)
+                {
+                    _connector_InGame = connector as Connector_InGame;
+                }
+                else
+                {
+                    Debug.LogWarning("커넥터 캐스팅 실패 : connector_InGame");
+                    return null;
+                }
+            }
+
+            return _connector_InGame;
         }
     }
 
@@ -141,26 +167,19 @@ public class GameManager : Singleton<GameManager>
         isCasinoGameView = boolValue;
     }
 
-    public void InitConnector()
+    public void InitConnector(Connector connector = null)
     {
-        switch(currentScene)
+        if (connector != null)
         {
-            case eScene.Title:{
-                    _connector = GameObject.FindGameObjectWithTag("Connector").GetComponent<Connector>();
-                    if (_connector == null) Debug.LogAssertion($"커넥터 Connector 연결 실패");
-                } break;
-            case eScene.Lobby: { 
-                    _connector = GameObject.FindGameObjectWithTag("Connector").GetComponent<Connector_Lobby>();
-                    if (_connector == null) Debug.LogAssertion($"커넥터 Connector_Lobby 연결 실패");
-                } break;
-            case eScene.InGame: {
-                    _connector = GameObject.FindGameObjectWithTag("Connector").GetComponent<Connector_InGame>();
-                    if (_connector == null) Debug.LogAssertion($"커넥터 Connector_InGame 연결 실패");
-                } break;
+            _connector = connector;
+            return;
         }
 
-        
+        _connector = GameObject.FindGameObjectWithTag("Connector").GetComponent<Connector>();
+        if (_connector == null) Debug.LogAssertion($"커넥터 Connector 연결 실패");
     }
+
+    
 
     
 
@@ -289,7 +308,7 @@ public class GameManager : Singleton<GameManager>
         isGameOver = true;
         
         // 이미 검은화면이면 바로 게임 종료
-        if (connector.blackView.activeInHierarchy)
+        if (connector.blackView.activeSelf)
         {
             connector_InGame.Canvas2.YouLoseView.gameObject.SetActive(true);
         }

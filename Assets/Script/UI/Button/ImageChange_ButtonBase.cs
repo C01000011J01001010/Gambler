@@ -19,28 +19,16 @@ public abstract class ImageChange_ButtonBase : ButtonBase
         }
     }
 
-
+    
     protected virtual void ChangeOn()
     {
-        if(image != null)
-        {
-            image.color = Color.white;
-        }
-        else
-        {
-            Debug.Log($"{gameObject.name} 객체는 이미지 컴포넌트 없음");
-        }
+        image.color = Color.white;
     }
 
     protected virtual void ChangeOff()
     {
-        if (image != null)
-        {
-            image.color = new Color(0.7f, 0.7f, 0.7f, 1.0f);
-        }
-        else
-        {
-            Debug.Log($"{gameObject.name} 객체는 이미지 컴포넌트 없음");
-        }
+        image.color = new Color(0.7f, 0.7f, 0.7f, 1.0f);
     }
+
+
 }

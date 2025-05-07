@@ -18,49 +18,61 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     public CardManager cardManager;
     public DiceManager diceManager;
     public DeckOfCards deckOfCards;
-    [SerializeField] private CardButtonMemoryPool cardButtonMemoryPool;
-    public CardButtonMemoryPool CardButtonMemoryPool
-    {
-        get 
-        {
-            if (cardButtonMemoryPool != null)
-            {
-                return cardButtonMemoryPool;
-            }
-            else
-            {
-                Debug.LogAssertion("error");
-                return null;
-            }
-        }
-
-        private set
-        {
-            cardButtonMemoryPool = value;
-        }
-    }
+    
     public PopUpView_InGame popUpView;
     public MainCameraAnimation mainCamAnime;
     public GameAssistantPopUp_OnlyOneLives gameAssistantPopUp;
 
     // 스크립트 편집
     public eOOLProgress currentProgress { get; private set; }
-    public bool isDistributionCompleted { get; private set; }
+    //public bool isDistributionCompleted { get; private set; }
     public List<CardGamePlayerBase> playerList {  get; private set; }
     public Queue<CardGamePlayerBase> OrderedPlayerQueue { get; private set; }
     public eCriteria currentCriteria { get; private set; }
-    
+
+    //
+    public int layerOfMe { get; private set; }
+    public int coinMultiple { get; private set; }  // 코인 배수
 
 
-
-
-
+    //
     public CardGamePlayerBase Attacker { get; private set; }
     public CardGamePlayerBase Deffender { get; private set; }
     public CardGamePlayerBase Joker { get; private set; }
     public CardGamePlayerBase Victim { get; private set; }
     public CardGamePlayerBase Prey {  get; private set; }
     public int ExpressionValue { get; private set; }
+
+
+
+    
+
+    // 캐싱
+    private CardButtonMemoryPool _cardButtonMemoryPool;
+    public CardButtonMemoryPool cardButtonMemoryPool
+    {
+        get
+        {
+            CheckCardButtonMemoryPool();
+            return _cardButtonMemoryPool;
+        }
+    }
+    public void CheckCardButtonMemoryPool()
+    {
+        if (_cardButtonMemoryPool == null)
+            _cardButtonMemoryPool = GameManager.connector_InGame.Canvas0.CardGameView.cardScreen.cardButtonMemoryPool;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        layerOfMe = LayerMask.NameToLayer("Me");
+    }
+
+    private void Start()
+    {
+        CheckCardButtonMemoryPool();
+    }
 
     public void SetAttacker(CardGamePlayerBase value)
     {
@@ -108,15 +120,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
     }
 
-    public int layerOfMe { get; private set; }
-    private int coinMultiple; // 코인 배수
-
-    protected override void Awake()
-    {
-        base.Awake();
-        layerOfMe = LayerMask.NameToLayer("Me");
-        
-    }
+    
 
     public void InitPlayerList()
     {
@@ -191,7 +195,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
         cardGameView.InitAttribute();
 
-        isDistributionCompleted = false;
+        //isDistributionCompleted = false;
 
         ClearPrey();
     }
@@ -385,6 +389,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     }
 
 
+    // 게임 진행
+
     public void GameSetting()
     {
         if(playerList == null)
@@ -443,7 +449,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
 
         // 플레이어(me)가 카드 선택을 완료하는 버튼을 활성화
-        isDistributionCompleted = true;
+        cardGameView.cardScreen.cardButtonMemoryPool.SetAllButtonInteractable(true);
+        //isDistributionCompleted = true;
         cardGameView.selectCompleteButton.TryActivate_Button();
     }
 

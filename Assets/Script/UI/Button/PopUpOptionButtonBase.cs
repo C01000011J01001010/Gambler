@@ -19,6 +19,8 @@ public abstract class PopUpOptionButtonBase<T_Class, sDefaultData ,cInfo> : Sele
     protected sDefaultData defaultData;
     protected cInfo info;
 
+    public IconView iconView => GameManager.connector_InGame.Canvas1.IconView;
+
 
     public virtual void SetData(sDefaultData defualtData, cInfo info)
     {
@@ -35,18 +37,9 @@ public abstract class PopUpOptionButtonBase<T_Class, sDefaultData ,cInfo> : Sele
     protected void ClickCheck(eIcon icon)
     {
         // 확인이 필요하면 객체를 활성화 시키고 그렇지 않으면 비활성화
-        if (info.isNeedCheck)
-        {
-            GameManager.connector_InGame.Canvas1.IconView.TryClickGuideOn(icon);
-            if (clickGuide.activeInHierarchy == false)
-                clickGuide.SetActive(true);
-        }
-        else
-        {
-            GameManager.connector_InGame.Canvas1.IconView.TryClickGuideOff(icon);
-            if (clickGuide.activeInHierarchy)
-                clickGuide.SetActive(false);
-        }
+        clickGuide.SetActive(info.isNeedCheck);
+        if (info.isNeedCheck) iconView.TryClickGuideOn(icon);
+        else iconView.TryClickGuideOff(icon);
     }
 
     /// <summary>
@@ -55,15 +48,6 @@ public abstract class PopUpOptionButtonBase<T_Class, sDefaultData ,cInfo> : Sele
     protected void ClickCheck()
     {
         // 확인이 필요하면 객체를 활성화 시키고 그렇지 않으면 비활성화
-        if (info.isNeedCheck)
-        {
-            if (clickGuide.activeInHierarchy == false)
-                clickGuide.SetActive(true);
-        }
-        else
-        {
-            if (clickGuide.activeInHierarchy)
-                clickGuide.SetActive(false);
-        }
+        clickGuide.SetActive(info.isNeedCheck);
     }
 }

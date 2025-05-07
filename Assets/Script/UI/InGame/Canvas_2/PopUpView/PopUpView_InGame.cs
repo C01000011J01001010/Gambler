@@ -89,7 +89,7 @@ public void InventoryPopUpOpen()
 
     public void GameAssistantPopUpOpen_OnlyOneLives()
     {
-        if(CardGamePlayManager.Instance.cardGameView.gameObject.activeInHierarchy)
+        if(CardGamePlayManager.Instance.cardGameView.gameObject.activeSelf)
         {
             gameAssistantPopUp_OnlyOneLives.gameObject.SetActive(true);
             gameAssistantPopUp_OnlyOneLives.transform.SetAsLastSibling();
