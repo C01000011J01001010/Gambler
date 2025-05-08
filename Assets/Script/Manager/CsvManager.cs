@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using PublicSet;
 using System.IO;
-using UnityEngine.UI;
-using UnityEditor.Build;
-using System.Runtime.CompilerServices;
 
 
 
@@ -98,7 +95,7 @@ public class CsvManager : Singleton<CsvManager>
 
     private void Start()
     {
-        TotalCsvProCess();
+        TotalCsvProcess();
     }
 
     private void NewCsvStorage()
@@ -150,7 +147,7 @@ public class CsvManager : Singleton<CsvManager>
     /// <summary>
     /// callbackManager를 써야하니 start에서 시작해야함
     /// </summary>
-    public void TotalCsvProCess()
+    public void TotalCsvProcess()
     {
         ProcessCsvOfCharacterInfo(); // 캐릭터 정보가 로딩된 후에 TextCsv처리가 가능함
 
@@ -768,7 +765,7 @@ public class CsvManager : Singleton<CsvManager>
                             {
                                 questInfo.type = enumField; // 기본키
 
-                                questInfo.endConditionCheck = callbackManager.questCheckCallback.CallbackList(enumField); // 체크
+                                questInfo.checkEndCondition = callbackManager.questCheckCallback.CallbackList(enumField); // 체크
                                 questInfo.endEvent = callbackManager.questEndEventCallback.CallbackList(enumField);
 
                                 // 로비로 씬로드시 할당되니 삭제

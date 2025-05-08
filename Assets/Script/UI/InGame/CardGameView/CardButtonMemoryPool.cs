@@ -118,10 +118,8 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
             cardSelectButtonList.Add(Buttonscript);
         }
 
-        // 카드 버튼은 생성 직후 활용되지 않음
-        // 모든 플레이어한테 카드의 분배가 완료된 후 활용
+        // 실제로 사용할때까지 잠금
         SetAllButtonInteractable(false);
-
     }
 
     /// <summary>
@@ -133,7 +131,6 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
         foreach (CardSelectButton cardButton in cardSelectButtonList)
         {
             cardButton.SetButtonInteractable(isOn);
-            cardButton.clickGuide.SetActive(isOn);
         }
     }
 
@@ -153,7 +150,7 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
     {
         foreach(CardSelectButton cardButton in cardSelectButtonList)
         {
-            cardButton.clickGuide.SetActive(false);
+            cardButton.ClickGuideSetActive(false);
         }
     }
 
@@ -161,8 +158,8 @@ public class CardButtonMemoryPool : MemoryPool_Stack<CardButtonMemoryPool>
     {
         foreach (CardSelectButton cardButton in cardSelectButtonList)
         {
-            if(cardButton.isOn)
-                cardButton.clickGuide.SetActive(true);
+            if (cardButton.isOn)
+                cardButton.ClickGuideSetActive(true);
         }
     }
 }

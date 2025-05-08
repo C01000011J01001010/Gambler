@@ -19,6 +19,16 @@ public class Loupe : MonoBehaviour
         subScreenOriginPos = subScreenLoupe.transform.position;
     }
 
+    private void OnEnable()
+    {
+        roupeBox.gameObject.SetActive(true);
+    }
+
+    private void OnDisable()
+    {
+        roupeBox.gameObject.SetActive(false);
+    }
+
     void Update()
     {
 

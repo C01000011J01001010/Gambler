@@ -4,26 +4,29 @@ using UnityEngine;
 
 public class PlayerMe : CardGamePlayerBase
 {
-
-    //에디터 연결
-    [SerializeField] private SelectCompleteButton selectCompleteButton;
-    public SelectCompleteButton m_SelectCompleteButton
-    {
-        get 
-        {
-            if (selectCompleteButton == null)
-            {
-                selectCompleteButton = CardGamePlayManager.Instance.cardGameView.selectCompleteButton;
-            }
-            return selectCompleteButton;
-        }
-    }
     public bool isCompleteSelect_OnGameSetting {  get; private set; }
     public bool isCompleteSelect_OnPlayTime { get; private set; }
     public bool isAttack {  get; private set; }
 
+
+    private SelectCompleteButton _selectCompleteButton;
+    public SelectCompleteButton selectCompleteButton
+    {
+        get
+        {
+            CheckSelectCompleteButton();
+            return _selectCompleteButton;
+        }
+    }
+    private void CheckSelectCompleteButton()
+    {
+        if (_selectCompleteButton == null)
+            _selectCompleteButton = CardGamePlayManager.Instance.cardGameView.selectCompleteButton;
+    }
+
     private void Start()
     {
+        CheckSelectCompleteButton();
         cCharacterInfo info = CsvManager.Instance.GetCharacterInfo(eCharacterType.Player);
         SetCharacterInfo(info);
     }
@@ -75,6 +78,32 @@ public class PlayerMe : CardGamePlayerBase
         isCompleteSelect_OnPlayTime = false;
     }
 
+    public override bool TryDownCountPerCardType(cTrumpCardInfo cardInfo)
+    {
+        if (cardCountPerType_GameSetting[cardInfo.cardType] > 1)
+        {
+            cardCountPerType_GameSetting[cardInfo.cardType]--;
+
+            // 플레이어가 TryDownCountPerCardType를 실행할 시 선택이 완료됐는지를 확인하고 버튼을 활성화함
+            selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType_GameSetting);
+
+            //Debug.Log($"{gameObject.name}에게 {cardInfo.cardName}카드 제거");
+            //Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()} 남은 카드 수 :" +
+            //    $" {cardCountPerType_GameSetting[cardInfo.cardType]}");
+
+            return true;
+        }
+        else
+        {
+
+            //Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()}의 남은 카드 수 :" +
+            //    $" {cardCountPerType_GameSetting[cardInfo.cardType]}");
+            //Debug.Log("카드 개수를 줄일 수 없음");
+
+            return false;
+        }
+    }
+
 
     public void Set_isCompleteSelect_OnGameSetting(bool value)
     {
@@ -94,13 +123,16 @@ public class PlayerMe : CardGamePlayerBase
         // 내 카드 보기 활성화
         CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.PlaySequence_FadeIn();
 
+        // 카드버튼 사용 활성화
+        CardGamePlayManager.Instance.cardButtonMemoryPool.SetAllButtonInteractable(true);
+
         // TargetDisplay에서 대상을 선택할 수 있도록 만듬
         CardGamePlayManager.Instance.cardGameView.targetDisplay.LiftRestrictionToAllSelections();
         //GameAssistantPopUp_OnlyOneLives.Instance.LiftRestrictionToAllSelections();
 
         // 버튼 클릭시 콜백을 변경
         isAttack = true;
-        m_SelectCompleteButton.SetButtonCallback(1);
+        selectCompleteButton.SetButtonCallback(1);
         // 상대를 지목하고 카드 선택을 완료하면 202를 실행해야함
     }
 
@@ -113,9 +145,12 @@ public class PlayerMe : CardGamePlayerBase
         // 내 카드 보기 활성화
         CardGamePlayManager.Instance.cardGameView.cardScreenButtonSet.PlaySequence_FadeIn();
 
+        // 카드버튼 사용 활성화
+        CardGamePlayManager.Instance.cardButtonMemoryPool.SetAllButtonInteractable(true);
+
         // 버튼 클릭시 콜백을 변경
         isAttack = false;
-        m_SelectCompleteButton.SetButtonCallback(1);
+        selectCompleteButton.SetButtonCallback(1);
         // 상대를 지목하고 카드 선택을 완료하면 302를 실행해야함
     }
 

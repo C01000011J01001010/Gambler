@@ -73,6 +73,7 @@ public class QuestCheckCallback : CallbackBase, ICallback<eQuestType>
         if (playerStatus.coin >= 2000)
         {
             QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect2000Coins);
+            QuestManager.Instance.TryPlayerGetQuest(eQuestType.Collect5000Coins);
         }
     }
 
@@ -81,6 +82,7 @@ public class QuestCheckCallback : CallbackBase, ICallback<eQuestType>
         if (playerStatus.coin >= 5000)
         {
             QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect5000Coins);
+            QuestManager.Instance.TryPlayerGetQuest(eQuestType.Collect8000Coins);
         }
     }
 
@@ -89,6 +91,7 @@ public class QuestCheckCallback : CallbackBase, ICallback<eQuestType>
         if (playerStatus.coin >= 8000)
         {
             QuestManager.Instance.TryPlayerCompleteQuest(eQuestType.Collect8000Coins);
+            QuestManager.Instance.TryPlayerGetQuest(eQuestType.Collect10000Coins);
         }
     }
 

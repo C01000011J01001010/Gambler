@@ -82,7 +82,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
                         if (QuestManager.questHashSet.Contains(quest))
                         {
                             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-                            if (questInfo.isComplete == false) questInfo.endConditionCheck();
+                            if (questInfo.isComplete == false) questInfo.checkEndCondition();
                         }
                     }
                 }
@@ -108,7 +108,7 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
 
             // 퀘스트의 완료조건 확인하여 퀘스트 완료
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (!questInfo.isComplete) questInfo.endConditionCheck();
+            if (!questInfo.isComplete) questInfo.checkEndCondition();
         }
 
     }

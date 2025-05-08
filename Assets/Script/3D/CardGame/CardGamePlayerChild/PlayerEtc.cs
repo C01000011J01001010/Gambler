@@ -246,7 +246,25 @@ public class PlayerEtc : CardGamePlayerBase
         return;
     }
 
+    public override bool TryDownCountPerCardType(cTrumpCardInfo cardInfo)
+    {
+        if (cardCountPerType_GameSetting[cardInfo.cardType] > 1)
+        {
+            cardCountPerType_GameSetting[cardInfo.cardType]--;
 
+            //Debug.Log($"{gameObject.name}에게 {cardInfo.cardName}카드 제거");
+            //Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()} 남은 카드 수 :" +
+            //    $" {cardCountPerType_GameSetting[cardInfo.cardType]}");
+            return true;
+        }
+        else
+        {
+            //Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()}의 남은 카드 수 :" +
+            //    $" {cardCountPerType_GameSetting[cardInfo.cardType]}");
+            //Debug.Log("카드 개수를 줄일 수 없음");
+            return false;
+        }
+    }
 
     public override void AttackOtherPlayers(List<CardGamePlayerBase> PlayerList)
     {

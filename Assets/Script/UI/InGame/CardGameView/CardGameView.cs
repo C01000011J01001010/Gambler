@@ -31,7 +31,7 @@ public class CardGameView : MonoBehaviour
     // Ä³½Ì
     private CardGamePlayManager _cardGamePlayManager;
     private CasinoView _casinoView;
-    private CardScreenButton _cardScreenOpenButton;
+    private CardScreenOpenButton _cardScreenOpenButton;
     private DiceButton _diceButton;
     private SelectCompleteButton _selectCompleteButton;
     private DeckOfCards _deckOfCards;
@@ -52,7 +52,7 @@ public class CardGameView : MonoBehaviour
             return _casinoView;
         }
     }
-    public CardScreenButton cardScreenOpenButton
+    public CardScreenOpenButton cardScreenOpenButton
     {
         get
         {

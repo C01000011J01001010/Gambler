@@ -410,31 +410,8 @@ public abstract class CardGamePlayerBase : MonoBehaviour
         }
     }
 
-    public virtual bool TryDownCountPerCardType(cTrumpCardInfo cardInfo)
-    {
-        if (cardCountPerType_GameSetting[cardInfo.cardType] > 1)
-        {
-            cardCountPerType_GameSetting[cardInfo.cardType]--;
-
-            // 플레이어가 TryDownCountPerCardType를 실행할 시 선택이 완료됐는지를 확인하고 버튼을 활성화함
-            if (gameObject.tag == "Player")
-            {
-                cardGamePlayManager.cardGameView.selectCompleteButton.CheckCompleteSelect_OnChooseCardsToReveal(cardCountPerType_GameSetting);
-            }
-            
-            Debug.Log($"{gameObject.name}에게 {cardInfo.cardName}카드 제거");
-            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()} 남은 카드 수 : {cardCountPerType_GameSetting[cardInfo.cardType]}");
-            return true;
-        }
-        else
-        {
-            Debug.Log($"{gameObject.name}의 {cardInfo.cardType.ToString()}의 남은 카드 수 : {cardCountPerType_GameSetting[cardInfo.cardType]}");
-            Debug.Log("카드 개수를 줄일 수 없음");
-            return false;
-        }
-    }
-
     // 실제플레이어와 컴퓨터에서 각각 재정의
+    public abstract bool TryDownCountPerCardType(cTrumpCardInfo cardInfo);
     public abstract void AttackOtherPlayers(List<CardGamePlayerBase> PlayerList);
     public abstract void DeffenceFromOtherPlayers(CardGamePlayerBase AttackerScript);
 

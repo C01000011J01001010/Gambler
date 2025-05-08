@@ -1,38 +1,62 @@
 using PublicSet;
+using System;
+using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class PlayManager : Singleton<PlayManager>
 {
+    public sPlayerStatus currentPlayerStatus { get; private set; }
+
+    private readonly HashSet<eQuestType> GoalQuests = new()
+    {
+        eQuestType.Collect2000Coins,
+        eQuestType.Collect5000Coins,
+        eQuestType.Collect8000Coins,
+        eQuestType.Collect10000Coins
+    };
+
+
     private Text _playerMoneyViewText; // 플레이어의 돈을 화면에 표시할 텍스트
+    private PlayerMoneyAnimation _moneyAnimation;
+
     public Text playerMoneyViewText
     {
         get
         {
-            if (_playerMoneyViewText == null) _playerMoneyViewText =
-                    GameManager.connector_InGame.Canvas1.PlayerMoneyView.coinResult;
+            CheckPlayerMoneyViewText();
             return _playerMoneyViewText;
         }
     }
-
-
-    private PlayerMoneyAnimation _moneyAnimation;
     public PlayerMoneyAnimation moneyAnimation
     {
         get
         {
-            if (_moneyAnimation == null) _moneyAnimation = GameManager.connector_InGame.Canvas1.PlayerMoneyView.GetComponent<PlayerMoneyAnimation>();
+            CheckMoneyAnimation();
             return _moneyAnimation;
         }
     }
 
-    public sPlayerStatus currentPlayerStatus { get; private set; }
-    
-    
+    private void CheckPlayerMoneyViewText()
+    {
+        if (_playerMoneyViewText == null) 
+            _playerMoneyViewText = GameManager.connector_InGame.Canvas1.PlayerMoneyView.coinResult;
+    }
+    private void CheckMoneyAnimation()
+    {
+        if (_moneyAnimation == null)
+            _moneyAnimation = GameManager.connector_InGame.Canvas1.PlayerMoneyView.GetComponent<PlayerMoneyAnimation>();
+    }
 
     //public int current
     protected override void Awake()
     {
         base.Awake();
+    }
+
+    private void Start()
+    {
+        CheckPlayerMoneyViewText();
+        CheckMoneyAnimation();
     }
 
     public void InitPlayerStatus(sPlayerStatus value = default)
@@ -84,10 +108,20 @@ public class PlayManager : Singleton<PlayManager>
             Value = (-Value); // 전광판에 띄우기 위해 양수로 바꿈
             moneyAnimation.PlaySequnce_PlayerMoneyMinus(Value);
         }
+
+        CheckQuestComplete();
     }
 
     
-
+    private void CheckQuestComplete()
+    {
+        cQuestInfo questInfo;
+        foreach (eQuestType questType in GoalQuests)
+        {
+            questInfo = CsvManager.Instance.GetQuestInfo(questType);
+            questInfo.checkEndCondition();
+        }
+    }
     
 
 

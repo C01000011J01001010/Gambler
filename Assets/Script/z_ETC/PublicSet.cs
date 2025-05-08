@@ -359,7 +359,7 @@ namespace PublicSet
     {
         // type으로 묶어서 처리
         public eQuestType type { get; set; }
-        public UnityAction endConditionCheck { get; set; }
+        public UnityAction checkEndCondition { get; set; }
         public UnityAction endEvent {  get; set; }
 
 

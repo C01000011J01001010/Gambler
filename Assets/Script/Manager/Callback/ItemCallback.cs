@@ -32,7 +32,7 @@ public class ItemCallback : CallbackBase, ICallback<eItemCallback>
         if (QuestManager.questHashSet.Contains(quest))
         {
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (questInfo.isComplete == false) questInfo.endConditionCheck();
+            if (questInfo.isComplete == false) questInfo.checkEndCondition();
         }
 
     }

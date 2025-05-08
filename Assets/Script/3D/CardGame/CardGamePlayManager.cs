@@ -25,7 +25,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
     // 스크립트 편집
     public eOOLProgress currentProgress { get; private set; }
-    //public bool isDistributionCompleted { get; private set; }
+    public bool isDistributionCompleted { get; private set; }
     public List<CardGamePlayerBase> playerList {  get; private set; }
     public Queue<CardGamePlayerBase> OrderedPlayerQueue { get; private set; }
     public eCriteria currentCriteria { get; private set; }
@@ -183,7 +183,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         if (QuestManager.questHashSet.Contains(quest))
         {
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-            if (questInfo.isComplete == false) questInfo.endConditionCheck();
+            if (questInfo.isComplete == false) questInfo.checkEndCondition();
         }
             
     }
@@ -195,7 +195,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
         cardGameView.InitAttribute();
 
-        //isDistributionCompleted = false;
+        isDistributionCompleted = false;
 
         ClearPrey();
     }
@@ -380,6 +380,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
     public void StartPlayerAttack()
     {
         Attacker.AttackOtherPlayers(playerList);
+
     }
 
 
@@ -449,8 +450,8 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         }
 
         // 플레이어(me)가 카드 선택을 완료하는 버튼을 활성화
-        cardGameView.cardScreen.cardButtonMemoryPool.SetAllButtonInteractable(true);
-        //isDistributionCompleted = true;
+        cardButtonMemoryPool.SetAllButtonInteractable(true);
+        isDistributionCompleted = true;
         cardGameView.selectCompleteButton.TryActivate_Button();
     }
 
@@ -489,7 +490,7 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
         sequence.SetLoops(1);
         sequence.Play();
     }
-
+    
     public void DetermineTheResult()
     {
         // 수비에 사용할 카드가 없는 경우

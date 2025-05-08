@@ -8,47 +8,75 @@ using UnityEngine.UI;
 public class SelectCompleteButton : Deactivatable_ButtonBase
 {
     // 에디터 연결
-    //public CardGamePlayManager cardGamePlayManager;
-    public PlayerMe playerMe;
-    public Text textComp;
-    [SerializeField] private CardButtonMemoryPool _cardButtonMemoryPool;
+    [SerializeField] private PlayerMe playerMe;
+    [SerializeField] private Text textComp;
     [SerializeField] private GameObject _clickGuide;
 
     // 스크립트 편집
-    public CardButtonMemoryPool cardButtonMemoryPool => _cardButtonMemoryPool;
     public GameObject clickGuide => _clickGuide;
-
 
     public readonly string onFirstButtonText = "선택한 카드\n오픈하기";
     public readonly string onAttackOrDeffenceButtonText = "선택한 카드\n제시하기";
 
 
+    // 캐싱
+    private CardScreen _cardScreen;
+    private CardButtonMemoryPool _cardButtonMemoryPool;
+    private CardScreenOpenButton _cardScreenOpenButton;
+
+    public CardScreen cardScreen
+    {
+        get
+        {
+            CheckCardScreen();
+            return _cardScreen;
+        }
+    }
+    public CardButtonMemoryPool cardButtonMemoryPool
+    {
+        get
+        {
+            CheckCardButtonMemoryPool();
+            return _cardButtonMemoryPool;
+        }
+    }
+    public CardScreenOpenButton cardScreenOpenButton
+    {
+        get
+        {
+            CheckCardScreenOpenButton();
+            return _cardScreenOpenButton;
+        }
+    }
+
+    public void CheckCardScreen()
+    {
+        if (_cardScreen == null) 
+            _cardScreen = GameManager.connector_InGame.Canvas0.CardGameView.cardScreen;
+    }
+    public void CheckCardButtonMemoryPool()
+    {
+        if (_cardButtonMemoryPool == null)
+            _cardButtonMemoryPool = cardScreen.cardButtonMemoryPool;
+    }
+    public void CheckCardScreenOpenButton()
+    {
+        if (_cardScreenOpenButton == null)
+            _cardScreenOpenButton = cardScreen.cardScreenOpenButton;
+    }
+
+    private void Start()
+    {
+        CheckCardScreen();
+        CheckCardButtonMemoryPool();
+        CheckCardScreenOpenButton();
+    }
 
     public void InitAttribute()
     {
         SetButtonCallback(CompleteCardSelect_ChooseCardsToReveal);
         TryDeactivate_Button();
         ChangeText(onFirstButtonText);
-    }
-
-    private void Start()
-    {
-        if(CardGamePlayManager.Instance == null)
-        {
-            Debug.LogAssertion("카드게임매니저 연결 안됐음");
-        }
-        if(cardButtonMemoryPool == null)
-        {
-            Debug.LogAssertion("카드버튼상자 연결 안됐음");
-        }
-        if(playerMe == null)
-        {
-            Debug.LogAssertion("플레이어 연결 안됐음");
-        }
-        if(textComp == null)
-        {
-            Debug.LogAssertion("자식객체의 text가 연결 안됐음");
-        }
     }
 
     // 실행하는 시점에서 컴퓨터는 이미 선택을 완료했어야함
@@ -70,8 +98,6 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         }
         playerMe.Set_isCompleteSelect_OnGameSetting(true);
         // 선택이 완료됐으면 버튼을 활성화 시도
-        
-        cardButtonMemoryPool.CheckClickGuide(true);
         TryActivate_Button();
     }
 
@@ -98,7 +124,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         Debug.Log("CompleteCardSelect_OnStartTime 실행");
 
         // 내카드 보기 비활성화
-        CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryDeactivate_Button();
+        cardScreenOpenButton.TryDeactivate_Button();
         
 
         // 애니메이션 실행
@@ -128,7 +154,7 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
         Debug.Log($"CompleteCardSelect_OnAttack_Or_OnDeffence 실행");
 
         // 내카드 보기 비활성화
-        CardGamePlayManager.Instance.cardGameView.cardScreenOpenButton.TryDeactivate_Button();
+        cardScreenOpenButton.TryDeactivate_Button();
 
         // 역할이 끝난 게임어시스턴트의 선택기능 종료
         if(CardGamePlayManager.Instance.Attacker == playerMe)
@@ -161,8 +187,8 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
             case eOOLProgress.num102_BeforeRotateDiceAndDistribution:
             case eOOLProgress.num103_BeforeChooseCardsToReveal:
                 {
-                    //if (CardGamePlayManager.Instance.isDistributionCompleted && playerMe.isCompleteSelect_OnGameSetting)
-                    if (playerMe.isCompleteSelect_OnGameSetting)
+                    if (CardGamePlayManager.Instance.isDistributionCompleted && playerMe.isCompleteSelect_OnGameSetting)
+                    //if (playerMe.isCompleteSelect_OnGameSetting)
                     {
                         SetButtonInteractable(true);
                     }
@@ -197,7 +223,16 @@ public class SelectCompleteButton : Deactivatable_ButtonBase
     public override void SetButtonInteractable(bool isOn)
     {
         base.SetButtonInteractable(isOn);
+        ClickGuideSetActive(isOn);
+
+        // 버튼이 활성화 될때만 적용됨
+        if(isOn) cardButtonMemoryPool.CheckClickGuide(true);
+        //cardButtonMemoryPool.CheckClickGuide(isOn); // 선택 완료되어 비활성화 하는데 카드 선택 버튼이 활성화되는 문제가 있음
+    }
+
+    private void ClickGuideSetActive(bool isOn)
+    {
         clickGuide.SetActive(isOn);
-        cardButtonMemoryPool.CheckClickGuide(isOn);
+        cardScreen.OpenButtonCheckClickGuide();
     }
 }

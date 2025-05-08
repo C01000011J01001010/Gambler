@@ -20,7 +20,7 @@ public class CardScreen : MonoBehaviour
     //[SerializeField]
     private RectTransform _canvas;
     private RectTransform _rectTransform;
-    private CardScreenButton _cardScreenOpenButton;
+    private CardScreenOpenButton _cardScreenOpenButton;
 
     public RectTransform canvas
     {
@@ -38,7 +38,7 @@ public class CardScreen : MonoBehaviour
             return _rectTransform;
         }
     }
-    public CardScreenButton cardScreenOpenButton
+    public CardScreenOpenButton cardScreenOpenButton
     {
         get
         {
@@ -94,22 +94,25 @@ public class CardScreen : MonoBehaviour
 
     public void OpenButtonCheckClickGuide()
     {
-        if(selectCompleteButton.clickGuide) 
+        if(selectCompleteButton.clickGuide.activeSelf) 
         {
             cardScreenOpenButton.SetClickGuide(true);
             return;
         }
         else
         {
-            foreach(var cardSelectButton in cardButtonMemoryPool.cardSelectButtonList)
+            foreach(CardSelectButton cardSelectButton in cardButtonMemoryPool.cardSelectButtonList)
             {
-                if(cardSelectButton.clickGuide)
+                if(cardSelectButton.clickGuide.activeSelf)
                 {
                     cardScreenOpenButton.SetClickGuide(true);
                     return;
                 }
             }
         }
+
+        // 확인할 버튼이 없으면 오픈버튼의 클릭가이드를 종료
+        cardScreenOpenButton.SetClickGuide(false);
     }
 
     /// <summary>

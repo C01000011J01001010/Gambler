@@ -3,25 +3,22 @@ using UnityEngine;
 
 public class CardScreenButtonSet : MonoBehaviour
 {
-    
-    
-
-    [SerializeField] private CardScreenButton _closeButton;
-    [SerializeField] private CardScreenButton _openButton;
-    private RectTransform _rectTrans;
-
-    public CardScreenButton closeButton => _closeButton;
-    public CardScreenButton openButton => _openButton;
-    public RectTransform rectTrans
-    {
-        get
-        {
-            if (_rectTrans == null) _rectTrans = GetComponent<RectTransform>();
-            return _rectTrans;
-        }
-    }
+    [SerializeField] private CardScreenCloseButton _closeButton;
+    [SerializeField] private CardScreenOpenButton _openButton;
+    public CardScreenCloseButton closeButton => _closeButton;
+    public CardScreenOpenButton openButton => _openButton;
 
 
+
+    //private RectTransform _rectTrans;
+    //public RectTransform rectTrans
+    //{
+    //    get
+    //    {
+    //        if (_rectTrans == null) _rectTrans = GetComponent<RectTransform>();
+    //        return _rectTrans;
+    //    }
+    //}
 
     public float fadeDuration = 0.5f;
 
@@ -55,9 +52,6 @@ public class CardScreenButtonSet : MonoBehaviour
         openButton.TryDeactivate_Button(); // 버튼 비활성화
 
         MethodManager.GetSequence_FadeOut(sequence, gameObject, fadeDuration);
-        //sequence.AppendCallback(() => transform.localScale = Vector3.one);
-        //sequence.Append(transform.DOScale(Vector3.zero, fadeDuration).SetEase(Ease.InBack));
-        //sequence.AppendCallback(() => gameObject.SetActive(false));
     }
 
     public void PlaySequence_FadeOut()
