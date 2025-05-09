@@ -16,14 +16,25 @@ public abstract class AudioBase  : MonoBehaviour, IAudioDefault
         }
     }
 
+    // Ä³½Ì
     private AudioSource _audioSource;
     public AudioSource audioSource
     {
         get
         {
-            if(_audioSource == null) _audioSource = GetComponent<AudioSource>();
+            CheckAudioSource();
             return _audioSource;
         }
+    }
+    private void CheckAudioSource()
+    {
+        if (_audioSource == null) 
+            _audioSource = GetComponent<AudioSource>();
+    }
+
+    protected virtual void Start()
+    {
+        CheckAudioSource();
     }
 
     public virtual float UpdateAudioVolume(float value)

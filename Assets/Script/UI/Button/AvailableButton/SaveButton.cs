@@ -29,10 +29,10 @@ public class SaveButton : SaveAndContinue_ButtonBase
     private void SaveDataProcess()
     {
         // 퀘스트 수주한 경우
-        sQuest quest = new sQuest(0, eQuestType.LearnHowToSave);
-        if (QuestManager.questHashSet.Contains(quest))
+        eQuestType questType = eQuestType.LearnHowToSave;
+        if (QuestManager.Instance.PlayerQuestDict.ContainsKey(questType))
         {
-            cQuestInfo quesInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            cQuestInfo quesInfo = CsvManager.Instance.GetQuestInfo(questType);
             if (quesInfo.isComplete == false) quesInfo.checkEndCondition();
         }
 

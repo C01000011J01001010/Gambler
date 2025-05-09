@@ -249,32 +249,40 @@ public class IconView : MonoBehaviour
         
     }
 
-    public void TryClickGuideOn(eIcon choice)
+    private void CheckNeedIconViewOn()
     {
         if (isIconViewOpen == false) // 아이콘 뷰가 닫혀있을 때
         {
-            foreach(eIcon key in iconDict.Keys)
+            foreach (eIcon key in iconDict.Keys)
             {
                 if (key == eIcon.IconViewOnOff) continue;
 
-                // 하나라도 켜진 알람이 있으면
+                // 하나라도 켜진 클릭가이드가 있으면
                 if (iconDict[key].clickGuide.activeSelf)
                 {
                     // 아이콘뷰 오픈을 유도
                     iconDict[eIcon.IconViewOnOff].clickGuide.gameObject.SetActive(true);
 
-                    break; // 반복문 탈출
+                    return;
                 }
             }
-        }
 
+            // 반복문에서 클릭가이드의 존재를 확인하지 못한 경우
+            iconDict[eIcon.IconViewOnOff].clickGuide.gameObject.SetActive(false);
+        }
+    }
+
+    public void TryClickGuideOn(eIcon choice)
+    {
         // 온오프를 호출한 경우 무시함
         if (choice != eIcon.IconViewOnOff)
         {
             iconDict[choice].clickGuide.gameObject.SetActive(true);
-            TryClickGuideOn(eIcon.IconViewOnOff);
+            //TryClickGuideOn(eIcon.IconViewOnOff);
         }
-            
+
+        // 아이콘 뷰에 클릭가이드가 켜졌으면 아이콘뷰의 오픈을 유도
+        CheckNeedIconViewOn();
     }
 
     public void TryClickGuideOff(eIcon choice)
@@ -283,28 +291,26 @@ public class IconView : MonoBehaviour
         {
             case eIcon.IconViewOnOff:
                 {
-                    // 닫혀있다면 가이드를 꺼야하는지 다시한번 확인
-                    if(isIconViewOpen == false)
-                    {
-                        foreach (eIcon key in iconDict.Keys)
-                        {
-                            if (key == eIcon.IconViewOnOff) continue;
-                            if (iconDict[key].clickGuide.activeSelf) // 하나라도 켜져있다면 온오프의 가이드도 유지해야함
-                                return;
-                        }
-                    }
-                    
+                    CheckNeedIconViewOn();
+                    //// 닫혀있다면 가이드를 꺼야하는지 다시한번 확인
+                    //if (isIconViewOpen == false)
+                    //{
+                    //    foreach (eIcon key in iconDict.Keys)
+                    //    {
+                    //        if (key == eIcon.IconViewOnOff) continue;
+                    //        if (iconDict[key].clickGuide.activeSelf) // 하나라도 켜져있다면 온오프의 가이드도 유지해야함
+                    //            return;
+                    //    }
+                    //}
                 }
                 break;
 
             case eIcon.Quest:
                 {
-                    // 모든 퀘스트를 확인한 경우 &&
-                    // 모든 완료된 퀘스트의 보상을 받은 경우
-                    foreach (sQuest quest in QuestManager.questHashSet)
+                    foreach (eQuestType questType in QuestManager.Instance.PlayerQuestDict.Keys)
                     {
-                        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
-                        if(questInfo.isNeedCheck == true) // 하나라도 true가 있다면 비활성화 하지 않고 함수 종료
+                        cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
+                        if(questInfo.isNeedCheck) // 하나라도 true가 있다면 비활성화 하지 않고 함수 종료
                         {
                             return;
                         }
@@ -315,6 +321,19 @@ public class IconView : MonoBehaviour
             case eIcon.Inventory:
                 {
                     // 모든 획득한 아이템을 확인한 경우
+                    foreach (eItemType itemType in ItemManager.Instance.PlayerItemDict.Keys)
+                    {
+                        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(itemType);
+                        if (itemInfo.isNeedCheck) // 하나라도 true가 있다면 비활성화 하지 않고 함수 종료
+                        {
+                            return;
+                        }
+                    }
+                }
+                break;
+
+            case eIcon.PlayerStatus:
+                {
 
                 }
                 break;
@@ -322,12 +341,6 @@ public class IconView : MonoBehaviour
             case eIcon.GameAssistant:
                 {
                     // 플레이어 공격차례에 공격대상을 선택 완료한 경우
-                }
-                break;
-
-            case eIcon.Message:
-                {
-
                 }
                 break;
         }
@@ -341,6 +354,8 @@ public class IconView : MonoBehaviour
             // 아이콘뷰가 닫혀있을 때 확인을 끝낸 경우 아이콘뷰onOff에 대한 확인을 재검토
             TryClickGuideOff(eIcon.IconViewOnOff);
         }
-            
+
+
+
     }
 }

@@ -18,10 +18,11 @@ public class NPC_MunDuckBea : DynamicInteractableBase
         if (currentFile == eTextScriptFile.NPC_MunDuckBea_Encounter)
         {
             // 퀘스트 수주한 경우
-            sQuest quest = new sQuest(0, eQuestType.LetsLookAroundOutside);
-            if (QuestManager.questHashSet.Contains(quest))
+            //cPlayerQuest quest = new cPlayerQuest(0, eQuestType.LetsLookAroundOutside);
+            eQuestType questType = eQuestType.LetsLookAroundOutside;
+            if (QuestManager.Instance.PlayerQuestDict.ContainsKey(questType))
             {
-                cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
                 if (!questInfo.isComplete) questInfo.checkEndCondition();
             }
                 

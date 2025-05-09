@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, cItemInfo>
+public class InventoryItemOptionButton : PopUpOptionButtonBase<InventoryItemOptionButton, cPlayerItem, cItemInfo>
 {
     [SerializeField] private Image itemImage;
 
@@ -24,6 +24,16 @@ public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, c
         InitItemImage();
 
         ClickCheck(eIcon.Inventory);
+
+        InitUseCheckCallback();
+    }
+
+    public void InitPanel(object PopUp)
+    {
+        InitItemImage();
+
+        //if(ShopPopUp != typeof(PopUp))
+            ClickCheck(eIcon.Inventory);
 
         InitUseCheckCallback();
     }
@@ -91,14 +101,14 @@ public class ItemOptionButton : PopUpOptionButtonBase<ItemOptionButton, sItem, c
 
     public void ItemUsedByPlayer()
     {
-        ItemManager.Instance.PlayerLoseItem(defaultData);
+        ItemManager.Instance.PlayerLoseItem(entryData);
     }
 
     public void ItemSoldByPlayer()
     {
-        ItemManager.Instance.PlayerLoseItem(defaultData);
+        ItemManager.Instance.PlayerLoseItem(entryData);
 
-        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(defaultData.type);
+        cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(entryData.type);
         PlayManager.Instance.AddPlayerMoney(itemInfo.value_Sale);
     }
 

@@ -2,73 +2,48 @@ using PublicSet;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuestManager : Singleton<QuestManager>
+public class QuestManager : EntryDictManagerBase<QuestManager, cPlayerQuest, eQuestType>
 {
     /// <summary>
     /// 완료되었던 퀘스트를 포함한 모든 퀘스트
     /// </summary>
-    public static HashSet<sQuest> questHashSet { get; private set; }
+    public Dictionary<eQuestType, cPlayerQuest> PlayerQuestDict
+    {
+        get => EntryDict;
+        private set => EntryDict = value;
+    }
 
     /// <summary>
-    /// 반복 가능한 퀘스트를 관리
+    /// 반복 가능한 퀘스트를 별도로 관리
     /// </summary>
-    public static HashSet<cQuestInfo> repeatableQuestInfo {  get; private set; }
+    public HashSet<cQuestInfo> repeatableQuestInfo {  get; private set; }
 
-    public static void HashSetAllClear()
+
+    public override void InitAllDict()
     {
-        questHashSet.Clear();
+        PlayerQuestDict = new Dictionary<eQuestType, cPlayerQuest>();
+        repeatableQuestInfo = new HashSet<cQuestInfo>();
+    }
+    public override void ClearAllDict()
+    {
+        PlayerQuestDict.Clear();
         repeatableQuestInfo.Clear();
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        questHashSet = new HashSet<sQuest>();
-        repeatableQuestInfo = new HashSet<cQuestInfo>();
-    }
-
-    public int GetNewLastId()
-    {
-        int LastitemID = GetLastItemId();
-        Debug.Log($"GetNewLastId에서 반환되는 id : {LastitemID + 1}");
-        return LastitemID + 1;
-    }
-    public int GetLastItemId()
-    {
-        if (questHashSet.Count == 0)
-        {
-            Debug.Log("저장된 데이터가 없음");
-            return -1;
-        }
-
-        int maxItemNumber = int.MinValue;
-
-        foreach (sQuest quest in questHashSet)
-        {
-            if (quest.id > maxItemNumber)
-            {
-                maxItemNumber = quest.id;
-            }
-        }
-        return maxItemNumber;
-    }
-
-    
     public bool TryPlayerGetQuest(eQuestType questType)
     {
-        int questId = GetNewLastId();
-
-        sQuest newQuest = new sQuest(questId, questType);
-
         // type만 비교하기 때문에 같은 퀘스트는 수주되지 않음
-        if (questHashSet.Contains(newQuest))
+        if (PlayerQuestDict.ContainsKey(questType))
         {
             // 이미 존재하면 추가하지 않음
-            Debug.LogWarning($"Quest {questId} 는 수주받은 퀘스트.");
+            Debug.LogWarning($"Quest {questType} 는 수주받은 퀘스트.");
             return false;
         }
 
-        questHashSet.Add(newQuest);
+
+        int questId = GetNewLastId();
+        cPlayerQuest newQuest = new cPlayerQuest(questId, questType);
+        PlayerQuestDict.Add(questType, newQuest);
         Debug.Log($"Quest {questId} 수주 성공.");
 
         // 플레이어가 수주한 퀘스트를 확인하도록 유도
@@ -81,13 +56,11 @@ public class QuestManager : Singleton<QuestManager>
     public bool TryPlayerCompleteQuest(eQuestType questType)
     {
         // 수주된 퀘스트인지 확인
-        sQuest quest = new sQuest(0,questType);
-        if(questHashSet.Contains(quest) == false)
+        if (PlayerQuestDict.ContainsKey(questType) == false)
         {
             Debug.LogWarning("수주하지 않은 퀘스트");
             return false;
         }
-        
 
         cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
         questInfo.isComplete = true;
@@ -108,7 +81,7 @@ public class QuestManager : Singleton<QuestManager>
         return true;
     }
 
-    public static bool TryAddRefeatableQuest(cQuestInfo questInfo)
+    public bool TryAddRefeatableQuest(cQuestInfo questInfo)
     {
         if (questInfo.isRepeatable)
         {
@@ -121,7 +94,7 @@ public class QuestManager : Singleton<QuestManager>
     /// <summary>
     /// 반복퀘스트가 있을 경우 날짜가 바뀔때마다 초기화됨
     /// </summary>
-    public static void InitRefeatableQuest()
+    public void InitRefeatableQuest()
     {
         bool isChanged = false;
 

@@ -26,7 +26,9 @@ public class Loupe : MonoBehaviour
 
     private void OnDisable()
     {
-        roupeBox.gameObject.SetActive(false);
+        if(roupeBox != null)
+            roupeBox.gameObject.SetActive(false);
+
     }
 
     void Update()

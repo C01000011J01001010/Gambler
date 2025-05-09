@@ -28,10 +28,10 @@ public class ItemCallback : CallbackBase, ICallback<eItemCallback>
         EventManager.Instance.PlaySequnce_EventAnimation();
 
         // 퀘스트를 수주한 경우
-        sQuest quest = new sQuest(0, eQuestType.UseCasinoEntryTicket);
-        if (QuestManager.questHashSet.Contains(quest))
+        eQuestType questType = eQuestType.UseCasinoEntryTicket;
+        if (QuestManager.Instance.PlayerQuestDict.ContainsKey(questType))
         {
-            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
             if (questInfo.isComplete == false) questInfo.checkEndCondition();
         }
 

@@ -128,7 +128,7 @@ public class GameManager : Singleton<GameManager>
             return;
         }
 
-        QuestManager.InitRefeatableQuest();
+        QuestManager.Instance.InitRefeatableQuest();
     }
 
     public Dictionary<eStage, string> stageMessageDict;
@@ -262,8 +262,8 @@ public class GameManager : Singleton<GameManager>
         PlayManager.Instance.InitPlayerStatus();
         SetStage(eStage.Stage1);
         connector_InGame.Canvas1.IconView.SetOpendIconCount(0);
-        ItemManager.HashSetAllClear();
-        QuestManager.HashSetAllClear();
+        ItemManager.Instance.ClearAllDict();
+        QuestManager.Instance.ClearAllDict();
 
         connector_InGame.Map.ChangeMapTo(eMap.InsideOfHouse);
         SetStage(eStage.Stage1);

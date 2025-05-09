@@ -78,10 +78,10 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
                         PlayManager.Instance.StartPlayerMonologue_OnPlayerWakeUp();
 
                         // 퀘스트를 수주한 경우
-                        sQuest quest = new sQuest(0, eQuestType.GoToSleep);
-                        if (QuestManager.questHashSet.Contains(quest))
+                        eQuestType questType = eQuestType.LetsLookAroundOutside;
+                        if (QuestManager.Instance.PlayerQuestDict.ContainsKey(questType))
                         {
-                            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
                             if (questInfo.isComplete == false) questInfo.checkEndCondition();
                         }
                     }
@@ -100,14 +100,14 @@ public class InteractiveTextCallback : CallbackBase, ICallback<int>
         TextWindowPopUp_Close();
 
         // 퀘스트를 수주한 경우
-        sQuest quest = new sQuest(0, eQuestType.LetsOpenBoxForTheFirstTime);
-        if (QuestManager.questHashSet.Contains(quest))
+        eQuestType questType = eQuestType.LetsOpenBoxForTheFirstTime;
+        if (QuestManager.Instance.PlayerQuestDict.ContainsKey(questType))
         {
-            // 첫 아이템 획득이니 아이콘을 해방
+            // 첫 아이템 획득이면 아이콘을 개방
             GameManager.connector_InGame.Canvas1.IconView.GetComponent<IconView>().TryIconUnLock(eIcon.Inventory);
 
             // 퀘스트의 완료조건 확인하여 퀘스트 완료
-            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
             if (!questInfo.isComplete) questInfo.checkEndCondition();
         }
 

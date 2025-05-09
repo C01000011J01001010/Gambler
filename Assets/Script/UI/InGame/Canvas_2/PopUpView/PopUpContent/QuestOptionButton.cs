@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static PublicSet.INeedCheck;
 
-public class QuestOptionButton : PopUpOptionButtonBase<QuestOptionButton, sQuest,  cQuestInfo>
+public class QuestOptionButton : PopUpOptionButtonBase<QuestOptionButton, cPlayerQuest,  cQuestInfo>
 {
     [SerializeField] private Text TextOfStatus;
     

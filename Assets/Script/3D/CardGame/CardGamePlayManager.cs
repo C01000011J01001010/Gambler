@@ -179,10 +179,9 @@ public class CardGamePlayManager : Singleton<CardGamePlayManager>
 
 
         // 퀘스트 수주한 경우
-        sQuest quest = new sQuest(0, eQuestType.StartFirstGame);
-        if (QuestManager.questHashSet.Contains(quest))
+        if (QuestManager.Instance.PlayerQuestDict.ContainsKey(eQuestType.StartFirstGame))
         {
-            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(eQuestType.StartFirstGame);
             if (questInfo.isComplete == false) questInfo.checkEndCondition();
         }
             

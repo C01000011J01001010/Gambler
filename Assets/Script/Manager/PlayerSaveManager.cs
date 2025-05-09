@@ -1,72 +1,111 @@
 using PublicSet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+
+
+public interface IEntryInfo<T_Enum>
+    where T_Enum : Enum
+{
+    public int id { get; set; }
+    public T_Enum type { get; set; }
+}
 
 /// <summary>
 /// 아이템 저장 자료구조
 /// </summary>
-public struct sItem
+public class cPlayerItem : IEntryInfo<eItemType>
 {
     /// <summary>
     /// 내가 소유하고 있는 아이템 번호, 0부터 시작
     /// </summary>
-    public int id;
-    public eItemType type; // 아이템 시리얼 번호 - 아이콘, 아이템의 능력치
+    public int id {  get; set; }
+
+    /// <summary>
+    /// 아이템 모델명
+    /// </summary>
+    public eItemType type { get; set; }
+
+    /// <summary>
+    /// 아이템 개수
+    /// </summary>
+    private int _quantity;
+
+    public int quantity
+    {
+        get => _quantity;
+        set => _quantity = value > 0 ? value : 1;
+    }
 
     // 데이터 저장을 위해 string으로 변환
     public override string ToString()
     {
         // 추가 정보도 같이 저장
         cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(type);
-        return $"{id}:{type}:{itemInfo.isNeedCheck.ToString()}";
+        return $"{id}:{type}:{quantity}:{itemInfo.isNeedCheck.ToString()}";
     }
 
     // string으로 저장했던 정보를 사용가능한 데이터로 변환
-    public static sItem DataSplit(string data)
+    public static cPlayerItem DataSplit(string data)
     {
-        sItem item = new sItem();
         string[] parts = data.Split(':');
 
-        if (parts.Length == 3 &&
-            int.TryParse(parts[0], out item.id) &&
-            eItemType.TryParse(parts[1], out item.type)&&
-            bool.TryParse(parts[2], out bool isNeedCheck))
+        if (parts.Length == 4 &&
+            int.TryParse(parts[0], out int id) &&
+            eItemType.TryParse(parts[1], out eItemType type)&&
+            int.TryParse(parts[2], out int quantity) &&
+            bool.TryParse(parts[3], out bool isNeedCheck))
         {
-            cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(item.type);
+            cItemInfo itemInfo = CsvManager.Instance.GetItemInfo(type);
             itemInfo.isNeedCheck = isNeedCheck;
 
-            return item;
+            return new cPlayerItem(id, type, quantity); ;
+        }
+        else
+        {
+            Debug.LogWarning("DataSplit 실패");
         }
 
         return default;
     }
 
+    /*
+    public bool Equals(sItem other)
+    {
+        return this.type == other.type;
+    }
+
     public override bool Equals(object obj)
     {
-        return obj is sItem item &&
-               id == item.id &&
-               type == item.type;
+        // 패턴매칭에 의한 조건부 비교
+        return obj is sItem other && Equals(other);
+        //if (obj is sQuest)
+        //{
+        //    sQuest other = (sQuest)obj;
+        //    return Equals(other);
+        //}
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(id, type);
+        return type.GetHashCode();
     }
+    */
 
-    // 생성자
-    public sItem(int id, eItemType serail)
+    
+    public cPlayerItem(int id, eItemType type, int quantity)
     {
         this.id = id;
-        type = serail;
+        this.type = type;
+        this.quantity = quantity;
         return;
     }
 
-    public sItem(sItem item)
+    public cPlayerItem(cPlayerItem item)
     {
         id = item.id;
         type = item.type;
+        quantity = item.quantity;
         return;
     }
 }
@@ -74,10 +113,10 @@ public struct sItem
 /// <summary>
 /// 퀘스트 저장 자료구조
 /// </summary>
-public struct sQuest : IEquatable<sQuest>
+public class cPlayerQuest : IEntryInfo<eQuestType> //: IEquatable<sQuest>
 {
-    public int id; // 퀘스트 순서
-    public eQuestType type; // 퀘스트 번호
+    public int id { get; set; } // 퀘스트 순서
+    public eQuestType type { get; set; } // 퀘스트 번호
 
     // 데이터 저장을 위해 string으로 변환
     public override string ToString()
@@ -89,14 +128,13 @@ public struct sQuest : IEquatable<sQuest>
     }
 
     // string으로 저장했던 정보를 사용가능한 데이터로 변환
-    public static sQuest DataSplit(string data)
+    public static cPlayerQuest DataSplit(string data)
     {
-        sQuest item = new sQuest();
         string[] parts = data.Split(':');
 
         if (parts.Length == 5 &&
-            int.TryParse(parts[0], out item.id) &&
-            eQuestType.TryParse(parts[1], out item.type)&&
+            int.TryParse(parts[0], out int id) &&
+            eQuestType.TryParse(parts[1], out eQuestType type)&&
             bool.TryParse(parts[2], out bool isNeedCheck) &&
             bool.TryParse(parts[3], out bool isComplete) &&
             bool.TryParse(parts[4], out bool hasReceivedReward)
@@ -104,16 +142,16 @@ public struct sQuest : IEquatable<sQuest>
             
         {
             // 데이터를 불러오면서 참조변수의 데이터도 같이 복원
-            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(item.type);
+            cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(type);
             questInfo.isNeedCheck = isNeedCheck;
             questInfo.isComplete = isComplete;
             questInfo.hasReceivedReward = hasReceivedReward;
 
-            return item;
+            return new cPlayerQuest(id, type); ;
         }
         return default;
     }
-
+    /*
     public bool Equals(sQuest other)
     {
         return this.type == other.type;
@@ -134,20 +172,17 @@ public struct sQuest : IEquatable<sQuest>
     {
         return type.GetHashCode();
     }
+    */
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="type"></param>
-    public sQuest(int id, eQuestType type)
+
+    public cPlayerQuest(int id, eQuestType type)
     {
         this.id = id;
         this.type = type;
         return;
     }
 
-    public sQuest(sQuest quest)
+    public cPlayerQuest(cPlayerQuest quest)
     {
         id = quest.id;
         type = quest.type;
@@ -296,11 +331,11 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         SaveData(currentPlayerSaveKey_SavedDate, SavedDate);
 
         //LoadItems(ePlayerSaveKey.None);
-        string itemData = string.Join(",", ItemManager.ItemHashSet);
+        string itemData = string.Join(",", ItemManager.Instance.PlayerItemDict);
         SaveData(currentPlayerSaveKey_Items, itemData);
 
         //LoadQuests(ePlayerSaveKey.None);
-        string questData = string.Join(",", QuestManager.questHashSet);
+        string questData = string.Join(",", QuestManager.Instance.PlayerQuestDict);
         SaveData(currentPlayerSaveKey_Quests, questData);
 
         int remainingPeriod = GameManager.Instance.currentRemainingPeriod;
@@ -368,9 +403,9 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         }
     }
 
-    public HashSet<sItem> LoadItems(ePlayerSaveKey saveKey)
+    public Dictionary<eItemType, cPlayerItem> LoadItems(ePlayerSaveKey saveKey)
     {
-        ItemManager.HashSetAllClear();
+        ItemManager.Instance.ClearAllDict();
 
         //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
         string savedData = LoadData(saveKey.ToString() + defaultSaveKey_Items, string.Empty);
@@ -379,7 +414,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         if (string.IsNullOrEmpty(savedData))
         {
             Debug.LogWarning("저장된 데이터가 없음 : LoadItems");
-            return new HashSet<sItem>();
+            return new Dictionary<eItemType, cPlayerItem>();
         }
 
         // id1:serail1 , id2:serail2 ....
@@ -388,28 +423,28 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         foreach (string itemString in itemStrings)
         {
             // id : serail
-            sItem item = sItem.DataSplit(itemString);
+            cPlayerItem item = cPlayerItem.DataSplit(itemString);
 
             // 데이터가 잘못된경우 패스
-            if (item.id == 0 && item.type == 0)
+            if (item.id == 0 && item.type == 0 && item.quantity == 0)
             {
                 continue;
             }
 
-            // 올바른 데이터를 해쉬셋에 추가
+            // 올바른 데이터를 딕셔너리에 추가
             else
             {
-                ItemManager.ItemHashSet.Add(item);
+                ItemManager.Instance.PlayerItemDict.Add(item.type, item);
             }
         }
 
         Debug.Log("데이터 로딩 성공 : LoadItems");
-        return ItemManager.ItemHashSet;
+        return ItemManager.Instance.PlayerItemDict;
     }
 
-    public HashSet<sQuest> LoadQuests(ePlayerSaveKey saveKey)
+    public Dictionary<eQuestType, cPlayerQuest> LoadQuests(ePlayerSaveKey saveKey)
     {
-        QuestManager.HashSetAllClear();
+        QuestManager.Instance.ClearAllDict();
 
         //string savedData = PlayerPrefs.GetString(savedItemsKey, string.Empty);
         string savedData = LoadData(saveKey.ToString() + defaultSaveKey_Quests, string.Empty);
@@ -417,8 +452,8 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         Debug.Log($"savedData : {savedData}");
         if (string.IsNullOrEmpty(savedData))
         {
-            QuestManager.questHashSet.Clear();
-            return new HashSet<sQuest>();
+            QuestManager.Instance.PlayerQuestDict.Clear();
+            return new Dictionary<eQuestType, cPlayerQuest>();
         }
 
         string[] questStrings = savedData.Split(',');
@@ -426,7 +461,7 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
         foreach (string questString in questStrings)
         {
             // id : serail
-            sQuest quest = sQuest.DataSplit(questString);
+            cPlayerQuest quest = cPlayerQuest.DataSplit(questString);
             cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
 
             // 데이터가 잘못된경우 패스
@@ -435,15 +470,14 @@ public class PlayerSaveManager : Singleton<PlayerSaveManager>
                 continue;
             }
 
-            // 올바른 데이터를 해쉬셋에 추가
+            // 올바른 데이터를 딕셔너리에 추가
             else
             {
-                
-                QuestManager.questHashSet.Add(quest);
-                QuestManager.TryAddRefeatableQuest(questInfo);
+                QuestManager.Instance.PlayerQuestDict.Add(quest.type, quest);
+                QuestManager.Instance.TryAddRefeatableQuest(questInfo);
             }
         }
-        return QuestManager.questHashSet;
+        return QuestManager.Instance.PlayerQuestDict;
     }
     public int LoadRemainingPeriod(ePlayerSaveKey saveKey)
     {

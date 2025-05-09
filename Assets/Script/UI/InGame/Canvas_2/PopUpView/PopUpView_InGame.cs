@@ -10,6 +10,7 @@ public class PopUpView_InGame : PopUpViewBase
     // 아이콘 팝업
     public OptionPopUp optionPopUp;
     public GameSettingPopUp gameSettingPopUp;
+    public ShopPopUp shopPopUp;
 
     public InventoryPopUp inventoryPopUp;
     public QuestPopUp questPopUp;
@@ -47,6 +48,7 @@ public class PopUpView_InGame : PopUpViewBase
     }
     public void InitPopUp()
     {
+        shopPopUp.InitAttribute();
         inventoryPopUp.InitAttribute();
     }
 

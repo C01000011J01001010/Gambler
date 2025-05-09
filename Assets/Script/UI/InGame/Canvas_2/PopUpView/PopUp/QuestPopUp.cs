@@ -1,16 +1,14 @@
 using PublicSet;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
-using UnityEngine.UI;
 
 public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
 {
     [SerializeField] protected QuestDescriptionPanel descriptionPanel;
     
-    HashSet<sQuest> playerQuestHash
+    Dictionary<eQuestType, cPlayerQuest> playerQuestDict
     {
-        get { return QuestManager.questHashSet; }
+        get { return QuestManager.Instance.PlayerQuestDict; }
     }
     
 
@@ -32,17 +30,19 @@ public class QuestPopUp : PopUpBase_FullScreen<QuestPopUp>
     /// </summary>
     public override void RefreshPopUp()
     {
-        Debug.Log($"playerQuestHash.Count == {playerQuestHash.Count}");
-        RefreshPopUp(playerQuestHash.Count,
+        Debug.Log($"playerQuestHash.Count == {playerQuestDict.Count}");
+        RefreshPopUp(playerQuestDict.Count,
             () =>
             {
-                foreach (sQuest quest in playerQuestHash)
+                foreach (eQuestType questType in playerQuestDict.Keys)
                 {
+                    cPlayerQuest quest = playerQuestDict[questType];
+
                     // 아이템정보로 초기화될 객체
                     QuestOptionButton questPanel = ActiveObjList[quest.id].GetComponent<QuestOptionButton>(); ;
 
                     // 아이템 종합정보를 호출
-                    cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(quest.type);
+                    cQuestInfo questInfo = CsvManager.Instance.GetQuestInfo(questType);
 
                     // 활성화된 각 객체에 정보를 초기화
                     if (questInfo != null)

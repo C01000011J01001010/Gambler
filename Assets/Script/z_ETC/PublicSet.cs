@@ -239,8 +239,8 @@ namespace PublicSet
         IconViewOnOff,
         Quest,
         Inventory,
+        PlayerStatus,
         GameAssistant,
-        Message
     }
 
     public enum ePopUpState

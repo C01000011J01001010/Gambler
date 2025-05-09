@@ -22,9 +22,9 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private EffactAudio _effactAudio;
 
 
-    public MasterAudio masterAudio{ get { return _masterAudio; } }
-    public BackGroundAudio backGroundAudio { get { return _backGroundAudio; } }
-    public EffactAudio effactAudio { get { return _effactAudio; } }
+    public MasterAudio masterAudio => _masterAudio;
+    public BackGroundAudio backGroundAudio => _backGroundAudio;
+    public EffactAudio effactAudio => _effactAudio;
     public List<IAudioDefault> TotalAudio { get; private set; } // 동일한 인터페이스를 사용중인 클래스를 묶을 예정
 
 
@@ -41,11 +41,8 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (_previousMuteStatusArr == null)
             {
-                _previousMuteStatusArr = new bool[2];
-                for (int i = 0; i < _previousMuteStatusArr.Length; i++)
-                {
-                    _previousMuteStatusArr[i] = false; // 기본값은 토글하지 않은 상태
-                }
+                int count = 2;
+                _previousMuteStatusArr = new bool[count]; // default가 false
             }
             return _previousMuteStatusArr;
         }
